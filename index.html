@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wordmere — Cozy Word Puzzles</title>
+<meta name="description" content="Wordmere is a cozy word puzzle game where every word you spell builds a beautiful little 3D world. Relax, spell, and watch your world grow." />
+<link rel="icon" href="icon.png" />
+<meta property="og:title" content="Wordmere — Cozy Word Puzzles" />
+<meta property="og:description" content="Spell words, build worlds. A cozy word game." />
+<meta property="og:image" content="icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{--sky-top:#BFE9F8;--sky:#5CC8F0;--grass:#6EE87A;--green:#52B788;--cream:#F7F2E8;--coral:#FF5436;--gold:#F0C040;--teal:#1B3A3A;--ink:#26313a;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{min-height:100%;font-family:"Nunito",system-ui,sans-serif;color:var(--ink);
+    background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky) 42%,#8fdca6 66%,var(--grass) 100%);
+    background-attachment:fixed;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:720px;margin:0 auto;padding:clamp(28px,7vw,64px) 22px 40px;text-align:center;display:flex;flex-direction:column;align-items:center;min-height:100vh;}
+  .icon{width:clamp(96px,26vw,132px);height:clamp(96px,26vw,132px);border-radius:26px;box-shadow:0 16px 40px rgba(20,80,90,.28);margin-bottom:22px;}
+  h1{font-family:"Fredoka";font-weight:700;color:#fff;font-size:clamp(38px,10vw,64px);line-height:1;letter-spacing:-.5px;text-shadow:0 3px 14px rgba(0,0,0,.16);}
+  .tag{font-family:"Fredoka";font-weight:600;color:var(--teal);font-size:clamp(18px,5vw,26px);margin-top:10px;}
+  .blurb{font-weight:700;color:var(--teal);opacity:.9;font-size:clamp(15px,4vw,18px);max-width:460px;margin:18px auto 0;line-height:1.5;}
+  .cta{display:inline-flex;align-items:center;gap:10px;margin-top:28px;font-family:"Fredoka";font-weight:700;font-size:clamp(17px,4.6vw,20px);
+    color:#fff;text-decoration:none;background:linear-gradient(180deg,#FF6A4D,#FF4D8D);
+    padding:15px 34px;border-radius:40px;box-shadow:0 9px 0 #c5306b,0 16px 26px rgba(0,0,0,.22);transition:transform .12s,box-shadow .12s;}
+  .cta:active{transform:translateY(5px);box-shadow:0 4px 0 #c5306b,0 8px 16px rgba(0,0,0,.22);}
+  .feats{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:34px;}
+  .feat{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:12px 16px;font-weight:800;color:var(--teal);font-size:14px;backdrop-filter:blur(4px);}
+  footer{margin-top:auto;padding-top:40px;font-weight:700;}
+  footer a{color:var(--teal);text-decoration:none;opacity:.85;margin:0 10px;border-bottom:2px solid rgba(27,58,58,.25);}
+  footer a:hover{opacity:1;}
+  .copy{display:block;margin-top:14px;font-size:13px;color:var(--teal);opacity:.6;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <img class="icon" src="icon.png" alt="Wordmere app icon" />
+    <h1>Wordmere</h1>
+    <p class="tag">Your words build worlds.</p>
+    <p class="blurb">A cozy word puzzle where every word you spell quietly builds a beautiful little 3D world. No timers, no pressure — just you, the letters, and that satisfying click.</p>
+    <a class="cta" href="https://apps.apple.com/app/id6782536688">Play free on the App Store ▸</a>
+    <div class="feats">
+      <span class="feat">🌿 Cozy &amp; calm</span>
+      <span class="feat">🏡 Build your world</span>
+      <span class="feat">✨ 480+ puzzles</span>
+    </div>
+    <footer>
+      <nav>
+        <a href="/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+        <a href="/support/">Support</a>
+      </nav>
+      <span class="copy">© Wordmere</span>
+    </footer>
+  </div>
+</body>
+</html>
