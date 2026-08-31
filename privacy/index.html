@@ -45,51 +45,79 @@
     <header>
       <span class="badge">Privacy Policy</span>
       <h1>Wordmere</h1>
-      <p>A cozy word puzzle · Last updated: 30 June 2026</p>
+      <p>A cozy word puzzle · Last updated: 31 August 2026</p>
     </header>
 
     <div class="summary">
-      <strong>The short version:</strong> Wordmere is a single-player word puzzle that runs entirely on your device.
-      <strong>No account is required, and we do not collect personal information that identifies you.</strong>
-      The game works offline, and your progress and settings stay on your device.
+      <strong>The short version:</strong> Wordmere is free to play, supported by ads and optional in-app purchases.
+      <strong>You never need an account, and we never ask for your name, email or address.</strong>
+      Your progress stays on your device. Our advertising and analytics partners do receive some
+      device information — what that is, and what you can turn off, is set out below.
     </div>
 
     <h2>Information we handle</h2>
     <p><strong>Stored only on your device</strong></p>
     <ul>
-      <li><strong>Game progress</strong> — your level, coins, found words and daily-puzzle history, kept in local storage on your device (AsyncStorage) and never uploaded.</li>
+      <li><strong>Game progress</strong> — your level, coins, found words and daily-puzzle history, kept in local storage on your device and never uploaded.</li>
       <li><strong>Settings</strong> — your sound, music and haptics preferences, stored locally.</li>
     </ul>
 
     <p><strong>Purchases</strong></p>
     <ul>
-      <li>Optional in-app purchases (coin packs) are processed by the <strong>Apple App Store</strong>. We never receive or store your payment details — Apple handles the transaction and shares only confirmation that a purchase succeeded. Purchase validation is handled via <strong>RevenueCat</strong>. These requests are anonymous and contain no personal data.</li>
+      <li>Optional in-app purchases — coin packs, the piggy bank, and the ad-free options — are processed by the store you installed from (the <strong>Apple App Store</strong> or <strong>Google Play</strong>). We never receive or store your payment details; the store handles the transaction and tells us only that a purchase succeeded. <strong>RevenueCat</strong> validates purchases on our behalf so we know which ones are active. These requests carry no personal data.</li>
     </ul>
 
-    <p><strong>Advertising &amp; analytics</strong></p>
+    <h2>Advertising</h2>
+    <p>Wordmere shows ads. Most are <strong>rewarded videos you choose to watch</strong> in exchange for coins or a hint; there are also occasional interstitials between levels.</p>
     <ul>
-      <li><strong>No ads.</strong> Wordmere does not show advertisements.</li>
-      <li><strong>Anonymous usage analytics.</strong> To understand how the game is played and to improve it, we use <strong>PostHog</strong> to collect anonymous product-analytics events — for example which screens you open, levels you complete, and features you tap. This data is tied only to a random, app-generated identifier. It is <strong>not linked to your name, email, or Apple ID</strong>, we do <strong>not</strong> use it to track you across other apps, and no device advertising identifier (IDFA) is collected.</li>
-      <li><strong>Measuring our own marketing.</strong> When we promote Wordmere with app-install ads, we use the <strong>Google (Firebase)</strong> and <strong>Meta (Facebook)</strong> SDKs to measure how well those campaigns work. If you install or play after seeing one of our ads, these SDKs share limited, aggregated app activity — such as app installs, gameplay milestones, and purchases — with Google and Meta solely to measure and improve our advertising. We do <strong>not</strong> use Apple’s advertising identifier (IDFA), we show <strong>no App Tracking Transparency prompt</strong>, and we do <strong>not</strong> track you across other apps or websites; measurement relies on Apple’s privacy-preserving SKAdNetwork and aggregated reporting.</li>
+      <li><strong>Who serves them.</strong> Ads are served by <strong>Google AdMob</strong>, which runs an auction across other ad networks to fill each slot — currently <strong>Meta Audience Network</strong>, <strong>Unity Ads</strong> and <strong>AppLovin</strong>.</li>
+      <li><strong>What they receive.</strong> To select, show and measure an ad, these partners receive your device's <strong>advertising identifier</strong>, your <strong>IP address</strong> (which indicates an approximate location, typically your city or region), and basic interaction signals such as app opens and whether an ad was viewed or completed. This is used for advertising, measurement and fraud prevention.</li>
+      <li><strong>On iOS.</strong> We ask your permission through Apple's <strong>App Tracking Transparency</strong> prompt before using Apple's advertising identifier (IDFA). If you decline, you still see ads, but they are non-personalised. You can change your answer at any time in <strong>Settings → Privacy &amp; Security → Tracking</strong>.</li>
+      <li><strong>On Android.</strong> You can reset or delete your advertising ID in <strong>Settings → Privacy → Ads</strong>.</li>
+      <li><strong>In the EEA, the UK and Switzerland.</strong> You are shown a consent form before ads are personalised, and you can change your choices at any time from an ad's options menu.</li>
+      <li><strong>Turning ads off.</strong> Wordmere offers a 30-day ad-free pass and a permanent <strong>Remove Ads</strong> purchase. Both stop interstitial ads. Rewarded videos remain available if you want to watch one for a reward, and are never forced.</li>
+    </ul>
+    <p>For more on how Google uses this information, see
+      <a href="https://policies.google.com/technologies/partner-sites">How Google uses information from sites or apps that use its services</a>.</p>
+
+    <h2>Analytics and stability</h2>
+    <ul>
+      <li><strong>Product analytics.</strong> We use <strong>PostHog</strong> and <strong>Google Firebase Analytics</strong> to understand how the game is played — which levels are reached, which features are used, where people get stuck. These events are tied to a random, app-generated identifier, not to your name, email, Apple ID or Google account.</li>
+      <li><strong>Crash reports.</strong> <strong>Firebase Crashlytics</strong> sends us diagnostic information when the app crashes, so we can fix it.</li>
+      <li><strong>Notifications.</strong> If you allow notifications, <strong>Firebase Cloud Messaging</strong> delivers reminders such as your daily puzzle or streak. You can turn these off at any time in your device settings, or in the game's own settings.</li>
     </ul>
 
-    <h2>Children’s privacy</h2>
-    <p>The game is intended for general audiences. We do not knowingly collect personal information from children. If you believe a child has provided personal information, contact us and we will delete it.</p>
+    <h2>Measuring our own marketing</h2>
+    <p>When we promote Wordmere with app-install ads, we use the <strong>Google (Firebase)</strong> and <strong>Meta (Facebook)</strong> SDKs to measure how those campaigns perform. If you install or play after seeing one of our ads, these SDKs may share limited app activity — installs, gameplay milestones and purchases — with Google and Meta, solely to measure and improve that advertising. On iOS this also uses Apple's privacy-preserving <strong>SKAdNetwork</strong>, which reports in aggregate.</p>
 
     <h2>Data sharing</h2>
-    <p>We do not sell your information. The third parties involved are <strong>Apple</strong> and <strong>RevenueCat</strong> (to process and validate in-app purchases), <strong>PostHog</strong> (anonymous usage analytics), and <strong>Google (Firebase)</strong> and <strong>Meta (Facebook)</strong> (aggregated measurement of our own app-install advertising — see “Advertising &amp; analytics” above). We do not share data that personally identifies you.</p>
+    <p><strong>We do not sell your personal information.</strong> The parties that receive data are:</p>
+    <ul>
+      <li><strong>Google</strong> — AdMob (serving and measuring ads), Firebase Analytics, Crashlytics and Cloud Messaging.</li>
+      <li><strong>Meta, Unity and AppLovin</strong> — as ad networks bidding to fill an ad slot, and Meta additionally for measuring our own install campaigns.</li>
+      <li><strong>PostHog</strong> — anonymous product analytics.</li>
+      <li><strong>Apple or Google</strong>, and <strong>RevenueCat</strong> — processing and validating purchases.</li>
+    </ul>
+    <p>None of these receive your name, email address or any information you have given us directly, because we do not ask you for any.</p>
+
+    <h2>Children's privacy</h2>
+    <p>Wordmere is intended for general audiences and is <strong>not directed to children under 13</strong>. We do not knowingly collect personal information from children. If you believe a child has provided personal information, contact us and we will delete it.</p>
 
     <h2>Your choices</h2>
     <ul>
-      <li>Gameplay and settings data stay on your device; clearing the app’s storage or uninstalling removes them.</li>
-      <li>You can manage purchases in your <strong>Apple ID</strong> account settings.</li>
+      <li>Decline tracking on iOS, or reset or delete your advertising ID on either platform, using the steps under <strong>Advertising</strong> above.</li>
+      <li>Change your consent choices in the EEA, UK and Switzerland from any ad's options menu.</li>
+      <li>Turn notifications off in your device settings or in the game.</li>
+      <li>Buy an ad-free option if you would rather not see interstitials.</li>
+      <li>Clear the app's storage or uninstall it to remove everything held on your device.</li>
+      <li>Manage or restore purchases in your <strong>Apple ID</strong> or <strong>Google Play</strong> account settings.</li>
     </ul>
 
-    <h2>Data retention</h2>
-    <p>Locally-stored data persists until you clear it or uninstall the app. We do not maintain user accounts or server-side profiles.</p>
+    <h2>Data retention and your rights</h2>
+    <p>Locally-stored data persists until you clear it or uninstall the app. We do not maintain user accounts or server-side profiles, so we hold no file about you to look up by name. Analytics and advertising data held by the partners above is retained under their own policies. If you would like to ask what is held or request deletion, email us at the address below and we will help.</p>
 
     <h2>Changes</h2>
-    <p>We may update this policy; the “Last updated” date will change. Material changes will be noted in-app or on this page.</p>
+    <p>We may update this policy; the "Last updated" date will change. Material changes will be noted in-app or on this page.</p>
 
     <h2>Contact</h2>
     <p>Questions? Email <a href="mailto:coolcontent1992@gmail.com">coolcontent1992@gmail.com</a>.</p>
