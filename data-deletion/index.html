@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Delete your data · Wordmere</title>
+<style>
+  :root{
+    --bg:#f1f8f4; --surface:#e0efe7; --ink:#173a35; --primary:#8fd9b6;
+    --secondary:#2e8b6f; --muted:#5a6b66;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:32px 20px 80px}
+  header{
+    background:var(--ink); color:#fff; border-radius:24px;
+    padding:28px 26px; margin-bottom:28px;
+    border:3px solid var(--ink); box-shadow:0 8px 0 rgba(23,58,53,.22);
+  }
+  header .badge{
+    display:inline-block; background:var(--primary); color:var(--ink);
+    font-weight:800; letter-spacing:.08em; font-size:12px;
+    padding:6px 12px; border-radius:999px; text-transform:uppercase;
+  }
+  h1{font-size:34px; margin:14px 0 4px; letter-spacing:-.02em}
+  header p{margin:0; opacity:.85; font-size:14px}
+  h2{font-size:20px; margin:30px 0 8px; border-bottom:2px solid var(--ink); padding-bottom:6px}
+  .steps{
+    background:var(--surface); border:2px solid var(--ink); border-radius:16px;
+    padding:20px 22px 18px; margin:8px 0 8px;
+  }
+  .steps ol{margin:10px 0 0; padding-left:22px}
+  .steps li{margin:10px 0}
+  ul{padding-left:20px}
+  li{margin:6px 0}
+  a{color:var(--secondary); font-weight:600}
+  table{width:100%; border-collapse:collapse; margin-top:12px; font-size:15px}
+  th{text-align:left; padding:8px 10px 8px 0; border-bottom:2px solid var(--ink); font-size:13px;
+     text-transform:uppercase; letter-spacing:.06em}
+  td{padding:9px 10px 9px 0; border-bottom:1px solid rgba(23,58,53,.18); vertical-align:top}
+  td:first-child{font-weight:600}
+  footer{margin-top:40px; font-size:13px; color:var(--muted); text-align:center}
+  strong{color:var(--ink)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="badge">Data deletion</span>
+      <h1>Wordmere</h1>
+      <p>A cozy word puzzle · Last updated: 31 August 2026</p>
+    </header>
+
+    <p>This page explains how to have data associated with <strong>Wordmere</strong> deleted.
+    Wordmere has no accounts — we never ask for your name, email address or a password — so
+    there is no profile to close. What exists is described below, along with how to have it removed.</p>
+
+    <h2>How to request deletion</h2>
+    <div class="steps">
+      <ol>
+        <li><strong>Email <a href="mailto:coolcontent1992@gmail.com?subject=Wordmere%20data%20deletion%20request">coolcontent1992@gmail.com</a></strong>
+            with the subject line <strong>"Wordmere data deletion request"</strong>.</li>
+        <li><strong>Tell us which device you play on</strong> (for example "Android phone" or "iPhone").
+            If you are able to, include your device's advertising ID — on Android it is in
+            <strong>Settings → Privacy → Ads</strong>. This is optional, and it is the only thing that
+            lets us identify advertising data as yours, since we hold no other identifier for you.</li>
+        <li><strong>We reply to confirm</strong>, and complete the deletion within <strong>30 days</strong>.</li>
+      </ol>
+    </div>
+    <p>You can also remove everything held on your device yourself, at any time and without contacting
+    us, by <strong>uninstalling the app</strong> or clearing its storage.</p>
+
+    <h2>What is deleted, and what is kept</h2>
+    <table>
+      <thead>
+        <tr><th>Data</th><th>On request</th><th>Retention</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Game progress and settings</td>
+          <td>Held only on your device — uninstalling removes it immediately</td>
+          <td>Until you uninstall or clear storage</td>
+        </tr>
+        <tr>
+          <td>Product analytics (PostHog, Firebase Analytics)</td>
+          <td>Deleted</td>
+          <td>Removed within 30 days of your request</td>
+        </tr>
+        <tr>
+          <td>Crash reports (Firebase Crashlytics)</td>
+          <td>Deleted</td>
+          <td>Removed within 30 days of your request</td>
+        </tr>
+        <tr>
+          <td>Advertising data (Google AdMob and its partners)</td>
+          <td>Deletion requested on your behalf</td>
+          <td>Held by those partners under their own policies; you can also reset or delete
+              your advertising ID yourself at any time in your device settings</td>
+        </tr>
+        <tr>
+          <td>Purchase records (Apple, Google Play, RevenueCat)</td>
+          <td><strong>Kept</strong></td>
+          <td>Retained as long as required for tax, accounting and refund obligations. These are
+              held by the store that processed your payment, not by us</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Why so little</h2>
+    <p>Wordmere runs on your device. Your level, coins, found words and settings never leave it.
+    We hold no account, no email address and no name, which is why the advertising ID above is the
+    only handle that exists for the small amount of data held off-device.</p>
+
+    <h2>More detail</h2>
+    <p>Our full <a href="/privacy">Privacy Policy</a> sets out everything we and our partners collect
+    and why. Questions about either page go to
+    <a href="mailto:coolcontent1992@gmail.com">coolcontent1992@gmail.com</a>.</p>
+
+    <footer>© 2026 Wordmere. All rights reserved.</footer>
+  </div>
+</body>
+</html>
