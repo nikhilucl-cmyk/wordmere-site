@@ -3,44 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Wordmere — Cosy Word Puzzles</title>
-<meta name="description" content="Wordmere is a cosy word puzzle game. Swipe letters, fill the crossword, and watch a 3-D world build itself around you. Thousands of levels, sixteen worlds, no timers.">
-<link rel="canonical" href="https://wordmere.com/">
+<title>Word Unscrambler — Every Word From Your Letters</title>
+<meta name="description" content="Free word unscrambler. Enter your letters and get every word you can make from them, sorted by length. 104,562 words, works on any word game, no sign-up.">
+<link rel="canonical" href="https://wordmere.com/tools/word-unscrambler/">
 <meta name="theme-color" content="#E9F6FE">
-<meta name="apple-itunes-app" content="app-id=6782536688">
-
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Wordmere">
-<meta property="og:title" content="Wordmere — Cosy Word Puzzles">
-<meta property="og:description" content="Wordmere is a cosy word puzzle game. Swipe letters, fill the crossword, and watch a 3-D world build itself around you. Thousands of levels, sixteen worlds, no timers.">
-<meta property="og:url" content="https://wordmere.com/">
+<meta property="og:title" content="Word Unscrambler — Every Word From Your Letters">
+<meta property="og:description" content="Free word unscrambler. Enter your letters and get every word you can make from them, sorted by length. 104,562 words, works on any word game, no sign-up.">
+<meta property="og:url" content="https://wordmere.com/tools/word-unscrambler/">
 <meta property="og:image" content="https://wordmere.com/img/social-card.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="A bright turquoise lagoon with a lighthouse, and the Wordmere app icon">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Wordmere — Cosy Word Puzzles">
-<meta name="twitter:description" content="Wordmere is a cosy word puzzle game. Swipe letters, fill the crossword, and watch a 3-D world build itself around you. Thousands of levels, sixteen worlds, no timers.">
+<meta name="twitter:title" content="Word Unscrambler — Every Word From Your Letters">
+<meta name="twitter:description" content="Free word unscrambler. Enter your letters and get every word you can make from them, sorted by length. 104,562 words, works on any word game, no sign-up.">
 <meta name="twitter:image" content="https://wordmere.com/img/social-card.jpg">
-
 <link rel="icon" href="/img/favicon-32.png" sizes="32x32">
 <link rel="icon" href="/img/favicon-16.png" sizes="16x16">
 <link rel="apple-touch-icon" href="/img/icon-180.png">
-
-<link rel="preload" as="image" href="/img/hero-lagoon.jpg" fetchpriority="high">
-
+<link rel="preload" as="fetch" href="/tools/word-unscrambler/words.txt" crossorigin>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
- {"@type":"WebSite","@id":"https://wordmere.com/#website","url":"https://wordmere.com/","name":"Wordmere",
-  "description":"Wordmere is a cosy word puzzle game. Swipe letters, fill the crossword, and watch a 3-D world build itself around you. Thousands of levels, sixteen worlds, no timers.","publisher":{"@id":"https://wordmere.com/#org"}},
- {"@type":"Organization","@id":"https://wordmere.com/#org","name":"Wordmere","url":"https://wordmere.com/",
-  "logo":"https://wordmere.com/img/icon-180.png"},
- {"@type":["VideoGame","MobileApplication"],"@id":"https://wordmere.com/#app","name":"Wordmere: Cozy Word Puzzles",
-  "applicationCategory":"GameApplication","operatingSystem":"iOS, Android","genre":"Word puzzle",
-  "description":"Wordmere is a cosy word puzzle game. Swipe letters, fill the crossword, and watch a 3-D world build itself around you. Thousands of levels, sixteen worlds, no timers.","image":"https://wordmere.com/img/social-card.jpg",
-  "publisher":{"@id":"https://wordmere.com/#org"},
-  "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
-  "installUrl":["https://apps.apple.com/app/id6782536688","https://play.google.com/store/apps/details?id=com.wordmere.game"]}
+ {"@type":"WebApplication","name":"Word Unscrambler","url":"https://wordmere.com/tools/word-unscrambler/",
+  "applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript",
+  "description":"Free word unscrambler. Enter your letters and get every word you can make from them, sorted by length. 104,562 words, works on any word game, no sign-up.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+  "publisher":{"@type":"Organization","name":"Wordmere","url":"https://wordmere.com/"}},
+ {"@type":"BreadcrumbList","itemListElement":[
+  {"@type":"ListItem","position":1,"name":"Wordmere","item":"https://wordmere.com/"},
+  {"@type":"ListItem","position":2,"name":"Word tools","item":"https://wordmere.com/tools/"},
+  {"@type":"ListItem","position":3,"name":"Word unscrambler","item":"https://wordmere.com/tools/word-unscrambler/"}]}
 ]}
 </script>
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
@@ -352,213 +342,144 @@
   }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
+
+<style>
+  .toolwrap{max-width:900px; margin:0 auto; padding:clamp(26px,4vw,52px) var(--gutter) 60px;}
+  .crumbs{font-size:13px; color:var(--ink-faint); margin:0 0 14px; font-weight:500;}
+  .crumbs a{color:var(--ink-soft); text-decoration:none;}
+  .toolwrap h1{font-family:var(--display); font-weight:800; font-size:clamp(30px,5.4vw,50px); letter-spacing:-.038em; line-height:1; margin:0; color:var(--ink);}
+  .toolwrap .sub{margin:12px 0 0; color:var(--ink-soft); font-size:clamp(15px,1.8vw,18px); max-width:58ch;}
+  .panel{margin-top:26px; background:var(--white); border-radius:22px; padding:clamp(18px,3vw,28px);
+    box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 8px 22px rgba(14,58,80,.08);}
+  .field{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;}
+  .field label{display:block; font:700 11px/1 var(--body); letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:8px;}
+  .field .grow{flex:1 1 240px; min-width:0;}
+  input[type=text]{width:100%; font-family:var(--display); font-weight:800; font-size:clamp(20px,3vw,28px); letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink); background:var(--page); border:2px solid transparent; border-radius:14px; padding:14px 16px; outline:none;
+    box-shadow:inset 0 2px 5px rgba(14,58,80,.10);}
+  input[type=text]:focus{border-color:var(--tq); box-shadow:inset 0 2px 5px rgba(14,58,80,.10), 0 0 0 4px rgba(47,196,220,.22);}
+  select{font-family:var(--body); font-weight:600; font-size:15px; color:var(--ink); background:var(--page); border:2px solid transparent;
+    border-radius:14px; padding:15px 14px; outline:none; box-shadow:inset 0 2px 5px rgba(14,58,80,.10);}
+  select:focus{border-color:var(--tq); box-shadow:0 0 0 4px rgba(47,196,220,.22);}
+  .solve{font-family:var(--display); font-weight:800; font-size:17px; color:#06323A; border:0; border-radius:14px; padding:16px 30px; cursor:pointer;
+    background:linear-gradient(180deg,#5AD9EC,var(--tq)); box-shadow:inset 0 2px 0 rgba(255,255,255,.45), 0 5px 0 var(--tq-deep);}
+  .solve:disabled{opacity:.55; cursor:progress;}
+  .err{margin:12px 0 0; color:#C13A2A; font-size:14px; font-weight:600;}
+  .status{margin:14px 0 0; color:var(--ink-faint); font-size:14px; font-weight:500;}
+  .group{margin-top:26px;}
+  .group h2{font-family:var(--display); font-weight:800; font-size:19px; letter-spacing:-.02em; margin:0 0 12px; color:var(--ink);}
+  .group h2 span{color:var(--ink-faint); font-weight:600; font-size:14px; font-family:var(--body); letter-spacing:0;}
+  .words{display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none;}
+  .words li{font-family:var(--display); font-weight:800; font-size:15px; letter-spacing:.04em; color:var(--ink);
+    background:var(--white); padding:9px 13px; border-radius:10px; box-shadow:inset 0 0 0 1px rgba(14,58,80,.10);}
+  .words li.top{background:linear-gradient(176deg,#FFC066,#EE9932 62%,#DE8117); color:#4A2200;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5), 0 3px 0 var(--sun-deep);}
+  .prose{margin-top:46px; max-width:64ch;}
+  .prose h2{font-family:var(--display); font-weight:800; font-size:clamp(21px,3vw,28px); letter-spacing:-.028em; margin:30px 0 10px; color:var(--ink);}
+  .prose p{margin:0 0 14px; color:var(--ink-soft); font-size:16px;}
+  .prose a{color:var(--sea); font-weight:600;}
+  .backhome{display:inline-flex; margin-top:30px; font-family:var(--display); font-weight:800; font-size:15px; color:#fff; text-decoration:none;
+    background:linear-gradient(180deg,#D64A28,#BE3F22); border-radius:999px; padding:14px 26px; box-shadow:0 4px 0 var(--coral-deep);}
+  @media (max-width:600px){ .solve{width:100%;} .field .grow{flex:1 1 100%;} select{flex:1 1 100%;} }
+</style>
+
 </head>
 <body>
 <div class="shell">
+  <nav class="nav" style="position:static"><div class="navbar" style="background:var(--white); border-color:rgba(14,58,80,.08)">
+    <span class="brand"><img src="/img/icon-96.png" alt="" width="30" height="30"><span>Wordmere</span></span>
+    <ul><li><a href="/#worlds">Worlds</a></li><li><a href="/#tools">Word tools</a></li><li><a href="/#answers">Answers</a></li></ul>
+    <a class="top" href="https://apps.apple.com/app/id6782536688">Play free</a>
+  </div></nav>
 
-  <header class="hero">
-    <img fetchpriority="high" decoding="async" width="2000" height="849" class="art" src="img/hero-lagoon.jpg" alt="A bright turquoise lagoon with a lighthouse, white clouds and cherry blossom — the Wordmere beach world">
-    <nav class="nav"><div class="navbar">
-      <span class="brand"><img loading="lazy" decoding="async" width="96" height="96" src="img/icon-96.png" alt="Wordmere app icon"><span>Wordmere</span></span>
-      <ul><li><a href="#worlds">Worlds</a></li><li><a href="#tools">Word tools</a></li><li><a href="#answers">Answers</a></li></ul>
-      <a class="top" href="https://apps.apple.com/app/id6782536688">Play free</a>
-    </div></nav>
+  <main class="toolwrap">
+    <p class="crumbs"><a href="/">Wordmere</a> › Word tools › Word unscrambler</p>
+    <h1>Word unscrambler</h1>
+    <p class="sub">Put in the letters you're holding. You'll get back every word they can make, longest first. Works for any word game, not just ours.</p>
 
-    <div class="stage">
-      <div class="copy">
-        <h1>Your words<br>build <em>worlds</em>.</h1>
-        <p>Swipe letters on the wheel and watch them lock into the grid. A whole place assembles around you, one word at a time — and nothing is ever on a clock.</p>
-        <div class="cta">
-          <a class="btn" href="https://apps.apple.com/app/id6782536688">
-            <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8c-1.5 0-2.9.9-3.7 2.2-1.6 2.8-.4 6.9 1.1 9.1.8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7 2-1.1 2.8-2.2c.9-1.3 1.2-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.6zM14.1 5.1c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></svg>
-            <i><small>Download on the</small><b>App Store</b></i>
-          </a>
-          <a class="btn two" href="https://play.google.com/store/apps/details?id=com.wordmere.game">
-            <svg viewBox="0 0 512 512" aria-hidden="true"><path fill="#4285F4" d="M47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0z"/><path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/><path fill="#FBBC04" d="M472.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8z"/><path fill="#34A853" d="M104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/></svg>
-            <i><small>Get it on</small><b>Google Play</b></i>
-          </a>
+    <div class="panel">
+      <form id="f" novalidate>
+        <div class="field">
+          <div class="grow">
+            <label for="letters">Your letters</label>
+            <input type="text" id="letters" name="letters" value="STONE" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="latin" aria-describedby="err">
+          </div>
+          <div>
+            <label for="len">Length</label>
+            <select id="len" name="len"><option value="0">Any</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
+          </div>
+          <button class="solve" id="go" type="submit">Unscramble</button>
         </div>
-      </div>
+        <p class="err" id="err" role="alert" hidden></p>
+        <p class="status" id="status">Loading the dictionary…</p>
+      </form>
+      <div id="out"></div>
+    </div>
 
-      <div class="board">
-        <div class="cell f">B</div><div class="cell f">E</div><div class="cell f">A</div><div class="cell f">C</div><div class="cell f">H</div>
-        <div class="cell f">A</div><div class="cell blank"></div><div class="cell blank"></div><div class="cell blank"></div><div class="cell blank"></div>
-        <div class="cell e"></div><div class="cell blank"></div><div class="cell blank"></div><div class="cell blank"></div><div class="cell blank"></div>
-        <div class="wheel">
-          <span class="pill">BAY</span>
-          <svg viewBox="0 0 100 100" aria-hidden="true"><polyline points="50,20 24,58 74,58" fill="none" stroke="#EE9932" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span class="wl" style="top:5%; left:35%">B</span>
-          <span class="wl" style="top:43%; left:9%">A</span>
-          <span class="wl" style="top:43%; left:61%">Y</span>
-          <span class="wl off" style="top:72%; left:35%">C</span>
-        </div>
-      </div>
+    <div class="prose">
+      <h2>How it works</h2>
+      <p>Type up to twelve letters and the tool checks them against 104,562 English words between three and eight letters long. A word appears only if your letters can actually spell it — each letter is used at most as many times as you have it. The results are grouped by length because in most word games the long ones are worth the most.</p>
+      <h2>Where the word list comes from</h2>
+      <p>It's the same dictionary the Wordmere game uses to accept bonus words, built from the public-domain <a href="https://github.com/dwyl/english-words" rel="nofollow">dwyl/english-words</a> list with offensive entries stripped out. If a word is in here, the game will take it.</p>
+      <h2>Using it on a letter-wheel puzzle</h2>
+      <p>Enter every letter on the wheel, including repeats. Set the length filter to the number of blanks in the row you're stuck on, and you'll usually spot the answer immediately. If you're playing Wordmere itself, a hint costs nothing and reveals a letter — there's no penalty for using one.</p>
+      <a class="backhome" href="/">Back to Wordmere</a>
     </div>
-  </header>
-
-  <div class="rail">
-    <div class="stat"><b>Thousands</b><span>Of levels</span></div>
-    <div class="stat"><b>16</b><span>3-D worlds</span></div>
-    <div class="stat"><b>0</b><span>Timers</span></div>
-    <div class="stat"><b>Free</b><span>To play</span></div>
-  </div>
-
-<section class="sec alt">
-    <div class="sechead">
-      <p class="eyebrow"><s></s>How it plays</p>
-      <h2>Three taps in, you'll have it.</h2>
-      <p class="lede">There is nothing to learn and nothing to configure. Open it and start spelling.</p>
-    </div>
-    <div class="steps">
-      <div class="step">
-        <span class="stepnum">1</span>
-        <h3>Swipe the wheel</h3>
-        <p>Drag across the letters to spell a word. Lift your finger and it either lands or it doesn't — no penalty either way.</p>
-        <div class="minirow"><span class="mt">B</span><span class="mt">A</span><span class="mt">Y</span></div>
-      </div>
-      <div class="step">
-        <span class="stepnum">2</span>
-        <h3>Fill the grid</h3>
-        <p>Each correct word drops into the crossword. Letters you've already placed help you find the ones you haven't.</p>
-        <div class="minirow"><span class="mt">S</span><span class="mt">E</span><span class="mt e"></span><span class="mt e"></span></div>
-      </div>
-      <div class="step">
-        <span class="stepnum">3</span>
-        <h3>Watch it build</h3>
-        <p>Finish the grid and the world behind it completes — a cottage, a lighthouse, a garden in bloom. Then the next one opens.</p>
-        <div class="minirow"><span class="mt">D</span><span class="mt">O</span><span class="mt">N</span><span class="mt">E</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="showcase">
-    <div class="phone"><img loading="lazy" decoding="async" width="440" height="953" src="img/gameplay.jpg" alt="Wordmere gameplay: a crossword grid above the letter wheel, mid-swipe, over a mountain-lake world"></div>
-    <div>
-      <h2>Spell a word.<br>A <em>cottage</em> appears.</h2>
-      <p>Every word you find drops into the grid and adds another piece to the world behind it. Fill the grid and the whole place is yours.</p>
-      <ul class="ticks">
-        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></i><span>Swipe the wheel to spell — the grid fills as you go</span></li>
-        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></i><span>Bonus words hide in the very same letters</span></li>
-        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></i><span>Stuck? A hint reveals a letter. No penalty, ever</span></li>
-      </ul>
-    </div>
-  </section>
-
-<section class="sec" id="worlds">
-    <div class="sechead">
-      <p class="eyebrow"><s></s>Sixteen worlds</p>
-      <h2>Every world is a real <em>3-D place</em>.</h2>
-      <p class="lede">Not a picture behind a grid. Each scene is built in 3-D and assembles piece by piece as you solve it.</p>
-    </div>
-    <div class="wgrid">
-      <div class="wcard"><img loading="lazy" decoding="async" width="620" height="420" src="img/world-meadow.jpg" alt="The Meadow world: a green hillside with a red-roofed cottage"><div><b>Meadow</b><span>Levels 1–10</span></div></div>
-      <div class="wcard"><img loading="lazy" decoding="async" width="620" height="420" src="img/world-honeywood.jpg" alt="The Honeywood world: amber hives among trees"><div><b>Honeywood</b><span>Levels 31–40</span></div></div>
-      <div class="wcard"><img loading="lazy" decoding="async" width="620" height="420" src="img/world-highkeep.jpg" alt="The Highkeep world: a castle on a highland crag"><div><b>Highkeep</b><span>Levels 61–70</span></div></div>
-      <div class="wcard"><img loading="lazy" decoding="async" width="620" height="420" src="img/world-snowpine.jpg" alt="The Snowpine world: an alpine chalet under ice-blue light"><div><b>Snowpine</b><span>Levels 91–100</span></div></div>
-      <div class="wcard more"><div><p>+12 more</p><small>Harbor · Marble · Sunny Lane · Red Gorge</small></div></div>
-    </div>
-  </section>
-
-<section class="sec alt" id="tools">
-    <div class="sechead">
-      <p class="eyebrow"><s></s>Free word tools</p>
-      <h2>Stuck on a word? <em>Use ours.</em></h2>
-      <p class="lede">Three tools that run right here in the browser. No sign-up, no app needed, and they work for any word game — not just this one.</p>
-    </div>
-    <div class="tools">
-      <div class="tool">
-        <span class="toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h7"/></svg></span>
-        <h3>Word unscrambler</h3>
-        <p>Type the letters you're holding and get every word you can make from them, sorted by length.</p>
-        <a href="/tools/word-unscrambler/">Open the unscrambler →</a>
-      </div>
-      <div class="tool">
-        <span class="toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg></span>
-        <h3>Anagram solver</h3>
-        <p>Rearrange any word or phrase into everything else it can spell. Useful well beyond a puzzle grid.</p>
-        <span class="soon">Coming soon</span>
-      </div>
-      <div class="tool">
-        <span class="toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></span>
-        <h3>Word finder</h3>
-        <p>Know some of the letters and where they go? Search by pattern, length, or the letters it has to contain.</p>
-        <span class="soon">Coming soon</span>
-      </div>
-    </div>
-  </section>
-
-<section class="sec" id="answers">
-    <div class="answers">
-      <div>
-        <p class="eyebrow"><s></s>Level answers</p>
-        <h2>We wrote the answers ourselves.</h2>
-        <p class="lede">Every level has a page here with the wheel letters, the finished grid, the bonus words and what each one means. No cheat site, no pop-ups, no waiting through a countdown to see a word.</p>
-        <div class="cta" style="margin-top:22px">
-          <button class="daily-go go" type="button" style="font-family:var(--display);font-weight:800;font-size:15px;color:#06323A;background:linear-gradient(180deg,#5AD9EC,#2FC4DC);border:0;border-radius:999px;padding:14px 26px;cursor:pointer;box-shadow:0 4px 0 #1796AD,0 8px 16px rgba(14,58,80,.2)">Level pages coming soon</button>
-        </div>
-      </div>
-      <div class="ansgrid">
-        <div class="ac f">S</div><div class="ac f">H</div><div class="ac f">O</div><div class="ac f">R</div><div class="ac f">E</div>
-        <div class="ac blank"></div><div class="ac f">O</div><div class="ac blank"></div><div class="ac blank"></div><div class="ac blank"></div>
-        <div class="ac blank"></div><div class="ac f">S</div><div class="ac blank"></div><div class="ac blank"></div><div class="ac blank"></div>
-        <div class="ac blank"></div><div class="ac e"></div><div class="ac blank"></div><div class="ac blank"></div><div class="ac blank"></div>
-      </div>
-    </div>
-  </section>
-
-<section class="sec alt">
-    <div class="daily">
-      <div>
-        <h3>A new puzzle every morning</h3>
-        <p>Word Bloom sets one fresh grid a day. Solve it, grow your garden, keep the streak going — or skip a week and pick it straight back up.</p>
-      </div>
-      <a class="go" href="https://apps.apple.com/app/id6782536688">Play today's puzzle</a>
-    </div>
-  </section>
-
-
-  <section class="closer">
-    <h2>Find a word. Build a world.</h2>
-    <p>Thousands of levels are waiting, and not one of them is in a hurry.</p>
-    <div class="cta" style="justify-content:center">
-<a class="btn" href="https://apps.apple.com/app/id6782536688">
-        <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8c-1.5 0-2.9.9-3.7 2.2-1.6 2.8-.4 6.9 1.1 9.1.8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7 2-1.1 2.8-2.2c.9-1.3 1.2-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.6zM14.1 5.1c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></svg>
-        <i><small>Download on the</small><b>App Store</b></i>
-      </a>
-      <a class="btn two" href="https://play.google.com/store/apps/details?id=com.wordmere.game">
-        <svg viewBox="0 0 512 512" aria-hidden="true"><path fill="#4285F4" d="M47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0z"/><path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/><path fill="#FBBC04" d="M472.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8z"/><path fill="#34A853" d="M104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/></svg>
-        <i><small>Get it on</small><b>Google Play</b></i>
-      </a>
-    </div>
-  </section>
-<footer class="sitefoot">
-    <div class="footcols">
-      <div class="footbrand">
-        <span class="fb"><img loading="lazy" decoding="async" width="96" height="96" src="img/icon-96.png" alt=""><strong>Wordmere</strong></span>
-        <p>A cosy word puzzle where every word you spell builds a little world.</p>
-      </div>
-      <div>
-        <h4>Play</h4>
-        <ul><li><a href="https://apps.apple.com/app/id6782536688">Download for iPhone</a></li><li><a href="https://play.google.com/store/apps/details?id=com.wordmere.game">Download for Android</a></li><li><a href="https://apps.apple.com/app/id6782536688">Today's puzzle</a></li><li><a href="#worlds">The worlds</a></li></ul>
-      </div>
-      <div>
-        <h4>Word tools</h4>
-        <ul><li><a href="/tools/word-unscrambler/">Word unscrambler</a></li><li><a href="#tools">Anagram solver</a></li><li><a href="#tools">Word finder</a></li><li><span>Word lists — soon</span></li></ul>
-      </div>
-      <div>
-        <h4>Help</h4>
-        <ul><li><a href="#answers">Level answers</a></li><li><a href="#worlds">How to play</a></li><li><a href="/support/">Support</a></li><li><a href="/support/">Contact us</a></li></ul>
-      </div>
-      <div>
-        <h4>Legal</h4>
-        <ul><li><a href="/privacy/">Privacy policy</a></li><li><a href="/terms/">Terms of service</a></li><li><a href="/data-deletion/">Delete your data</a></li></ul>
-      </div>
-    </div>
-    <div class="footbase">
-      <span>© 2026 Wordmere</span>
-      <span>Definitions from Princeton WordNet</span>
-    </div>
-  </footer>
+  </main>
 </div>
+
+<script>
+(function(){
+  var DICT=null, byLen={};
+  var f=document.getElementById('f'), inp=document.getElementById('letters'), sel=document.getElementById('len');
+  var go=document.getElementById('go'), err=document.getElementById('err'), status=document.getElementById('status'), out=document.getElementById('out');
+
+  function showErr(m){ err.textContent=m; err.hidden=false; }
+  function clearErr(){ err.hidden=true; err.textContent=''; }
+
+  fetch('/tools/word-unscrambler/words.txt').then(function(r){ return r.text(); }).then(function(t){
+    DICT=t.split('\n');
+    for(var i=0;i<DICT.length;i++){ var w=DICT[i]; if(!w) continue; (byLen[w.length]=byLen[w.length]||[]).push(w); }
+    status.textContent='104,562 words ready.';
+    go.disabled=false; solve();
+  }).catch(function(){ status.textContent='The dictionary could not load. Refresh and try again.'; });
+  go.disabled=true;
+
+  function counts(s){ var c={}; for(var i=0;i<s.length;i++) c[s[i]]=(c[s[i]]||0)+1; return c; }
+  function makeable(word, have){
+    var need={};
+    for(var i=0;i<word.length;i++){ var ch=word[i]; need[ch]=(need[ch]||0)+1; if(need[ch]>(have[ch]||0)) return false; }
+    return true;
+  }
+
+  function solve(){
+    clearErr();
+    var raw=(inp.value||'').toUpperCase().replace(/[^A-Z]/g,'');
+    if(!raw){ showErr('Enter some letters first.'); out.innerHTML=''; return; }
+    if(raw.length<3){ showErr('Enter at least three letters.'); out.innerHTML=''; return; }
+    inp.value=raw;
+    if(!DICT) return;
+    var have=counts(raw), want=parseInt(sel.value,10)||0;
+    var lens = want ? [want] : [8,7,6,5,4,3];
+    var html='', total=0;
+    for(var li=0; li<lens.length; li++){
+      var L=lens[li]; if(L>raw.length) continue;
+      var pool=byLen[L]||[], hits=[];
+      for(var i=0;i<pool.length;i++){ if(makeable(pool[i], have)) hits.push(pool[i]); }
+      if(!hits.length) continue;
+      total+=hits.length;
+      html+='<div class="group"><h2>'+L+'-letter words <span>'+hits.length+'</span></h2><ul class="words">';
+      for(var j=0;j<hits.length;j++){ html+='<li'+(L>=Math.min(raw.length,7)?' class="top"':'')+'>'+hits[j]+'</li>'; }
+      html+='</ul></div>';
+    }
+    out.innerHTML = total ? html : '<p class="status">No words can be made from those letters.</p>';
+    status.textContent = total ? (total+' words from '+raw) : '104,562 words ready.';
+  }
+
+  f.addEventListener('submit', function(e){ e.preventDefault(); solve(); });
+  sel.addEventListener('change', function(){ if(DICT) solve(); });
+  inp.addEventListener('input', clearErr);
+})();
+</script>
 </body>
 </html>

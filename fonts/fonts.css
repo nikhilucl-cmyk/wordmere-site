@@ -1,0 +1,37 @@
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/QGYvz_MVcBeNP4NJtEtqUYLknw.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/QGYvz_MVcBeNP4NJtEtqUYLknw.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(/fonts/QGYvz_MVcBeNP4NJtEtqUYLknw.woff2) format('woff2');
+}

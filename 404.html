@@ -7,16 +7,15 @@
 <meta name="robots" content="noindex">
 <link rel="icon" href="/img/favicon-32.png" sizes="32x32">
 <link rel="apple-touch-icon" href="/img/icon-180.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Outfit:wght@400;500;600&display=swap">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
+<link rel="stylesheet" href="/fonts/fonts.css">
 <style>
   :root{
     --page:#E9F6FE; --white:#FFFFFF; --mist:#D6EEFB;
-    --sky:#73CBFD; --sky-soft:#A2E2FB; --tq:#2FC4DC; --tq-deep:#1796AD; --sea:#0E7FA8;
-    --ink:#0E3A50; --ink-soft:#3E6B80; --ink-faint:#7699A8;
+    --sky:#73CBFD; --sky-soft:#A2E2FB; --tq:#2FC4DC; --tq-deep:#10707F; --sea:#0E7FA8;
+    --ink:#0E3A50; --ink-soft:#3E6B80; --ink-faint:#4E7484;
     --sun:#EE9932; --sun-deep:#BE741C; --sun-hi:#FFB55C;
-    --coral:#FF6B4A; --coral-deep:#C94526; --pink:#F8A0C0;
+    --coral:#D64A28; --coral-deep:#9E3319; --pink:#F8A0C0;
     --tileface:#FDFBF3;
     --line:rgba(14,58,80,.13); --line-soft:rgba(14,58,80,.07);
     --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
@@ -46,7 +45,7 @@
   .navbar li:first-child{color:var(--ink); background:rgba(14,58,80,.07);}
   .navbar .top{text-decoration:none; display:inline-block;
     margin-left:auto; font-family:var(--display); font-weight:800; font-size:14px; color:#fff;
-    background:linear-gradient(180deg,#FF8467,var(--coral)); border:0; border-radius:999px; padding:12px 22px;
+    background:linear-gradient(180deg,#D64A28,#BE3F22); border:0; border-radius:999px; padding:12px 22px;
     box-shadow:0 4px 0 var(--coral-deep), 0 8px 16px rgba(201,69,38,.3); cursor:pointer;
   }
 
@@ -82,7 +81,7 @@
     position:relative; display:grid; place-items:center; color:#fff;
     font-family:var(--display); font-weight:800; letter-spacing:-.03em;
     font-size:clamp(24px,4.6vw,50px); line-height:1;
-    background:linear-gradient(176deg,#FFC066 0%,#F5A23A 38%,#E98E22 78%,#DE8117 100%);
+    background:linear-gradient(176deg,#E8973C 0%,#D07A18 55%,#BE6C13 100%);
     box-shadow:
       inset 0 clamp(2px,.35vw,4px) 0 rgba(255,255,255,.62),
       inset 0 clamp(-5px,-.7vw,-3px) 0 rgba(120,62,0,.22),
@@ -109,16 +108,16 @@
   }
   .wl{position:absolute; width:32%; aspect-ratio:1; border-radius:50%; display:grid; place-items:center;
     font-family:var(--display); font-weight:800; font-size:clamp(14px,2.3vw,24px); color:#fff; line-height:1;
-    background:linear-gradient(176deg,#FFC066,#EE9932 62%,#DE8117);
-    box-shadow:inset 0 2px 0 rgba(255,255,255,.55), 0 4px 0 var(--sun-deep), 0 8px 14px rgba(14,58,80,.22);
-    text-shadow:0 2px 0 rgba(140,72,0,.4);}
+    background:linear-gradient(176deg,#E8973C,#D07A18 62%,#BE6C13);
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.5), 0 4px 0 var(--sun-deep), 0 8px 14px rgba(14,58,80,.22);
+    text-shadow:0 2px 0 rgba(120,62,0,.45);}
   .wl.off{background:linear-gradient(176deg,#FBFDFE,#E2EBEF); color:var(--ink-faint);
     box-shadow:inset 0 2px 0 rgba(255,255,255,.9), 0 3px 0 rgba(14,58,80,.14), 0 6px 12px rgba(14,58,80,.14);
     text-shadow:none;}
   .wheel svg{position:absolute; inset:0; width:100%; height:100%;}
   .pill{
     position:absolute; top:-16%; left:50%; transform:translateX(-50%);
-    background:var(--sun); color:#fff; font-family:var(--display); font-weight:800; font-size:clamp(11px,1.5vw,15px);
+    background:var(--sun); color:#4A2200; font-family:var(--display); font-weight:800; font-size:clamp(11px,1.5vw,15px);
     padding:6px 14px; border-radius:999px; box-shadow:0 3px 0 var(--sun-deep); white-space:nowrap;
   }
 
@@ -184,16 +183,16 @@
     box-shadow:inset 0 0 0 1px rgba(14,58,80,.07);}
   .sec.alt .step{background:var(--page);}
   .stepnum{width:34px; height:34px; border-radius:11px; display:grid; place-items:center;
-    font-family:var(--display); font-weight:800; font-size:17px; color:#fff;
+    font-family:var(--display); font-weight:800; font-size:17px; color:#4A2200;
     background:linear-gradient(176deg,#FFC066,#EE9932 62%,#DE8117);
     box-shadow:inset 0 2px 0 rgba(255,255,255,.5), 0 4px 0 var(--sun-deep);}
   .step h3{font-family:var(--display); font-weight:800; font-size:19px; letter-spacing:-.02em; margin:0; color:var(--ink);}
   .step p{margin:0; color:var(--ink-soft); font-size:15px;}
   .minirow{display:flex; gap:6px; margin-top:2px;}
   .mt{width:30px; height:30px; border-radius:9px; display:grid; place-items:center;
-    font-family:var(--display); font-weight:800; font-size:15px; color:#fff; line-height:1;
+    font-family:var(--display); font-weight:800; font-size:15px; color:#4A2200; line-height:1;
     background:linear-gradient(176deg,#FFC066,#EE9932 62%,#DE8117);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.5), 0 3px 0 var(--sun-deep); text-shadow:0 1px 0 rgba(140,72,0,.4);}
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5), 0 3px 0 var(--sun-deep);}
   .mt.e{background:linear-gradient(176deg,#FFFEF8,#EFEADB); box-shadow:inset 0 2px 4px rgba(14,58,80,.18), inset 0 0 0 1px rgba(14,58,80,.1);}
 
   /* ── worlds grid ───────────────────────────── */
@@ -222,17 +221,17 @@
   .toolicon svg{width:22px; height:22px;}
   .tool h3{font-family:var(--display); font-weight:800; font-size:19px; letter-spacing:-.02em; margin:0; color:var(--ink);}
   .tool p{margin:0; color:var(--ink-soft); font-size:15px;}
-  .tool a{margin-top:4px; font-family:var(--display); font-weight:800; font-size:14px; color:var(--sea); text-decoration:none;}
-  .soon{margin-top:4px; justify-self:start; font:700 11px/1 var(--body); letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); background:var(--mist); padding:7px 11px; border-radius:999px;}
+  .tool a{margin-top:4px; font-family:var(--display); font-weight:800; font-size:14px; color:#0C6E92; text-decoration:none;}
+  .soon{margin-top:4px; justify-self:start; font:700 11px/1 var(--body); letter-spacing:.12em; text-transform:uppercase; color:#3E6270; background:var(--mist); padding:7px 11px; border-radius:999px;}
 
   /* ── answers panel ─────────────────────────── */
   .answers{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.82fr); gap:clamp(20px,4vw,48px); align-items:center;}
   @media(max-width:780px){ .answers{grid-template-columns:1fr;} }
   .ansgrid{display:grid; grid-template-columns:repeat(5,1fr); gap:7px; width:min(320px,82%); justify-self:center;}
   .ac{aspect-ratio:1; border-radius:11px;}
-  .ac.f{display:grid; place-items:center; font-family:var(--display); font-weight:800; font-size:clamp(15px,2.3vw,24px); color:#fff; line-height:1;
+  .ac.f{display:grid; place-items:center; font-family:var(--display); font-weight:800; font-size:clamp(15px,2.3vw,24px); color:#06323A; line-height:1;
     background:linear-gradient(176deg,#7FE3F2,var(--tq) 62%,#1FAFC6);
-    box-shadow:inset 0 2px 0 rgba(255,255,255,.5), 0 5px 0 var(--tq-deep); text-shadow:0 2px 0 rgba(8,90,105,.35);}
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.5), 0 5px 0 var(--tq-deep); text-shadow:0 1px 0 rgba(255,255,255,.35);}
   .ac.e{background:linear-gradient(176deg,#FFFEF8,#EFEADB); box-shadow:inset 0 3px 5px rgba(14,58,80,.18), inset 0 0 0 1px rgba(14,58,80,.1);}
   .ac.blank{background:transparent;}
 
@@ -242,7 +241,7 @@
     box-shadow:inset 0 0 0 1px rgba(14,58,80,.08);}
   .daily h3{font-family:var(--display); font-weight:800; font-size:clamp(21px,3vw,32px); letter-spacing:-.03em; margin:0 0 6px; color:var(--ink);}
   .daily p{margin:0; color:var(--ink-soft); max-width:46ch;}
-  .daily .go{text-decoration:none; display:inline-block;font-family:var(--display); font-weight:800; font-size:15px; color:#fff; background:linear-gradient(180deg,#FF8467,var(--coral));
+  .daily .go{text-decoration:none; display:inline-block;font-family:var(--display); font-weight:800; font-size:15px; color:#fff; background:linear-gradient(180deg,#D64A28,#BE3F22);
     border:0; border-radius:999px; padding:14px 26px; cursor:pointer; box-shadow:0 4px 0 var(--coral-deep), 0 8px 16px rgba(201,69,38,.26);}
 
   /* ── footer ────────────────────────────────── */
