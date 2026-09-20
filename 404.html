@@ -3,49 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Wordmere — Cosy Word Puzzles</title>
-<meta name="description" content="Wordmere is a cosy word puzzle game. Swipe letters, fill the crossword, and watch a 3-D world build itself around you. Thousands of levels, sixteen worlds, no timers.">
-<link rel="canonical" href="https://wordmere.com/">
-<meta name="theme-color" content="#E9F6FE">
-<meta name="apple-itunes-app" content="app-id=6782536688">
-
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Wordmere">
-<meta property="og:title" content="Wordmere — Cosy Word Puzzles">
-<meta property="og:description" content="Wordmere is a cosy word puzzle game. Swipe letters, fill the crossword, and watch a 3-D world build itself around you. Thousands of levels, sixteen worlds, no timers.">
-<meta property="og:url" content="https://wordmere.com/">
-<meta property="og:image" content="https://wordmere.com/img/social-card.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="A bright turquoise lagoon with a lighthouse, and the Wordmere app icon">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Wordmere — Cosy Word Puzzles">
-<meta name="twitter:description" content="Wordmere is a cosy word puzzle game. Swipe letters, fill the crossword, and watch a 3-D world build itself around you. Thousands of levels, sixteen worlds, no timers.">
-<meta name="twitter:image" content="https://wordmere.com/img/social-card.jpg">
-
+<title>Word not found — Wordmere</title>
+<meta name="robots" content="noindex">
 <link rel="icon" href="/img/favicon-32.png" sizes="32x32">
-<link rel="icon" href="/img/favicon-16.png" sizes="16x16">
 <link rel="apple-touch-icon" href="/img/icon-180.png">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="/img/hero-lagoon.jpg" fetchpriority="high">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Outfit:wght@400;500;600&display=swap">
-
-<script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[
- {"@type":"WebSite","@id":"https://wordmere.com/#website","url":"https://wordmere.com/","name":"Wordmere",
-  "description":"Wordmere is a cosy word puzzle game. Swipe letters, fill the crossword, and watch a 3-D world build itself around you. Thousands of levels, sixteen worlds, no timers.","publisher":{"@id":"https://wordmere.com/#org"}},
- {"@type":"Organization","@id":"https://wordmere.com/#org","name":"Wordmere","url":"https://wordmere.com/",
-  "logo":"https://wordmere.com/img/icon-180.png"},
- {"@type":["VideoGame","MobileApplication"],"@id":"https://wordmere.com/#app","name":"Wordmere: Cozy Word Puzzles",
-  "applicationCategory":"GameApplication","operatingSystem":"iOS, Android","genre":"Word puzzle",
-  "description":"Wordmere is a cosy word puzzle game. Swipe letters, fill the crossword, and watch a 3-D world build itself around you. Thousands of levels, sixteen worlds, no timers.","image":"https://wordmere.com/img/social-card.jpg",
-  "publisher":{"@id":"https://wordmere.com/#org"},
-  "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
-  "installUrl":["https://apps.apple.com/app/id6782536688","https://play.google.com/store/apps/details?id=com.wordmere.game"]}
-]}
-</script>
 <style>
   :root{
     --page:#E9F6FE; --white:#FFFFFF; --mist:#D6EEFB;
@@ -295,213 +259,22 @@
   .footbase{border-top:1px solid var(--line-soft); padding:18px 0 26px; display:flex; gap:12px; flex-wrap:wrap; justify-content:space-between; color:var(--ink-faint); font-size:13px;}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
+<style>
+  .lost{min-height:78vh; display:grid; place-items:center; text-align:center; padding:40px 20px;}
+  .lost .inner{display:grid; gap:18px; justify-items:center;}
+  .lostgrid{display:grid; grid-template-columns:repeat(5,1fr); gap:9px; width:min(330px,80vw);}
+  .lost h1{font-family:var(--display); font-weight:800; font-size:clamp(28px,5vw,48px); letter-spacing:-.035em; margin:0; color:var(--ink);}
+  .lost p{margin:0; color:var(--ink-soft); max-width:42ch;}
+</style>
 </head>
 <body>
-<div class="shell">
-
-  <header class="hero">
-    <img class="art" src="img/hero-lagoon.jpg" alt="A bright turquoise lagoon with a lighthouse, white clouds and cherry blossom — the Wordmere beach world">
-    <nav class="nav"><div class="navbar">
-      <span class="brand"><img src="img/icon-96.png" alt="Wordmere app icon"><span>Wordmere</span></span>
-      <ul><li><a href="#worlds">Worlds</a></li><li><a href="#tools">Word tools</a></li><li><a href="#answers">Answers</a></li></ul>
-      <a class="top" href="https://apps.apple.com/app/id6782536688">Play free</a>
-    </div></nav>
-
-    <div class="stage">
-      <div class="copy">
-        <h1>Your words<br>build <em>worlds</em>.</h1>
-        <p>Swipe letters on the wheel and watch them lock into the grid. A whole place assembles around you, one word at a time — and nothing is ever on a clock.</p>
-        <div class="cta">
-          <a class="btn" href="https://apps.apple.com/app/id6782536688">
-            <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8c-1.5 0-2.9.9-3.7 2.2-1.6 2.8-.4 6.9 1.1 9.1.8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7 2-1.1 2.8-2.2c.9-1.3 1.2-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.6zM14.1 5.1c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></svg>
-            <i><small>Download on the</small><b>App Store</b></i>
-          </a>
-          <a class="btn two" href="https://play.google.com/store/apps/details?id=com.wordmere.game">
-            <svg viewBox="0 0 512 512" aria-hidden="true"><path fill="#4285F4" d="M47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0z"/><path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/><path fill="#FBBC04" d="M472.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8z"/><path fill="#34A853" d="M104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/></svg>
-            <i><small>Get it on</small><b>Google Play</b></i>
-          </a>
-        </div>
-      </div>
-
-      <div class="board">
-        <div class="cell f">B</div><div class="cell f">E</div><div class="cell f">A</div><div class="cell f">C</div><div class="cell f">H</div>
-        <div class="cell f">A</div><div class="cell blank"></div><div class="cell blank"></div><div class="cell blank"></div><div class="cell blank"></div>
-        <div class="cell e"></div><div class="cell blank"></div><div class="cell blank"></div><div class="cell blank"></div><div class="cell blank"></div>
-        <div class="wheel">
-          <span class="pill">BAY</span>
-          <svg viewBox="0 0 100 100" aria-hidden="true"><polyline points="50,20 24,58 74,58" fill="none" stroke="#EE9932" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span class="wl" style="top:5%; left:35%">B</span>
-          <span class="wl" style="top:43%; left:9%">A</span>
-          <span class="wl" style="top:43%; left:61%">Y</span>
-          <span class="wl off" style="top:72%; left:35%">C</span>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <div class="rail">
-    <div class="stat"><b>Thousands</b><span>Of levels</span></div>
-    <div class="stat"><b>16</b><span>3-D worlds</span></div>
-    <div class="stat"><b>0</b><span>Timers</span></div>
-    <div class="stat"><b>Free</b><span>To play</span></div>
+<div class="lost"><div class="inner">
+  <div class="lostgrid">
+    <div class="cell f">L</div><div class="cell f">O</div><div class="cell f">S</div><div class="cell f">T</div><div class="cell e"></div>
   </div>
-
-<section class="sec alt">
-    <div class="sechead">
-      <p class="eyebrow"><s></s>How it plays</p>
-      <h2>Three taps in, you'll have it.</h2>
-      <p class="lede">There is nothing to learn and nothing to configure. Open it and start spelling.</p>
-    </div>
-    <div class="steps">
-      <div class="step">
-        <span class="stepnum">1</span>
-        <h3>Swipe the wheel</h3>
-        <p>Drag across the letters to spell a word. Lift your finger and it either lands or it doesn't — no penalty either way.</p>
-        <div class="minirow"><span class="mt">B</span><span class="mt">A</span><span class="mt">Y</span></div>
-      </div>
-      <div class="step">
-        <span class="stepnum">2</span>
-        <h3>Fill the grid</h3>
-        <p>Each correct word drops into the crossword. Letters you've already placed help you find the ones you haven't.</p>
-        <div class="minirow"><span class="mt">S</span><span class="mt">E</span><span class="mt e"></span><span class="mt e"></span></div>
-      </div>
-      <div class="step">
-        <span class="stepnum">3</span>
-        <h3>Watch it build</h3>
-        <p>Finish the grid and the world behind it completes — a cottage, a lighthouse, a garden in bloom. Then the next one opens.</p>
-        <div class="minirow"><span class="mt">D</span><span class="mt">O</span><span class="mt">N</span><span class="mt">E</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="showcase">
-    <div class="phone"><img src="img/gameplay.jpg" alt="Wordmere gameplay: a crossword grid above the letter wheel, mid-swipe, over a mountain-lake world"></div>
-    <div>
-      <h2>Spell a word.<br>A <em>cottage</em> appears.</h2>
-      <p>Every word you find drops into the grid and adds another piece to the world behind it. Fill the grid and the whole place is yours.</p>
-      <ul class="ticks">
-        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></i><span>Swipe the wheel to spell — the grid fills as you go</span></li>
-        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></i><span>Bonus words hide in the very same letters</span></li>
-        <li><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></i><span>Stuck? A hint reveals a letter. No penalty, ever</span></li>
-      </ul>
-    </div>
-  </section>
-
-<section class="sec" id="worlds">
-    <div class="sechead">
-      <p class="eyebrow"><s></s>Sixteen worlds</p>
-      <h2>Every world is a real <em>3-D place</em>.</h2>
-      <p class="lede">Not a picture behind a grid. Each scene is built in 3-D and assembles piece by piece as you solve it.</p>
-    </div>
-    <div class="wgrid">
-      <div class="wcard"><img src="img/world-meadow.jpg" alt="The Meadow world: a green hillside with a red-roofed cottage"><div><b>Meadow</b><span>Levels 1–10</span></div></div>
-      <div class="wcard"><img src="img/world-honeywood.jpg" alt="The Honeywood world: amber hives among trees"><div><b>Honeywood</b><span>Levels 31–40</span></div></div>
-      <div class="wcard"><img src="img/world-highkeep.jpg" alt="The Highkeep world: a castle on a highland crag"><div><b>Highkeep</b><span>Levels 61–70</span></div></div>
-      <div class="wcard"><img src="img/world-snowpine.jpg" alt="The Snowpine world: an alpine chalet under ice-blue light"><div><b>Snowpine</b><span>Levels 91–100</span></div></div>
-      <div class="wcard more"><div><p>+12 more</p><small>Harbor · Marble · Sunny Lane · Red Gorge</small></div></div>
-    </div>
-  </section>
-
-<section class="sec alt" id="tools">
-    <div class="sechead">
-      <p class="eyebrow"><s></s>Free word tools</p>
-      <h2>Stuck on a word? <em>Use ours.</em></h2>
-      <p class="lede">Three tools that run right here in the browser. No sign-up, no app needed, and they work for any word game — not just this one.</p>
-    </div>
-    <div class="tools">
-      <div class="tool">
-        <span class="toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h7"/></svg></span>
-        <h3>Word unscrambler</h3>
-        <p>Type the letters you're holding and get every word you can make from them, sorted by length.</p>
-        <span class="soon">Coming soon</span>
-      </div>
-      <div class="tool">
-        <span class="toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg></span>
-        <h3>Anagram solver</h3>
-        <p>Rearrange any word or phrase into everything else it can spell. Useful well beyond a puzzle grid.</p>
-        <span class="soon">Coming soon</span>
-      </div>
-      <div class="tool">
-        <span class="toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></span>
-        <h3>Word finder</h3>
-        <p>Know some of the letters and where they go? Search by pattern, length, or the letters it has to contain.</p>
-        <span class="soon">Coming soon</span>
-      </div>
-    </div>
-  </section>
-
-<section class="sec" id="answers">
-    <div class="answers">
-      <div>
-        <p class="eyebrow"><s></s>Level answers</p>
-        <h2>We wrote the answers ourselves.</h2>
-        <p class="lede">Every level has a page here with the wheel letters, the finished grid, the bonus words and what each one means. No cheat site, no pop-ups, no waiting through a countdown to see a word.</p>
-        <div class="cta" style="margin-top:22px">
-          <button class="daily-go go" type="button" style="font-family:var(--display);font-weight:800;font-size:15px;color:#fff;background:linear-gradient(180deg,#5AD9EC,#2FC4DC);border:0;border-radius:999px;padding:14px 26px;cursor:pointer;box-shadow:0 4px 0 #1796AD,0 8px 16px rgba(14,58,80,.2)">Level pages coming soon</button>
-        </div>
-      </div>
-      <div class="ansgrid">
-        <div class="ac f">S</div><div class="ac f">H</div><div class="ac f">O</div><div class="ac f">R</div><div class="ac f">E</div>
-        <div class="ac blank"></div><div class="ac f">O</div><div class="ac blank"></div><div class="ac blank"></div><div class="ac blank"></div>
-        <div class="ac blank"></div><div class="ac f">S</div><div class="ac blank"></div><div class="ac blank"></div><div class="ac blank"></div>
-        <div class="ac blank"></div><div class="ac e"></div><div class="ac blank"></div><div class="ac blank"></div><div class="ac blank"></div>
-      </div>
-    </div>
-  </section>
-
-<section class="sec alt">
-    <div class="daily">
-      <div>
-        <h3>A new puzzle every morning</h3>
-        <p>Word Bloom sets one fresh grid a day. Solve it, grow your garden, keep the streak going — or skip a week and pick it straight back up.</p>
-      </div>
-      <a class="go" href="https://apps.apple.com/app/id6782536688">Play today's puzzle</a>
-    </div>
-  </section>
-
-
-  <section class="closer">
-    <h2>Find a word. Build a world.</h2>
-    <p>Thousands of levels are waiting, and not one of them is in a hurry.</p>
-    <div class="cta" style="justify-content:center">
-<a class="btn" href="https://apps.apple.com/app/id6782536688">
-        <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8c-1.5 0-2.9.9-3.7 2.2-1.6 2.8-.4 6.9 1.1 9.1.8 1.1 1.7 2.3 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7 2-1.1 2.8-2.2c.9-1.3 1.2-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.6zM14.1 5.1c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></svg>
-        <i><small>Download on the</small><b>App Store</b></i>
-      </a>
-      <a class="btn two" href="https://play.google.com/store/apps/details?id=com.wordmere.game">
-        <svg viewBox="0 0 512 512" aria-hidden="true"><path fill="#4285F4" d="M47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0z"/><path fill="#EA4335" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1z"/><path fill="#FBBC04" d="M472.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8z"/><path fill="#34A853" d="M104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/></svg>
-        <i><small>Get it on</small><b>Google Play</b></i>
-      </a>
-    </div>
-  </section>
-<footer class="sitefoot">
-    <div class="footcols">
-      <div class="footbrand">
-        <span class="fb"><img src="img/icon-96.png" alt=""><strong>Wordmere</strong></span>
-        <p>A cosy word puzzle where every word you spell builds a little world.</p>
-      </div>
-      <div>
-        <h4>Play</h4>
-        <ul><li><a href="https://apps.apple.com/app/id6782536688">Download for iPhone</a></li><li><a href="https://play.google.com/store/apps/details?id=com.wordmere.game">Download for Android</a></li><li><a href="https://apps.apple.com/app/id6782536688">Today's puzzle</a></li><li><a href="#worlds">The worlds</a></li></ul>
-      </div>
-      <div>
-        <h4>Word tools</h4>
-        <ul><li><a href="#tools">Word unscrambler</a></li><li><a href="#tools">Anagram solver</a></li><li><a href="#tools">Word finder</a></li><li><span>Word lists — soon</span></li></ul>
-      </div>
-      <div>
-        <h4>Help</h4>
-        <ul><li><a href="#answers">Level answers</a></li><li><a href="#worlds">How to play</a></li><li><a href="/support/">Support</a></li><li><a href="/support/">Contact us</a></li></ul>
-      </div>
-      <div>
-        <h4>Legal</h4>
-        <ul><li><a href="/privacy/">Privacy policy</a></li><li><a href="/terms/">Terms of service</a></li><li><a href="/data-deletion/">Delete your data</a></li></ul>
-      </div>
-    </div>
-    <div class="footbase">
-      <span>© 2026 Wordmere</span>
-      <span>Definitions from Princeton WordNet</span>
-    </div>
-  </footer>
-</div>
+  <h1>That word isn't in the grid.</h1>
+  <p>The page you were after doesn't exist — or it hasn't been built yet. The wheel's still spinning back home.</p>
+  <a class="btn two" href="/" style="padding:14px 26px;min-height:0"><i><b>Back to Wordmere</b></i></a>
+</div></div>
 </body>
 </html>
