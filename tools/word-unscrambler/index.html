@@ -63,7 +63,7 @@
     border:1px solid rgba(255,255,255,.85); border-radius:999px; padding:8px 8px 8px 14px;
     box-shadow:0 8px 26px rgba(14,58,80,.16);
   }
-  .brand{display:flex; align-items:center; gap:9px;}
+  .brand{text-decoration:none; color:inherit; display:flex; align-items:center; gap:9px;}
   .brand img{width:30px; height:30px; border-radius:9px; display:block;}
   .brand span{font-family:var(--display); font-weight:800; font-size:17px; letter-spacing:-.03em; color:var(--ink);}
   .navbar ul{display:flex; gap:clamp(4px,1vw,10px); list-style:none; margin:0; padding:0;}
@@ -344,7 +344,7 @@
 </style>
 
 <style>
-  .toolwrap{max-width:900px; margin:0 auto; padding:clamp(26px,4vw,52px) var(--gutter) 60px;}
+  .toolwrap{max-width:1080px; margin:0 auto; padding:clamp(24px,4vw,52px) var(--gutter) 56px;}
   .crumbs{font-size:13px; color:var(--ink-faint); margin:0 0 14px; font-weight:500;}
   .crumbs a{color:var(--ink-soft); text-decoration:none;}
   .toolwrap h1{font-family:var(--display); font-weight:800; font-size:clamp(30px,5.4vw,50px); letter-spacing:-.038em; line-height:1; margin:0; color:var(--ink);}
@@ -377,17 +377,42 @@
   .prose{margin-top:46px; max-width:64ch;}
   .prose h2{font-family:var(--display); font-weight:800; font-size:clamp(21px,3vw,28px); letter-spacing:-.028em; margin:30px 0 10px; color:var(--ink);}
   .prose p{margin:0 0 14px; color:var(--ink-soft); font-size:16px;}
-  .prose a{color:var(--sea); font-weight:600;}
-  .backhome{display:inline-flex; margin-top:30px; font-family:var(--display); font-weight:800; font-size:15px; color:#fff; text-decoration:none;
+  .prose a{color:#0C6E92; font-weight:600;}
+  .prose a.backhome, .backhome{display:inline-flex; margin-top:30px; font-family:var(--display); font-weight:800; font-size:15px; color:#fff; text-decoration:none;
     background:linear-gradient(180deg,#D64A28,#BE3F22); border-radius:999px; padding:14px 26px; box-shadow:0 4px 0 var(--coral-deep);}
-  @media (max-width:600px){ .solve{width:100%;} .field .grow{flex:1 1 100%;} select{flex:1 1 100%;} }
+  .related{margin-top:40px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;}
+  .rel{display:block; text-decoration:none; background:var(--white); border-radius:16px; padding:18px 20px;
+    box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 4px 12px rgba(14,58,80,.06);}
+  .prose a.rel{color:inherit;}
+  .rel b{display:block; font-family:var(--display); font-weight:800; font-size:16px; color:var(--ink); letter-spacing:-.015em;}
+  .rel span{display:block; margin-top:4px; font-size:13.5px; color:var(--ink-soft);}
+  .rel em{font-style:normal; color:#0C6E92; font-weight:600;}
+  @media (min-width:900px){
+    .field{flex-wrap:nowrap;}
+    .words li{font-size:16px; padding:10px 15px;}
+    .group h2{font-size:21px;}
+  }
+  @media (max-width:600px){
+    .solve{width:100%;}
+    .field{gap:12px;}
+    .field .grow{flex:1 1 100%;}
+    .field > div:nth-child(2){flex:1 1 100%;}
+    select{width:100%;}
+    input[type=text]{font-size:22px; letter-spacing:.1em; padding:13px 14px;}
+    .panel{border-radius:18px; padding:16px;}
+    .toolwrap h1{font-size:clamp(28px,8.4vw,38px);}
+    .words li{font-size:14px; padding:8px 11px;}
+    .group h2{font-size:17px;}
+    .prose h2{font-size:20px;}
+    .backhome{width:100%; justify-content:center;}
+  }
 </style>
 
 </head>
 <body>
 <div class="shell">
   <nav class="nav" style="position:static"><div class="navbar" style="background:var(--white); border-color:rgba(14,58,80,.08)">
-    <span class="brand"><img src="/img/icon-96.png" alt="" width="30" height="30"><span>Wordmere</span></span>
+    <a class="brand" href="/"><img src="/img/icon-96.png" alt="" width="30" height="30"><span>Wordmere</span></a>
     <ul><li><a href="/#worlds">Worlds</a></li><li><a href="/#tools">Word tools</a></li><li><a href="/#answers">Answers</a></li></ul>
     <a class="top" href="https://apps.apple.com/app/id6782536688">Play free</a>
   </div></nav>
@@ -420,12 +445,46 @@
       <h2>How it works</h2>
       <p>Type up to twelve letters and the tool checks them against 104,562 English words between three and eight letters long. A word appears only if your letters can actually spell it — each letter is used at most as many times as you have it. The results are grouped by length because in most word games the long ones are worth the most.</p>
       <h2>Where the word list comes from</h2>
-      <p>It's the same dictionary the Wordmere game uses to accept bonus words, built from the public-domain <a href="https://github.com/dwyl/english-words" rel="nofollow">dwyl/english-words</a> list with offensive entries stripped out. If a word is in here, the game will take it.</p>
+      <p>It's the same dictionary <a href="/">Wordmere</a> uses to accept bonus words, built from the public-domain <a href="https://github.com/dwyl/english-words" rel="nofollow">dwyl/english-words</a> list with offensive entries stripped out. If a word is in here, the game will take it.</p>
       <h2>Using it on a letter-wheel puzzle</h2>
-      <p>Enter every letter on the wheel, including repeats. Set the length filter to the number of blanks in the row you're stuck on, and you'll usually spot the answer immediately. If you're playing Wordmere itself, a hint costs nothing and reveals a letter — there's no penalty for using one.</p>
+      <p>Enter every letter on the wheel, including repeats. Set the length filter to the number of blanks in the row you're stuck on, and you'll usually spot the answer immediately. If you're playing <a href="/">Wordmere</a> itself, a hint costs nothing and reveals a letter — there's no penalty for using one. Each puzzle sits inside one of <a href="/#worlds">sixteen 3-D worlds</a> that build as you solve, and every level has <a href="/#answers">its own answer page</a>.</p>
+      <div class="related">
+        <a class="rel" href="/"><b>Wordmere</b><span>The cosy word game this dictionary comes from. <em>Play free →</em></span></a>
+        <a class="rel" href="/#worlds"><b>The sixteen worlds</b><span>Every level builds a real 3-D place. <em>Take a look →</em></span></a>
+        <a class="rel" href="/#answers"><b>Level answers</b><span>Wheel letters, finished grids and bonus words. <em>Browse →</em></span></a>
+      </div>
       <a class="backhome" href="/">Back to Wordmere</a>
     </div>
   </main>
+
+<footer class="sitefoot">
+    <div class="footcols">
+      <div class="footbrand">
+        <span class="fb"><img loading="lazy" decoding="async" width="96" height="96" src="/img/icon-96.png" alt=""><strong>Wordmere</strong></span>
+        <p>A cosy word puzzle where every word you spell builds a little world.</p>
+      </div>
+      <div>
+        <h4>Play</h4>
+        <ul><li><a href="https://apps.apple.com/app/id6782536688">Download for iPhone</a></li><li><a href="https://play.google.com/store/apps/details?id=com.wordmere.game">Download for Android</a></li><li><a href="https://apps.apple.com/app/id6782536688">Today's puzzle</a></li><li><a href="#worlds">The worlds</a></li></ul>
+      </div>
+      <div>
+        <h4>Word tools</h4>
+        <ul><li><a href="/tools/word-unscrambler/">Word unscrambler</a></li><li><a href="#tools">Anagram solver</a></li><li><a href="#tools">Word finder</a></li><li><span>Word lists — soon</span></li></ul>
+      </div>
+      <div>
+        <h4>Help</h4>
+        <ul><li><a href="#answers">Level answers</a></li><li><a href="#worlds">How to play</a></li><li><a href="/support/">Support</a></li><li><a href="/support/">Contact us</a></li></ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul><li><a href="/privacy/">Privacy policy</a></li><li><a href="/terms/">Terms of service</a></li><li><a href="/data-deletion/">Delete your data</a></li></ul>
+      </div>
+    </div>
+    <div class="footbase">
+      <span>© 2026 Wordmere</span>
+      <span>Definitions from Princeton WordNet</span>
+    </div>
+  </footer>
 </div>
 
 <script>

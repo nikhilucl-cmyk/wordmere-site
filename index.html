@@ -73,7 +73,7 @@
     border:1px solid rgba(255,255,255,.85); border-radius:999px; padding:8px 8px 8px 14px;
     box-shadow:0 8px 26px rgba(14,58,80,.16);
   }
-  .brand{display:flex; align-items:center; gap:9px;}
+  .brand{text-decoration:none; color:inherit; display:flex; align-items:center; gap:9px;}
   .brand img{width:30px; height:30px; border-radius:9px; display:block;}
   .brand span{font-family:var(--display); font-weight:800; font-size:17px; letter-spacing:-.03em; color:var(--ink);}
   .navbar ul{display:flex; gap:clamp(4px,1vw,10px); list-style:none; margin:0; padding:0;}
@@ -359,7 +359,7 @@
   <header class="hero">
     <img fetchpriority="high" decoding="async" width="2000" height="849" class="art" src="img/hero-lagoon.jpg" alt="A bright turquoise lagoon with a lighthouse, white clouds and cherry blossom — the Wordmere beach world">
     <nav class="nav"><div class="navbar">
-      <span class="brand"><img loading="lazy" decoding="async" width="96" height="96" src="img/icon-96.png" alt="Wordmere app icon"><span>Wordmere</span></span>
+      <a class="brand" href="/"><img loading="lazy" decoding="async" width="96" height="96" src="img/icon-96.png" alt="Wordmere app icon"><span>Wordmere</span></a>
       <ul><li><a href="#worlds">Worlds</a></li><li><a href="#tools">Word tools</a></li><li><a href="#answers">Answers</a></li></ul>
       <a class="top" href="https://apps.apple.com/app/id6782536688">Play free</a>
     </div></nav>
