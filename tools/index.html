@@ -159,7 +159,7 @@
   .phone{position:relative; justify-self:center; width:min(252px,68vw); aspect-ratio:9/19.5; background:#fff; border-radius:36px; padding:8px; box-shadow:0 0 0 2px rgba(14,58,80,.12), 0 26px 50px -18px rgba(14,58,80,.38);}
   .phone img{width:100%; height:100%; object-fit:cover; border-radius:29px; display:block;}
   .showcase h2{font-family:var(--display); font-weight:800; font-size:clamp(26px,4.2vw,48px); line-height:.98; letter-spacing:-.035em; margin:0 0 14px; color:var(--ink); text-wrap:balance;}
-  .showcase h2 em{font-style:normal; color:var(--sun);}
+  .showcase h2 em{font-style:normal; color:#C06A12;}
   .showcase > div > p{margin:0 0 18px; color:var(--ink-soft); font-size:clamp(14px,1.7vw,18px); max-width:44ch;}
   .ticks{display:grid; gap:10px; margin:0; padding:0; list-style:none;}
   .ticks li{display:flex; gap:12px; align-items:flex-start; font-size:15px; color:var(--ink); font-weight:500;}
@@ -230,7 +230,7 @@
   .wcard.more{display:grid; place-items:center; text-align:center; background:var(--mist); box-shadow:inset 0 0 0 1px rgba(14,58,80,.09);}
   .wcard.more::after{display:none;}
   .wcard.more p{margin:0; font-family:var(--display); font-weight:800; font-size:clamp(24px,3vw,32px); color:var(--sea); letter-spacing:-.03em;}
-  .wcard.more small{display:block; margin-top:4px; font-size:11.5px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-faint); font-weight:700;}
+  .wcard.more small{display:block; margin-top:4px; font-size:11.5px; letter-spacing:.11em; text-transform:uppercase; color:#3E6270; font-weight:700;}
 
   /* ── tool cards ────────────────────────────── */
   .tools{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:clamp(14px,2.2vw,22px);}
@@ -269,7 +269,7 @@
   /* ── footer ────────────────────────────────── */
   .sitefoot{background:var(--white); border-top:1px solid var(--line); padding:clamp(30px,4vw,54px) var(--gutter) 0;}
   .footcols{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:clamp(18px,3vw,34px); padding-bottom:30px;}
-  .footcols h4{font:700 11px/1 var(--body); letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 13px;}
+  .footcols .fh{font:700 11px/1 var(--body); letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 13px;}
   .footcols ul{list-style:none; margin:0; padding:0; display:grid; gap:9px;}
   .footcols a{color:var(--ink-soft); text-decoration:none; font-size:14.5px; font-weight:500;}
   .footbrand{display:grid; gap:10px;}
@@ -342,7 +342,7 @@
   .navstatic .navbar{background:var(--white); border-color:rgba(14,58,80,.08);}
   .hubwrap{max-width:1080px; margin:0 auto; padding:clamp(24px,4vw,52px) var(--gutter) 60px;}
   .crumbs{font-size:13px; color:var(--ink-faint); margin:0 0 14px; font-weight:500;}
-  .crumbs a{color:var(--ink-soft); text-decoration:none;}
+  .crumbs a{color:var(--ink-soft); text-decoration:underline; text-decoration-color:rgba(14,58,80,.35); text-underline-offset:3px;}
   .hubwrap h1{font-family:var(--display); font-weight:800; font-size:clamp(30px,5.4vw,52px); letter-spacing:-.038em; line-height:1; margin:0; color:var(--ink); text-wrap:balance;}
   .hubwrap .sub{margin:12px 0 0; color:var(--ink-soft); font-size:clamp(15px,1.8vw,18px); max-width:60ch;}
   .hubgrid{margin-top:30px; display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:clamp(14px,2vw,20px);}
@@ -357,7 +357,7 @@
   .hubprose{margin-top:48px; max-width:66ch;}
   .hubprose h2{font-family:var(--display); font-weight:800; font-size:clamp(21px,3vw,28px); letter-spacing:-.028em; margin:28px 0 10px; color:var(--ink);}
   .hubprose p{margin:0 0 14px; color:var(--ink-soft); font-size:16px;}
-  .hubprose a{color:#0C6E92; font-weight:600;}
+  .hubprose a{color:#0C6E92; font-weight:600; text-decoration:underline; text-underline-offset:3px;}
   @media (max-width:600px){ .hubwrap h1{font-size:clamp(28px,8.4vw,38px);} .hubcard{padding:22px 20px;} }
 </style>
 </head>
@@ -409,19 +409,19 @@
         <p>A cosy word puzzle where every word you spell builds a little world.</p>
       </div>
       <div>
-        <h4>Play</h4>
+        <p class="fh">Play</p>
         <ul><li><a href="https://apps.apple.com/app/id6782536688">Download for iPhone</a></li><li><a href="https://play.google.com/store/apps/details?id=com.wordmere.game">Download for Android</a></li><li><a href="/#worlds">The sixteen worlds</a></li><li><a href="/#how">How to play</a></li></ul>
       </div>
       <div>
-        <h4>Word tools</h4>
+        <p class="fh">Word tools</p>
         <ul><li><a href="/tools/">All word tools</a></li><li><a href="/tools/word-unscrambler/">Word unscrambler</a></li><li><a href="/tools/#anagram">Anagram solver</a></li><li><a href="/tools/#finder">Word finder</a></li></ul>
       </div>
       <div>
-        <h4>Help</h4>
+        <p class="fh">Help</p>
         <ul><li><a href="/#answers">Level answers</a></li><li><a href="/support/">Support</a></li><li><a href="/support/">Contact us</a></li></ul>
       </div>
       <div>
-        <h4>Legal</h4>
+        <p class="fh">Legal</p>
         <ul><li><a href="/privacy/">Privacy policy</a></li><li><a href="/terms/">Terms of service</a></li><li><a href="/data-deletion/">Delete your data</a></li></ul>
       </div>
     </div>
