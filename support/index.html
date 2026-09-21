@@ -48,6 +48,12 @@
     box-shadow:0 8px 26px rgba(14,58,80,.16);
   }
   .brand{text-decoration:none; color:inherit; display:flex; align-items:center; gap:9px;}
+  .brand,.footbrand .fb{cursor:pointer; border-radius:12px; transition:transform .15s ease;}
+  .brand img,.footbrand .fb img{transition:transform .18s ease, box-shadow .18s ease;}
+  .brand:hover img,.footbrand .fb:hover img{transform:translateY(-2px) rotate(-4deg); box-shadow:0 6px 14px rgba(14,58,80,.22);}
+  .brand:hover span,.footbrand .fb:hover strong{color:#0C6E92;}
+  .brand:focus-visible,.footbrand .fb:focus-visible{outline:3px solid var(--tq); outline-offset:4px;}
+  @media (prefers-reduced-motion:reduce){ .brand:hover img,.footbrand .fb:hover img{transform:none;} }
   .brand img{width:30px; height:30px; border-radius:9px; display:block;}
   .brand span{font-family:var(--display); font-weight:800; font-size:17px; letter-spacing:-.03em; color:var(--ink);}
   .navbar ul{display:flex; gap:clamp(4px,1vw,10px); list-style:none; margin:0; padding:0;}
