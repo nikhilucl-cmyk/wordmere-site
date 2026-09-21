@@ -251,7 +251,7 @@
   .footcols ul{list-style:none; margin:0; padding:0; display:grid; gap:9px;}
   .footcols a{color:var(--ink-soft); text-decoration:none; font-size:14.5px; font-weight:500;}
   .footbrand{display:grid; gap:10px;}
-  .footbrand .fb{display:flex; align-items:center; gap:9px;}
+  .footbrand .fb{text-decoration:none; display:flex; align-items:center; gap:9px;}
   .footbrand img{width:34px; height:34px; border-radius:10px;}
   .footbrand strong{font-family:var(--display); font-weight:800; font-size:18px; letter-spacing:-.03em; color:var(--ink);}
   .footbrand p{margin:0; color:var(--ink-faint); font-size:14px; max-width:30ch;}
@@ -264,9 +264,18 @@
   .lostgrid{display:grid; grid-template-columns:repeat(5,1fr); gap:9px; width:min(330px,80vw);}
   .lost h1{font-family:var(--display); font-weight:800; font-size:clamp(28px,5vw,48px); letter-spacing:-.035em; margin:0; color:var(--ink);}
   .lost p{margin:0; color:var(--ink-soft); max-width:42ch;}
+  .navstatic{position:static;}
+  .navstatic .navbar{background:var(--white); border-color:rgba(14,58,80,.08);}
+  .lost{min-height:56vh;}
 </style>
 </head>
 <body>
+<div class="shell">
+  <nav class="nav navstatic"><div class="navbar">
+    <a class="brand" href="/"><img src="/img/icon-96.png" alt="" width="30" height="30"><span>Wordmere</span></a>
+    <ul><li><a href="/#worlds">Worlds</a></li><li><a href="/tools/">Word tools</a></li><li><a href="/#answers">Answers</a></li></ul>
+    <a class="top" href="https://apps.apple.com/app/id6782536688">Play free</a>
+  </div></nav>
 <div class="lost"><div class="inner">
   <div class="lostgrid">
     <div class="cell f">L</div><div class="cell f">O</div><div class="cell f">S</div><div class="cell f">T</div><div class="cell e"></div>
@@ -275,5 +284,34 @@
   <p>The page you were after doesn't exist — or it hasn't been built yet. The wheel's still spinning back home.</p>
   <a class="btn two" href="/" style="padding:14px 26px;min-height:0"><i><b>Back to Wordmere</b></i></a>
 </div></div>
+  <footer class="sitefoot">
+    <div class="footcols">
+      <div class="footbrand">
+        <a class="fb" href="/"><img src="/img/icon-96.png" alt="" width="34" height="34"><strong>Wordmere</strong></a>
+        <p>A cosy word puzzle where every word you spell builds a little world.</p>
+      </div>
+      <div>
+        <h4>Play</h4>
+        <ul><li><a href="https://apps.apple.com/app/id6782536688">Download for iPhone</a></li><li><a href="https://play.google.com/store/apps/details?id=com.wordmere.game">Download for Android</a></li><li><a href="/#worlds">The sixteen worlds</a></li><li><a href="/#how">How to play</a></li></ul>
+      </div>
+      <div>
+        <h4>Word tools</h4>
+        <ul><li><a href="/tools/">All word tools</a></li><li><a href="/tools/word-unscrambler/">Word unscrambler</a></li><li><a href="/tools/#anagram">Anagram solver</a></li><li><a href="/tools/#finder">Word finder</a></li></ul>
+      </div>
+      <div>
+        <h4>Help</h4>
+        <ul><li><a href="/#answers">Level answers</a></li><li><a href="/support/">Support</a></li><li><a href="/support/">Contact us</a></li></ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul><li><a href="/privacy/">Privacy policy</a></li><li><a href="/terms/">Terms of service</a></li><li><a href="/data-deletion/">Delete your data</a></li></ul>
+      </div>
+    </div>
+    <div class="footbase">
+      <span>© 2026 Wordmere</span>
+      <span>Definitions from Princeton WordNet · Word list from dwyl/english-words (public domain)</span>
+    </div>
+  </footer>
+</div>
 </body>
 </html>
