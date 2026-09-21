@@ -1,24 +1,29 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Delete your data · Wordmere</title>
-<meta name="description" content="Request deletion of your Wordmere data. What gets removed, how long it takes, and what to send us to start the process.">
-<link rel="canonical" href="https://wordmere.com/data-deletion/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Words With Letters — Find Words Containing Any Letters You Choose</title>
+<meta name="description" content="Free tool to find words containing the letters you choose, in any position and any order. Search words with Q and Z, words with two Es, and more.">
+<link rel="canonical" href="https://wordmere.com/tools/words-with-letters/">
 <meta name="theme-color" content="#E9F6FE">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Wordmere">
-<meta property="og:title" content="Delete your data · Wordmere">
-<meta property="og:description" content="Request deletion of your Wordmere data. What gets removed, how long it takes, and what to send us to start the process.">
-<meta property="og:url" content="https://wordmere.com/data-deletion/">
+<meta property="og:title" content="Words With Letters — Find Words Containing Any Letters You Choose">
+<meta property="og:description" content="Free tool to find words containing the letters you choose, in any position and any order. Search words with Q and Z, words with two Es, and more.">
+<meta property="og:url" content="https://wordmere.com/tools/words-with-letters/">
 <meta property="og:image" content="https://wordmere.com/img/social-card.jpg">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Words With Letters — Find Words Containing Any Letters You Choose">
+<meta name="twitter:description" content="Free tool to find words containing the letters you choose, in any position and any order. Search words with Q and Z, words with two Es, and more.">
+<meta name="twitter:image" content="https://wordmere.com/img/social-card.jpg">
 <link rel="icon" href="/img/favicon-32.png" sizes="32x32">
+<link rel="icon" href="/img/favicon-16.png" sizes="16x16">
 <link rel="apple-touch-icon" href="/img/icon-180.png">
-
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
 <link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="preload" as="fetch" href="/tools/words.txt?v=2" crossorigin>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Words with letters", "url": "https://wordmere.com/tools/words-with-letters/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "description": "Free tool to find words containing the letters you choose, in any position and any order. Search words with Q and Z, words with two Es, and more.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Word tools", "item": "https://wordmere.com/tools/"}, {"@type": "ListItem", "position": 3, "name": "Words with letters", "item": "https://wordmere.com/tools/words-with-letters/"}]}]}</script>
 <style>
   :root{
     --page:#E9F6FE; --white:#FFFFFF; --mist:#D6EEFB;
@@ -292,7 +297,7 @@
     .cell{border-radius:10px;}
     .cell.f{font-size:27px;}
     .wheel{right:2%; left:auto; bottom:-64px; transform:none; width:126px;}
-    .wl{font-size:17px;}
+    .wl{font-size:19px;}
     .pill{top:-13%; font-size:12px;}
 
     .rail{grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; padding-block:16px;}
@@ -329,28 +334,63 @@
 <style>
   .navstatic{position:static;}
   .navstatic .navbar{background:var(--white); border-color:rgba(14,58,80,.08);}
-  .legal .wrap{max-width:780px; margin:0 auto; padding:clamp(22px,3.4vw,44px) var(--gutter) 64px;}
-  .legal header{background:linear-gradient(135deg,#0A5F80,#0C6E92); color:#fff; border-radius:22px; padding:clamp(22px,3vw,32px); margin-bottom:26px; box-shadow:0 12px 26px rgba(14,58,80,.18); border:0;}
-  .legal header .badge{display:inline-block; background:rgba(255,255,255,.18); color:#fff; font:700 11px/1 var(--body); letter-spacing:.14em; text-transform:uppercase; padding:7px 12px; border-radius:999px;}
-  .legal h1{font-family:var(--display); font-weight:800; font-size:clamp(28px,5vw,40px); letter-spacing:-.035em; margin:12px 0 4px; color:#fff; line-height:1.05;}
-  .legal header p{margin:0; color:#E6F4FA; font-size:15px;}
-  .legal header a{color:#fff;}
-  .legal h2{font-family:var(--display); font-weight:800; font-size:clamp(19px,2.6vw,23px); letter-spacing:-.02em; color:var(--ink); margin:32px 0 10px; padding-bottom:8px; border-bottom:2px solid rgba(14,58,80,.10);}
-  .legal h3{font-family:var(--display); font-weight:700; font-size:17px; color:var(--ink); margin:20px 0 6px;}
-  .legal p,.legal li,.legal td{color:var(--ink-soft); font-size:16px; line-height:1.65;}
-  .legal strong{color:var(--ink);}
-  .legal a{color:#0C6E92; font-weight:600; text-decoration:underline; text-underline-offset:3px;}
-  .legal .cta{text-decoration:none;}
-  .legal ul,.legal ol{padding-left:22px;}
-  .legal .summary{background:var(--white); border-radius:16px; padding:18px 20px; margin:8px 0; box-shadow:inset 0 0 0 1px rgba(14,58,80,.10);}
-  .legal table{width:100%; border-collapse:collapse; margin:12px 0; display:block; overflow-x:auto;}
-  .legal td{padding:10px 12px; border-bottom:1px solid rgba(14,58,80,.10); vertical-align:top;}
-  .legal .steps{background:var(--white); border-radius:16px; padding:18px 20px 18px 40px; margin:12px 0; box-shadow:inset 0 0 0 1px rgba(14,58,80,.10);}
-  .legal .cta{display:inline-block; margin:10px 0; font-family:var(--display); font-weight:800; font-size:15px; color:#fff; text-decoration:none;
-    background:linear-gradient(180deg,#D64A28,#BE3F22); border-radius:999px; padding:13px 24px; box-shadow:0 4px 0 #9E3319;}
-  .legal .links{display:flex; flex-wrap:wrap; gap:10px 18px; margin:14px 0;}
-  .legal .wrap > footer{display:none;}
-  @media (max-width:600px){ .legal p,.legal li,.legal td{font-size:15.5px;} }
+  .toolwrap{max-width:1080px; margin:0 auto; padding:clamp(24px,4vw,52px) var(--gutter) 56px;}
+  .crumbs{font-size:13px; color:var(--ink-faint); margin:0 0 14px; font-weight:500;}
+  .crumbs a{color:var(--ink-soft); text-decoration:underline; text-decoration-color:rgba(14,58,80,.35); text-underline-offset:3px;}
+  .toolwrap h1{font-family:var(--display); font-weight:800; font-size:clamp(30px,5.4vw,50px); letter-spacing:-.038em; line-height:1; margin:0; color:var(--ink); text-wrap:balance;}
+  .toolwrap .sub{margin:12px 0 0; color:var(--ink-soft); font-size:clamp(15px,1.8vw,18px); max-width:60ch;}
+  .panel{margin-top:26px; background:var(--white); border-radius:22px; padding:clamp(18px,3vw,28px); box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 8px 22px rgba(14,58,80,.08);}
+  .field{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;}
+  .field label{display:block; font:700 11px/1 var(--body); letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:8px;}
+  .field .grow{flex:1 1 220px; min-width:0;}
+  .field .mid{flex:1 1 150px; min-width:0;}
+  input[type=text]{width:100%; font-family:var(--display); font-weight:800; font-size:clamp(19px,2.6vw,26px); letter-spacing:.12em; text-transform:uppercase; color:var(--ink); background:var(--page); border:2px solid transparent; border-radius:14px; padding:14px 16px; outline:none; box-shadow:inset 0 2px 5px rgba(14,58,80,.10);}
+  input[type=text]::placeholder{color:#5E7E8C; letter-spacing:.02em; text-transform:none; font-weight:600; font-family:var(--body);}
+  input[type=text]:focus{border-color:var(--tq); box-shadow:inset 0 2px 5px rgba(14,58,80,.10), 0 0 0 4px rgba(47,196,220,.22);}
+  select{width:100%; font-family:var(--body); font-weight:600; font-size:15px; color:var(--ink); background:var(--page); border:2px solid transparent; border-radius:14px; padding:15px 14px; outline:none; box-shadow:inset 0 2px 5px rgba(14,58,80,.10);}
+  select:focus{border-color:var(--tq); box-shadow:0 0 0 4px rgba(47,196,220,.22);}
+  .solve{font-family:var(--display); font-weight:800; font-size:17px; color:#06323A; border:0; border-radius:14px; padding:16px 30px; cursor:pointer; background:linear-gradient(180deg,#5AD9EC,var(--tq)); box-shadow:inset 0 2px 0 rgba(255,255,255,.45), 0 5px 0 var(--tq-deep);}
+  .solve:disabled{opacity:.55; cursor:progress;}
+  .hint{margin:12px 0 0; color:var(--ink-faint); font-size:13.5px;}
+  .err{margin:12px 0 0; color:#B23624; font-size:14px; font-weight:600;}
+  .status{margin:14px 0 0; color:var(--ink-faint); font-size:14px; font-weight:500;}
+  #out{min-height:520px;}
+  .best{margin-top:22px; display:flex; flex-wrap:wrap; align-items:center; gap:12px; background:linear-gradient(120deg,#FFF3DC,#FFFBF2); border-radius:16px; padding:16px 18px; box-shadow:inset 0 0 0 1px rgba(192,106,18,.25);}
+  .best b{font-family:var(--display); font-weight:800; font-size:22px; letter-spacing:.06em; color:#5A2D00;}
+  .best span{color:#6B4A1F; font-size:14px; font-weight:600;}
+  .group{margin-top:26px;}
+  .group h2{font-family:var(--display); font-weight:800; font-size:19px; letter-spacing:-.02em; margin:0 0 12px; color:var(--ink);}
+  .group h2 span{color:var(--ink-faint); font-weight:600; font-size:14px; font-family:var(--body); letter-spacing:0;}
+  .words{display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none;}
+  .words li{font-family:var(--display); font-weight:800; font-size:15px; letter-spacing:.04em; color:var(--ink); background:var(--white); padding:9px 13px; border-radius:10px; box-shadow:inset 0 0 0 1px rgba(14,58,80,.10);}
+  .words li em{font-style:normal; font-family:var(--body); font-weight:700; font-size:11px; letter-spacing:0; color:#0C6E92; margin-left:7px; vertical-align:2px;}
+  .words li.top{background:linear-gradient(176deg,#FFC066,#EE9932 62%,#DE8117); color:#4A2200; box-shadow:inset 0 1px 0 rgba(255,255,255,.5), 0 3px 0 var(--sun-deep);}
+  .words li.top em{color:#4A2200;}
+  .words li.rare{color:#3E6270; background:var(--page); box-shadow:inset 0 0 0 1px rgba(14,58,80,.07); font-weight:700;}
+  .words li.top.rare{background:linear-gradient(176deg,#FFE3B8,#FAD29A); color:#5A3300; box-shadow:inset 0 0 0 1px rgba(192,106,18,.25);}
+  .more{margin:10px 0 0; color:var(--ink-faint); font-size:13.5px;}
+  .prose{margin-top:46px; max-width:66ch;}
+  .prose h2{font-family:var(--display); font-weight:800; font-size:clamp(21px,3vw,28px); letter-spacing:-.028em; margin:30px 0 10px; color:var(--ink);}
+  .prose p{margin:0 0 14px; color:var(--ink-soft); font-size:16px;}
+  .prose a{color:#0C6E92; font-weight:600; text-decoration:underline; text-underline-offset:3px;}
+  .prose code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:14px; background:var(--mist); color:var(--ink); padding:2px 6px; border-radius:6px;}
+  .tm{margin-top:18px; font-size:13px; color:var(--ink-faint);}
+  .related{margin-top:40px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;}
+  .prose a.rel,.rel{display:block; text-decoration:none; color:inherit; background:var(--white); border-radius:16px; padding:18px 20px; box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 4px 12px rgba(14,58,80,.06);}
+  .rel b{display:block; font-family:var(--display); font-weight:800; font-size:16px; color:var(--ink); letter-spacing:-.015em;}
+  .rel span{display:block; margin-top:4px; font-size:13.5px; color:var(--ink-soft);}
+  .prose a.backhome,.backhome{display:inline-flex; margin-top:30px; font-family:var(--display); font-weight:800; font-size:15px; color:#fff; text-decoration:none; background:linear-gradient(180deg,#D64A28,#BE3F22); border-radius:999px; padding:14px 26px; box-shadow:0 4px 0 #9E3319;}
+  @media (min-width:900px){ .field{flex-wrap:nowrap;} .words li{font-size:16px; padding:10px 15px;} .group h2{font-size:21px;} }
+  @media (max-width:600px){
+    #out{min-height:760px;}
+    .field{gap:12px;} .field .grow,.field .mid,.field > div{flex:1 1 100%;}
+    .solve{width:100%;}
+    input[type=text]{font-size:21px; letter-spacing:.09em; padding:13px 14px;}
+    .panel{border-radius:18px; padding:16px;}
+    .toolwrap h1{font-size:clamp(28px,8.4vw,38px);}
+    .words li{font-size:14px; padding:8px 11px;} .group h2{font-size:17px;} .prose h2{font-size:20px;}
+    .backhome{width:100%; justify-content:center;}
+  }
 </style>
 </head>
 <body>
@@ -360,82 +400,44 @@
     <ul><li><a href="/#worlds">Worlds</a></li><li><a href="/tools/">Word tools</a></li><li><a href="/#answers">Answers</a></li></ul>
     <a class="top" href="https://apps.apple.com/app/id6782536688">Play free</a>
   </div></nav>
-  <main class="legal">
-  <div class="wrap">
-    <header>
-      <span class="badge">Data deletion</span>
-      <h1>Wordmere</h1>
-      <p>A cozy word puzzle · Last updated: 31 August 2026</p>
-    </header>
 
-    <p>This page explains how to have data associated with <strong>Wordmere</strong> deleted.
-    Wordmere has no accounts — we never ask for your name, email address or a password — so
-    there is no profile to close. What exists is described below, along with how to have it removed.</p>
+  <main class="toolwrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <a href="/tools/">Word tools</a> › <span aria-current="page">Words with letters</span></nav>
+    <h1>Words with letters</h1>
+    <p class="sub">Choose the letters a word has to include. You get every word that contains all of them, in any order and any position — and it can have other letters too.</p>
 
-    <h2>How to request deletion</h2>
-    <div class="steps">
-      <ol>
-        <li><strong>Email <a href="mailto:coolcontent1992@gmail.com?subject=Wordmere%20data%20deletion%20request">coolcontent1992@gmail.com</a></strong>
-            with the subject line <strong>"Wordmere data deletion request"</strong>.</li>
-        <li><strong>Tell us which device you play on</strong> (for example "Android phone" or "iPhone").
-            If you are able to, include your device's advertising ID — on Android it is in
-            <strong>Settings → Privacy → Ads</strong>. This is optional, and it is the only thing that
-            lets us identify advertising data as yours, since we hold no other identifier for you.</li>
-        <li><strong>We reply to confirm</strong>, and complete the deletion within <strong>30 days</strong>.</li>
-      </ol>
+    <div class="panel">
+      <form id="f" novalidate>
+        <div class="field">
+          <div class="grow"><label for="has">Letters it must contain</label><input type="text" id="has" name="has" value="QZ" placeholder="e.g. QZ or XYZ" maxlength="8" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="err"></div><div><label for="len">Length</label><select id="len" name="len"><option value="0">Any</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
+          <button class="solve" id="go" type="submit" disabled>Search</button>
+        </div>
+        
+        <p class="err" id="err" role="alert" hidden></p>
+        <p class="status" id="status" aria-live="polite">Loading the dictionary…</p>
+      </form>
+      <div id="out"></div>
     </div>
-    <p>You can also remove everything held on your device yourself, at any time and without contacting
-    us, by <strong>uninstalling the app</strong> or clearing its storage.</p>
 
-    <h2>What is deleted, and what is kept</h2>
-    <table>
-      <thead>
-        <tr><th>Data</th><th>On request</th><th>Retention</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Game progress and settings</td>
-          <td>Held only on your device — uninstalling removes it immediately</td>
-          <td>Until you uninstall or clear storage</td>
-        </tr>
-        <tr>
-          <td>Product analytics (PostHog, Firebase Analytics)</td>
-          <td>Deleted</td>
-          <td>Removed within 30 days of your request</td>
-        </tr>
-        <tr>
-          <td>Crash reports (Firebase Crashlytics)</td>
-          <td>Deleted</td>
-          <td>Removed within 30 days of your request</td>
-        </tr>
-        <tr>
-          <td>Advertising data (Google AdMob and its partners)</td>
-          <td>Deletion requested on your behalf</td>
-          <td>Held by those partners under their own policies; you can also reset or delete
-              your advertising ID yourself at any time in your device settings</td>
-        </tr>
-        <tr>
-          <td>Purchase records (Apple, Google Play, RevenueCat)</td>
-          <td><strong>Kept</strong></td>
-          <td>Retained as long as required for tax, accounting and refund obligations. These are
-              held by the store that processed your payment, not by us</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h2>Why so little</h2>
-    <p>Wordmere runs on your device. Your level, coins, found words and settings never leave it.
-    We hold no account, no email address and no name, which is why the advertising ID above is the
-    only handle that exists for the small amount of data held off-device.</p>
-
-    <h2>More detail</h2>
-    <p>Our full <a href="/privacy/">Privacy Policy</a> sets out everything we and our partners collect
-    and why. Questions about either page go to
-    <a href="mailto:coolcontent1992@gmail.com">coolcontent1992@gmail.com</a>.</p>
-
-    <footer>© 2026 Wordmere. All rights reserved.</footer>
-  </div>
+    <div class="prose">
+      
+      <h2>How this is different from an unscrambler</h2>
+      <p>An unscrambler only uses the letters you give it. This does the opposite: the letters you enter are a minimum, and a word can have any other letters around them. <code>QZ</code> finds QUIZ and QUARTZ; <code>XYZ</code> finds every word that has an X, a Y and a Z somewhere in it.</p>
+      <h2>Repeated letters</h2>
+      <p>Enter a letter twice to require it twice. <code>EE</code> matches words like FREEZE and KEEPER but not TREND. It works for any letter, so <code>SS</code> or <code>OO</code> behave the same way.</p>
+      <h2>Awkward letters</h2>
+      <p>Stuck holding a Q, a J or an X? Put it here, set the length you have room for, and pick from what comes back. If you also know where in the word a letter sits, the <a href="/tools/word-finder/">word finder</a> takes a pattern.</p>
+      
+      <div class="related">
+        <a class="rel" href="/tools/word-unscrambler/"><b>Word unscrambler</b><span>Every word from your letters</span></a>
+        <a class="rel" href="/tools/anagram-solver/"><b>Anagram solver</b><span>Words that use every letter</span></a>
+        <a class="rel" href="/tools/word-finder/"><b>Word finder</b><span>Search by pattern, start, end or length</span></a>
+        <a class="rel" href="/"><b>Wordmere</b><span>The cosy word game this dictionary comes from.</span></a>
+      </div>
+      <a class="backhome" href="/">Back to Wordmere</a>
+    </div>
   </main>
+
   <footer class="sitefoot">
     <div class="footcols">
       <div class="footbrand">
@@ -465,5 +467,38 @@
     </div>
   </footer>
 </div>
+
+<script src="/tools/wordkit.js?v=2"></script>
+<script>
+(function(){
+  var f=document.getElementById('f'), go=document.getElementById('go'), err=document.getElementById('err'),
+      status=document.getElementById('status'), outEl=document.getElementById('out');
+  function val(id){ var e=document.getElementById(id); return e ? e.value : ''; }
+  function setv(id,v){ var e=document.getElementById(id); if(e) e.value=v; }
+  function fail(m){ err.textContent=m; err.hidden=false; outEl.innerHTML=''; status.textContent=''; }
+  function out(html,msg){ err.hidden=true; outEl.innerHTML=html; status.textContent=msg; }
+  function done(hits,msg){ out(hits.length ? WK.group(hits) : '<p class="status">No words found. Try different letters.</p>', hits.length ? msg : ''); }
+  function solve(){
+    err.hidden=true;
+    if(!WK.dict) return;
+
+  var has=WK.clean(val('has')), L=+val('len')||0;
+  if(!has) return fail('Enter at least one letter.');
+  setv('has',has);
+  var need=WK.counts(has), hits=[];
+  for(var n=8;n>=3;n--){ if(L&&n!==L) continue; if(n<has.length) continue; (WK.byLen[n]||[]).forEach(function(w){ var c=WK.counts(w); for(var k in need) if((c[k]||0)<need[k]) return; hits.push({w:w}); }); }
+  var shown=hits, extra='';
+  if(hits.length>1500){ shown=hits.slice(0,1500); extra='<p class="more">Showing the first 1,500 of '+hits.length.toLocaleString()+'. Add a letter or pick a length to narrow it.</p>'; }
+  out(WK.group(shown)+extra, hits.length.toLocaleString()+' word'+(hits.length===1?'':'s')+' containing '+has.split('').join(', '));
+  }
+  WK.onReady(function(e){
+    if(e){ status.textContent='The dictionary could not load. Refresh the page to try again.'; return; }
+    go.disabled=false; status.textContent='104,562 words ready.'; solve();
+  });
+  f.addEventListener('submit', function(ev){ ev.preventDefault(); solve(); });
+  var len=document.getElementById('len'); if(len) len.addEventListener('change', solve);
+  f.querySelectorAll('input').forEach(function(i){ i.addEventListener('input', function(){ err.hidden=true; }); });
+})();
+</script>
 </body>
 </html>

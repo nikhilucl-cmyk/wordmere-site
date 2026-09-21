@@ -20,21 +20,10 @@
 <link rel="icon" href="/img/favicon-32.png" sizes="32x32">
 <link rel="icon" href="/img/favicon-16.png" sizes="16x16">
 <link rel="apple-touch-icon" href="/img/icon-180.png">
-<link rel="preload" as="fetch" href="/tools/word-unscrambler/words.txt" crossorigin>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[
- {"@type":"WebApplication","name":"Word Unscrambler","url":"https://wordmere.com/tools/word-unscrambler/",
-  "applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript",
-  "description":"Free word unscrambler. Enter your letters and get every word you can make from them, sorted by length. 104,562 words, works on any word game, no sign-up.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
-  "publisher":{"@type":"Organization","name":"Wordmere","url":"https://wordmere.com/"}},
- {"@type":"BreadcrumbList","itemListElement":[
-  {"@type":"ListItem","position":1,"name":"Wordmere","item":"https://wordmere.com/"},
-  {"@type":"ListItem","position":2,"name":"Word tools","item":"https://wordmere.com/tools/"},
-  {"@type":"ListItem","position":3,"name":"Word unscrambler","item":"https://wordmere.com/tools/word-unscrambler/"}]}
-]}
-</script>
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
 <link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="preload" as="fetch" href="/tools/words.txt?v=2" crossorigin>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Word unscrambler", "url": "https://wordmere.com/tools/word-unscrambler/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "description": "Free word unscrambler. Enter your letters and get every word you can make from them, sorted by length. 104,562 words, works on any word game, no sign-up.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Word tools", "item": "https://wordmere.com/tools/"}, {"@type": "ListItem", "position": 3, "name": "Word unscrambler", "item": "https://wordmere.com/tools/word-unscrambler/"}]}]}</script>
 <style>
   :root{
     --page:#E9F6FE; --white:#FFFFFF; --mist:#D6EEFB;
@@ -308,7 +297,7 @@
     .cell{border-radius:10px;}
     .cell.f{font-size:27px;}
     .wheel{right:2%; left:auto; bottom:-64px; transform:none; width:126px;}
-    .wl{font-size:17px;}
+    .wl{font-size:19px;}
     .pill{top:-13%; font-size:12px;}
 
     .rail{grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; padding-block:16px;}
@@ -342,74 +331,67 @@
   }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
-
 <style>
+  .navstatic{position:static;}
+  .navstatic .navbar{background:var(--white); border-color:rgba(14,58,80,.08);}
   .toolwrap{max-width:1080px; margin:0 auto; padding:clamp(24px,4vw,52px) var(--gutter) 56px;}
   .crumbs{font-size:13px; color:var(--ink-faint); margin:0 0 14px; font-weight:500;}
   .crumbs a{color:var(--ink-soft); text-decoration:underline; text-decoration-color:rgba(14,58,80,.35); text-underline-offset:3px;}
-  .toolwrap h1{font-family:var(--display); font-weight:800; font-size:clamp(30px,5.4vw,50px); letter-spacing:-.038em; line-height:1; margin:0; color:var(--ink);}
-  .toolwrap .sub{margin:12px 0 0; color:var(--ink-soft); font-size:clamp(15px,1.8vw,18px); max-width:58ch;}
-  .panel{margin-top:26px; background:var(--white); border-radius:22px; padding:clamp(18px,3vw,28px);
-    box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 8px 22px rgba(14,58,80,.08);}
+  .toolwrap h1{font-family:var(--display); font-weight:800; font-size:clamp(30px,5.4vw,50px); letter-spacing:-.038em; line-height:1; margin:0; color:var(--ink); text-wrap:balance;}
+  .toolwrap .sub{margin:12px 0 0; color:var(--ink-soft); font-size:clamp(15px,1.8vw,18px); max-width:60ch;}
+  .panel{margin-top:26px; background:var(--white); border-radius:22px; padding:clamp(18px,3vw,28px); box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 8px 22px rgba(14,58,80,.08);}
   .field{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;}
   .field label{display:block; font:700 11px/1 var(--body); letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:8px;}
-  .field .grow{flex:1 1 240px; min-width:0;}
-  input[type=text]{width:100%; font-family:var(--display); font-weight:800; font-size:clamp(20px,3vw,28px); letter-spacing:.14em; text-transform:uppercase;
-    color:var(--ink); background:var(--page); border:2px solid transparent; border-radius:14px; padding:14px 16px; outline:none;
-    box-shadow:inset 0 2px 5px rgba(14,58,80,.10);}
+  .field .grow{flex:1 1 220px; min-width:0;}
+  .field .mid{flex:1 1 150px; min-width:0;}
+  input[type=text]{width:100%; font-family:var(--display); font-weight:800; font-size:clamp(19px,2.6vw,26px); letter-spacing:.12em; text-transform:uppercase; color:var(--ink); background:var(--page); border:2px solid transparent; border-radius:14px; padding:14px 16px; outline:none; box-shadow:inset 0 2px 5px rgba(14,58,80,.10);}
+  input[type=text]::placeholder{color:#5E7E8C; letter-spacing:.02em; text-transform:none; font-weight:600; font-family:var(--body);}
   input[type=text]:focus{border-color:var(--tq); box-shadow:inset 0 2px 5px rgba(14,58,80,.10), 0 0 0 4px rgba(47,196,220,.22);}
-  select{font-family:var(--body); font-weight:600; font-size:15px; color:var(--ink); background:var(--page); border:2px solid transparent;
-    border-radius:14px; padding:15px 14px; outline:none; box-shadow:inset 0 2px 5px rgba(14,58,80,.10);}
+  select{width:100%; font-family:var(--body); font-weight:600; font-size:15px; color:var(--ink); background:var(--page); border:2px solid transparent; border-radius:14px; padding:15px 14px; outline:none; box-shadow:inset 0 2px 5px rgba(14,58,80,.10);}
   select:focus{border-color:var(--tq); box-shadow:0 0 0 4px rgba(47,196,220,.22);}
-  .solve{font-family:var(--display); font-weight:800; font-size:17px; color:#06323A; border:0; border-radius:14px; padding:16px 30px; cursor:pointer;
-    background:linear-gradient(180deg,#5AD9EC,var(--tq)); box-shadow:inset 0 2px 0 rgba(255,255,255,.45), 0 5px 0 var(--tq-deep);}
+  .solve{font-family:var(--display); font-weight:800; font-size:17px; color:#06323A; border:0; border-radius:14px; padding:16px 30px; cursor:pointer; background:linear-gradient(180deg,#5AD9EC,var(--tq)); box-shadow:inset 0 2px 0 rgba(255,255,255,.45), 0 5px 0 var(--tq-deep);}
   .solve:disabled{opacity:.55; cursor:progress;}
-  .err{margin:12px 0 0; color:#C13A2A; font-size:14px; font-weight:600;}
+  .hint{margin:12px 0 0; color:var(--ink-faint); font-size:13.5px;}
+  .err{margin:12px 0 0; color:#B23624; font-size:14px; font-weight:600;}
   .status{margin:14px 0 0; color:var(--ink-faint); font-size:14px; font-weight:500;}
   #out{min-height:520px;}
-  @media (max-width:600px){ #out{min-height:760px;} }
+  .best{margin-top:22px; display:flex; flex-wrap:wrap; align-items:center; gap:12px; background:linear-gradient(120deg,#FFF3DC,#FFFBF2); border-radius:16px; padding:16px 18px; box-shadow:inset 0 0 0 1px rgba(192,106,18,.25);}
+  .best b{font-family:var(--display); font-weight:800; font-size:22px; letter-spacing:.06em; color:#5A2D00;}
+  .best span{color:#6B4A1F; font-size:14px; font-weight:600;}
   .group{margin-top:26px;}
   .group h2{font-family:var(--display); font-weight:800; font-size:19px; letter-spacing:-.02em; margin:0 0 12px; color:var(--ink);}
   .group h2 span{color:var(--ink-faint); font-weight:600; font-size:14px; font-family:var(--body); letter-spacing:0;}
   .words{display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none;}
-  .words li{font-family:var(--display); font-weight:800; font-size:15px; letter-spacing:.04em; color:var(--ink);
-    background:var(--white); padding:9px 13px; border-radius:10px; box-shadow:inset 0 0 0 1px rgba(14,58,80,.10);}
-  .words li.top{background:linear-gradient(176deg,#FFC066,#EE9932 62%,#DE8117); color:#4A2200;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.5), 0 3px 0 var(--sun-deep);}
-  .prose{margin-top:46px; max-width:64ch;}
+  .words li{font-family:var(--display); font-weight:800; font-size:15px; letter-spacing:.04em; color:var(--ink); background:var(--white); padding:9px 13px; border-radius:10px; box-shadow:inset 0 0 0 1px rgba(14,58,80,.10);}
+  .words li em{font-style:normal; font-family:var(--body); font-weight:700; font-size:11px; letter-spacing:0; color:#0C6E92; margin-left:7px; vertical-align:2px;}
+  .words li.top{background:linear-gradient(176deg,#FFC066,#EE9932 62%,#DE8117); color:#4A2200; box-shadow:inset 0 1px 0 rgba(255,255,255,.5), 0 3px 0 var(--sun-deep);}
+  .words li.top em{color:#4A2200;}
+  .words li.rare{color:#3E6270; background:var(--page); box-shadow:inset 0 0 0 1px rgba(14,58,80,.07); font-weight:700;}
+  .words li.top.rare{background:linear-gradient(176deg,#FFE3B8,#FAD29A); color:#5A3300; box-shadow:inset 0 0 0 1px rgba(192,106,18,.25);}
+  .more{margin:10px 0 0; color:var(--ink-faint); font-size:13.5px;}
+  .prose{margin-top:46px; max-width:66ch;}
   .prose h2{font-family:var(--display); font-weight:800; font-size:clamp(21px,3vw,28px); letter-spacing:-.028em; margin:30px 0 10px; color:var(--ink);}
   .prose p{margin:0 0 14px; color:var(--ink-soft); font-size:16px;}
   .prose a{color:#0C6E92; font-weight:600; text-decoration:underline; text-underline-offset:3px;}
-  .prose a.backhome, .backhome{display:inline-flex; margin-top:30px; font-family:var(--display); font-weight:800; font-size:15px; color:#fff; text-decoration:none;
-    background:linear-gradient(180deg,#D64A28,#BE3F22); border-radius:999px; padding:14px 26px; box-shadow:0 4px 0 var(--coral-deep);}
+  .prose code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:14px; background:var(--mist); color:var(--ink); padding:2px 6px; border-radius:6px;}
+  .tm{margin-top:18px; font-size:13px; color:var(--ink-faint);}
   .related{margin-top:40px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;}
-  .rel{display:block; text-decoration:none; background:var(--white); border-radius:16px; padding:18px 20px;
-    box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 4px 12px rgba(14,58,80,.06);}
-  .prose a.rel{color:inherit;}
+  .prose a.rel,.rel{display:block; text-decoration:none; color:inherit; background:var(--white); border-radius:16px; padding:18px 20px; box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 4px 12px rgba(14,58,80,.06);}
   .rel b{display:block; font-family:var(--display); font-weight:800; font-size:16px; color:var(--ink); letter-spacing:-.015em;}
   .rel span{display:block; margin-top:4px; font-size:13.5px; color:var(--ink-soft);}
-  .rel em{font-style:normal; color:#0C6E92; font-weight:600;}
-  @media (min-width:900px){
-    .field{flex-wrap:nowrap;}
-    .words li{font-size:16px; padding:10px 15px;}
-    .group h2{font-size:21px;}
-  }
+  .prose a.backhome,.backhome{display:inline-flex; margin-top:30px; font-family:var(--display); font-weight:800; font-size:15px; color:#fff; text-decoration:none; background:linear-gradient(180deg,#D64A28,#BE3F22); border-radius:999px; padding:14px 26px; box-shadow:0 4px 0 #9E3319;}
+  @media (min-width:900px){ .field{flex-wrap:nowrap;} .words li{font-size:16px; padding:10px 15px;} .group h2{font-size:21px;} }
   @media (max-width:600px){
+    #out{min-height:760px;}
+    .field{gap:12px;} .field .grow,.field .mid,.field > div{flex:1 1 100%;}
     .solve{width:100%;}
-    .field{gap:12px;}
-    .field .grow{flex:1 1 100%;}
-    .field > div:nth-child(2){flex:1 1 100%;}
-    select{width:100%;}
-    input[type=text]{font-size:22px; letter-spacing:.1em; padding:13px 14px;}
+    input[type=text]{font-size:21px; letter-spacing:.09em; padding:13px 14px;}
     .panel{border-radius:18px; padding:16px;}
     .toolwrap h1{font-size:clamp(28px,8.4vw,38px);}
-    .words li{font-size:14px; padding:8px 11px;}
-    .group h2{font-size:17px;}
-    .prose h2{font-size:20px;}
+    .words li{font-size:14px; padding:8px 11px;} .group h2{font-size:17px;} .prose h2{font-size:20px;}
     .backhome{width:100%; justify-content:center;}
   }
 </style>
-
 </head>
 <body>
 <div class="shell">
@@ -427,39 +409,36 @@
     <div class="panel">
       <form id="f" novalidate>
         <div class="field">
-          <div class="grow">
-            <label for="letters">Your letters</label>
-            <input type="text" id="letters" name="letters" value="STONE" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="latin" aria-describedby="err">
-          </div>
-          <div>
-            <label for="len">Length</label>
-            <select id="len" name="len"><option value="0">Any</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
-          </div>
-          <button class="solve" id="go" type="submit">Unscramble</button>
+          <div class="grow"><label for="letters">Your letters</label><input type="text" id="letters" name="letters" value="STONE" placeholder="e.g. STONE" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="err"></div><div><label for="len">Length</label><select id="len" name="len"><option value="0">Any</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
+          <button class="solve" id="go" type="submit" disabled>Search</button>
         </div>
+        
         <p class="err" id="err" role="alert" hidden></p>
-        <p class="status" id="status">Loading the dictionary…</p>
+        <p class="status" id="status" aria-live="polite">Loading the dictionary…</p>
       </form>
       <div id="out"></div>
     </div>
 
     <div class="prose">
+      
       <h2>How it works</h2>
-      <p>Type up to twelve letters and the tool checks them against 104,562 English words between three and eight letters long. A word appears only if your letters can actually spell it — each letter is used at most as many times as you have it. The results are grouped by length because in most word games the long ones are worth the most.</p>
-      <h2>Where the word list comes from</h2>
-      <p>It's the same dictionary <a href="/">Wordmere</a> uses to accept bonus words, built from the public-domain <a href="https://github.com/dwyl/english-words" rel="nofollow">dwyl/english-words</a> list with offensive entries stripped out. If a word is in here, the game will take it.</p>
+      <p>Type up to twelve letters and the tool checks them against 104,562 English words between three and eight letters long. A word only appears if your letters can actually spell it — each letter is used no more times than you have it. Results are grouped by length, because in most word games the long ones are worth the most.</p>
       <h2>Using it on a letter-wheel puzzle</h2>
-      <p>Enter every letter on the wheel, including repeats. Set the length filter to the number of blanks in the row you're stuck on, and you'll usually spot the answer immediately. If you're playing <a href="/">Wordmere</a> itself, a hint costs nothing and reveals a letter — there's no penalty for using one. Each puzzle sits inside one of <a href="/#worlds">sixteen 3-D worlds</a> that build as you solve, and every level has <a href="/#answers">its own answer page</a>.</p>
+      <p>Enter every letter on the wheel, repeats included. Set the length to the number of blanks in the row you're stuck on and the answer usually jumps out. If you're playing <a href="/">Wordmere</a>, a hint reveals a letter for free.</p>
+      <h2>Unscrambler or anagram solver?</h2>
+      <p>The unscrambler finds words that use <em>some</em> of your letters. If you need a word that uses <em>every</em> letter exactly once, the <a href="/tools/anagram-solver/">anagram solver</a> is the one you want.</p>
+      
       <div class="related">
-        <a class="rel" href="/"><b>Wordmere</b><span>The cosy word game this dictionary comes from. <em>Play free →</em></span></a>
-        <a class="rel" href="/#worlds"><b>The sixteen worlds</b><span>Every level builds a real 3-D place. <em>Take a look →</em></span></a>
-        <a class="rel" href="/#answers"><b>Level answers</b><span>Wheel letters, finished grids and bonus words. <em>Browse →</em></span></a>
+        <a class="rel" href="/tools/anagram-solver/"><b>Anagram solver</b><span>Words that use every letter</span></a>
+        <a class="rel" href="/tools/word-finder/"><b>Word finder</b><span>Search by pattern, start, end or length</span></a>
+        <a class="rel" href="/tools/scrabble-word-finder/"><b>Scrabble word finder</b><span>Highest-scoring words from your rack</span></a>
+        <a class="rel" href="/"><b>Wordmere</b><span>The cosy word game this dictionary comes from.</span></a>
       </div>
       <a class="backhome" href="/">Back to Wordmere</a>
     </div>
   </main>
 
-<footer class="sitefoot">
+  <footer class="sitefoot">
     <div class="footcols">
       <div class="footbrand">
         <a class="fb" href="/"><img src="/img/icon-96.png" alt="" width="34" height="34"><strong>Wordmere</strong></a>
@@ -471,7 +450,7 @@
       </div>
       <div>
         <p class="fh">Word tools</p>
-        <ul><li><a href="/tools/">All word tools</a></li><li><a href="/tools/word-unscrambler/">Word unscrambler</a></li><li><a href="/tools/#anagram">Anagram solver</a></li><li><a href="/tools/#finder">Word finder</a></li></ul>
+        <ul><li><a href="/tools/">All word tools</a></li><li><a href="/tools/word-unscrambler/">Word unscrambler</a></li><li><a href="/tools/anagram-solver/">Anagram solver</a></li><li><a href="/tools/word-finder/">Word finder</a></li><li><a href="/tools/scrabble-word-finder/">Scrabble word finder</a></li><li><a href="/tools/words-with-letters/">Words with letters</a></li></ul>
       </div>
       <div>
         <p class="fh">Help</p>
@@ -489,57 +468,35 @@
   </footer>
 </div>
 
+<script src="/tools/wordkit.js?v=2"></script>
 <script>
 (function(){
-  var DICT=null, byLen={};
-  var f=document.getElementById('f'), inp=document.getElementById('letters'), sel=document.getElementById('len');
-  var go=document.getElementById('go'), err=document.getElementById('err'), status=document.getElementById('status'), out=document.getElementById('out');
-
-  function showErr(m){ err.textContent=m; err.hidden=false; }
-  function clearErr(){ err.hidden=true; err.textContent=''; }
-
-  fetch('/tools/word-unscrambler/words.txt').then(function(r){ return r.text(); }).then(function(t){
-    DICT=t.split('\n');
-    for(var i=0;i<DICT.length;i++){ var w=DICT[i]; if(!w) continue; (byLen[w.length]=byLen[w.length]||[]).push(w); }
-    status.textContent='104,562 words ready.';
-    go.disabled=false; solve();
-  }).catch(function(){ status.textContent='The dictionary could not load. Refresh and try again.'; });
-  go.disabled=true;
-
-  function counts(s){ var c={}; for(var i=0;i<s.length;i++) c[s[i]]=(c[s[i]]||0)+1; return c; }
-  function makeable(word, have){
-    var need={};
-    for(var i=0;i<word.length;i++){ var ch=word[i]; need[ch]=(need[ch]||0)+1; if(need[ch]>(have[ch]||0)) return false; }
-    return true;
-  }
-
+  var f=document.getElementById('f'), go=document.getElementById('go'), err=document.getElementById('err'),
+      status=document.getElementById('status'), outEl=document.getElementById('out');
+  function val(id){ var e=document.getElementById(id); return e ? e.value : ''; }
+  function setv(id,v){ var e=document.getElementById(id); if(e) e.value=v; }
+  function fail(m){ err.textContent=m; err.hidden=false; outEl.innerHTML=''; status.textContent=''; }
+  function out(html,msg){ err.hidden=true; outEl.innerHTML=html; status.textContent=msg; }
+  function done(hits,msg){ out(hits.length ? WK.group(hits) : '<p class="status">No words found. Try different letters.</p>', hits.length ? msg : ''); }
   function solve(){
-    clearErr();
-    var raw=(inp.value||'').toUpperCase().replace(/[^A-Z]/g,'');
-    if(!raw){ showErr('Enter some letters first.'); out.innerHTML=''; return; }
-    if(raw.length<3){ showErr('Enter at least three letters.'); out.innerHTML=''; return; }
-    inp.value=raw;
-    if(!DICT) return;
-    var have=counts(raw), want=parseInt(sel.value,10)||0;
-    var lens = want ? [want] : [8,7,6,5,4,3];
-    var html='', total=0;
-    for(var li=0; li<lens.length; li++){
-      var L=lens[li]; if(L>raw.length) continue;
-      var pool=byLen[L]||[], hits=[];
-      for(var i=0;i<pool.length;i++){ if(makeable(pool[i], have)) hits.push(pool[i]); }
-      if(!hits.length) continue;
-      total+=hits.length;
-      html+='<div class="group"><h2>'+L+'-letter words <span>'+hits.length+'</span></h2><ul class="words">';
-      for(var j=0;j<hits.length;j++){ html+='<li'+(L>=Math.min(raw.length,7)?' class="top"':'')+'>'+hits[j]+'</li>'; }
-      html+='</ul></div>';
-    }
-    out.innerHTML = total ? html : '<p class="status">No words can be made from those letters.</p>';
-    status.textContent = total ? (total+' words from '+raw) : '104,562 words ready.';
-  }
+    err.hidden=true;
+    if(!WK.dict) return;
 
-  f.addEventListener('submit', function(e){ e.preventDefault(); solve(); });
-  sel.addEventListener('change', function(){ if(DICT) solve(); });
-  inp.addEventListener('input', clearErr);
+  var raw=WK.clean(val('letters'));
+  if(!raw) return fail('Enter some letters first.');
+  if(raw.length<3) return fail('Enter at least three letters.');
+  setv('letters',raw);
+  var have=WK.counts(raw), L=+val('len')||0, hits=[];
+  for(var n=Math.min(8,raw.length); n>=3; n--){ if(L&&n!==L) continue; (WK.byLen[n]||[]).forEach(function(w){ if(WK.makeable(w,have,0)) hits.push({w:w, top:n>=Math.min(raw.length,7)}); }); }
+  done(hits, hits.length+' words from '+raw);
+  }
+  WK.onReady(function(e){
+    if(e){ status.textContent='The dictionary could not load. Refresh the page to try again.'; return; }
+    go.disabled=false; status.textContent='104,562 words ready.'; solve();
+  });
+  f.addEventListener('submit', function(ev){ ev.preventDefault(); solve(); });
+  var len=document.getElementById('len'); if(len) len.addEventListener('change', solve);
+  f.querySelectorAll('input').forEach(function(i){ i.addEventListener('input', function(){ err.hidden=true; }); });
 })();
 </script>
 </body>

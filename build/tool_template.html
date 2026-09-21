@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESC}}">
+<link rel="canonical" href="{{URL}}">
+<meta name="theme-color" content="#E9F6FE">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Wordmere">
+<meta property="og:title" content="{{TITLE}}">
+<meta property="og:description" content="{{DESC}}">
+<meta property="og:url" content="{{URL}}">
+<meta property="og:image" content="https://wordmere.com/img/social-card.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{TITLE}}">
+<meta name="twitter:description" content="{{DESC}}">
+<meta name="twitter:image" content="https://wordmere.com/img/social-card.jpg">
+<link rel="icon" href="/img/favicon-32.png" sizes="32x32">
+<link rel="icon" href="/img/favicon-16.png" sizes="16x16">
+<link rel="apple-touch-icon" href="/img/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
+<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="preload" as="fetch" href="/tools/words.txt?v=2" crossorigin>
+<script type="application/ld+json">{{SCHEMA}}</script>
+{{STYLE}}
+{{TOOLCSS}}
+</head>
+<body>
+<div class="shell">
+  {{NAV}}
+
+  <main class="toolwrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <a href="/tools/">Word tools</a> › <span aria-current="page">{{NAME}}</span></nav>
+    <h1>{{NAME}}</h1>
+    <p class="sub">{{SUB}}</p>
+
+    <div class="panel">
+      <form id="f" novalidate>
+        <div class="field">
+          {{FORM}}
+          <button class="solve" id="go" type="submit" disabled>Search</button>
+        </div>
+        {{HINT}}
+        <p class="err" id="err" role="alert" hidden></p>
+        <p class="status" id="status" aria-live="polite">Loading the dictionary…</p>
+      </form>
+      <div id="out"></div>
+    </div>
+
+    <div class="prose">
+      {{PROSE}}
+      {{TM}}
+      <div class="related">
+        {{RELATED}}
+      </div>
+      <a class="backhome" href="/">Back to Wordmere</a>
+    </div>
+  </main>
+
+  {{FOOT}}
+</div>
+
+<script src="/tools/wordkit.js?v=2"></script>
+<script>
+(function(){
+  var f=document.getElementById('f'), go=document.getElementById('go'), err=document.getElementById('err'),
+      status=document.getElementById('status'), outEl=document.getElementById('out');
+  function val(id){ var e=document.getElementById(id); return e ? e.value : ''; }
+  function setv(id,v){ var e=document.getElementById(id); if(e) e.value=v; }
+  function fail(m){ err.textContent=m; err.hidden=false; outEl.innerHTML=''; status.textContent=''; }
+  function out(html,msg){ err.hidden=true; outEl.innerHTML=html; status.textContent=msg; }
+  function done(hits,msg){ out(hits.length ? WK.group(hits) : '<p class="status">No words found. Try different letters.</p>', hits.length ? msg : ''); }
+  function solve(){
+    err.hidden=true;
+    if(!WK.dict) return;
+{{SOLVE}}
+  }
+  WK.onReady(function(e){
+    if(e){ status.textContent='The dictionary could not load. Refresh the page to try again.'; return; }
+    go.disabled=false; status.textContent='104,562 words ready.'; solve();
+  });
+  f.addEventListener('submit', function(ev){ ev.preventDefault(); solve(); });
+  var len=document.getElementById('len'); if(len) len.addEventListener('change', solve);
+  f.querySelectorAll('input').forEach(function(i){ i.addEventListener('input', function(){ err.hidden=true; }); });
+})();
+</script>
+</body>
+</html>

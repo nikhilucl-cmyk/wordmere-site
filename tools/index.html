@@ -23,8 +23,7 @@
 {"@context":"https://schema.org","@graph":[
  {"@type":"CollectionPage","name":"Free word tools","url":"https://wordmere.com/tools/","description":"Free word tools from Wordmere: a word unscrambler, an anagram solver and a word finder. They run in your browser, need no sign-up, and work for any word game.",
   "isPartOf":{"@type":"WebSite","name":"Wordmere","url":"https://wordmere.com/"},
-  "mainEntity":{"@type":"ItemList","itemListElement":[
-   {"@type":"ListItem","position":1,"name":"Word unscrambler","url":"https://wordmere.com/tools/word-unscrambler/"}]}},
+  "mainEntity":{"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"name":"Word unscrambler","url":"https://wordmere.com/tools/word-unscrambler/"},{"@type":"ListItem","position":2,"name":"Anagram solver","url":"https://wordmere.com/tools/anagram-solver/"},{"@type":"ListItem","position":3,"name":"Word finder","url":"https://wordmere.com/tools/word-finder/"},{"@type":"ListItem","position":4,"name":"Scrabble word finder","url":"https://wordmere.com/tools/scrabble-word-finder/"},{"@type":"ListItem","position":5,"name":"Words with letters","url":"https://wordmere.com/tools/words-with-letters/"}]}},
  {"@type":"BreadcrumbList","itemListElement":[
   {"@type":"ListItem","position":1,"name":"Wordmere","item":"https://wordmere.com/"},
   {"@type":"ListItem","position":2,"name":"Word tools","item":"https://wordmere.com/tools/"}]}
@@ -371,33 +370,44 @@
   <main class="hubwrap">
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <span aria-current="page">Word tools</span></nav>
     <h1>Free word tools</h1>
-    <p class="sub">Tools for when a word is on the tip of your tongue. They run in your browser, there's nothing to sign up for, and they work for any word game — Wordmere, a crossword, a Scrabble board, or a letter wheel you're staring at on the bus.</p>
+    <p class="sub">Five tools for when a word is on the tip of your tongue. They run in your browser, there's nothing to sign up for, and they work for any word game — Wordmere, a crossword, a Scrabble board, or a letter wheel you're staring at on the bus.</p>
 
     <div class="hubgrid">
-      <a class="hubcard" href="/tools/word-unscrambler/" id="unscrambler">
+      <a class="hubcard" href="/tools/word-unscrambler/" id="word">
         <span class="toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h7"/></svg></span>
-        <span class="live">Live</span>
         <h2>Word unscrambler</h2>
-        <p>Enter the letters you're holding and get every word they can make, grouped by length, longest first. Checks 104,562 English words.</p>
-        <span class="go">Open the unscrambler →</span>
+        <p>Enter the letters you're holding and get every word they can make, grouped by length, longest first.</p>
+        <span class="go">Open the word unscrambler →</span>
       </a>
-      <div class="hubcard" id="anagram">
-        <span class="toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg></span>
-        <span class="later">Coming next</span>
+      <a class="hubcard" href="/tools/anagram-solver/" id="anagram">
+        <span class="toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4l-3 3 3 3M4 7h11a4 4 0 0 1 0 8H9M17 20l3-3-3-3"/></svg></span>
         <h2>Anagram solver</h2>
-        <p>Every word or phrase that uses exactly the same letters as the one you type — no letters left over. Useful for cryptic clues as much as games.</p>
-      </div>
-      <div class="hubcard" id="finder">
+        <p>Every word that uses all of your letters exactly once — plus the words that are one letter short.</p>
+        <span class="go">Open the anagram solver →</span>
+      </a>
+      <a class="hubcard" href="/tools/word-finder/" id="word">
         <span class="toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></span>
-        <span class="later">Coming next</span>
         <h2>Word finder</h2>
-        <p>Know some of the letters and where they sit? Search by pattern, length, or the letters a word has to include or leave out.</p>
-      </div>
+        <p>Search by pattern with wildcards, by how a word starts or ends, by letters it contains, or by length.</p>
+        <span class="go">Open the word finder →</span>
+      </a>
+      <a class="hubcard" href="/tools/scrabble-word-finder/" id="scrabble">
+        <span class="toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></span>
+        <h2>Scrabble word finder</h2>
+        <p>Enter your rack, blanks included, and get every playable word ranked by score — bingos flagged.</p>
+        <span class="go">Open the scrabble word finder →</span>
+      </a>
+      <a class="hubcard" href="/tools/words-with-letters/" id="words">
+        <span class="toolicon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19l5-14 5 14M7 13h6M17 5v14"/></svg></span>
+        <h2>Words with letters</h2>
+        <p>Find every word containing the letters you choose — words with Q and Z, words with two Es, anything.</p>
+        <span class="go">Open the words with letters →</span>
+      </a>
     </div>
 
     <div class="hubprose">
       <h2>Where the words come from</h2>
-      <p>All three tools share one dictionary: 104,562 English words from three to eight letters, built from the public-domain dwyl/english-words list with offensive entries removed. It's the same list <a href="/">Wordmere</a> uses to decide whether a bonus word counts, so if a tool shows you a word, the game will accept it.</p>
+      <p>All five tools share one dictionary: 104,562 English words from three to eight letters, built from the public-domain dwyl/english-words list with offensive entries removed. It's the same list <a href="/">Wordmere</a> uses to decide whether a bonus word counts, so if a tool shows you a word, the game will accept it.</p>
       <h2>Why a word game makes free tools</h2>
       <p>Because getting stuck shouldn't mean closing the app and searching a cheat site full of pop-ups. If you're playing Wordmere, a hint costs nothing and reveals a letter. If you're playing something else, these are here anyway. Wordmere itself is a cosy crossword where every word you find builds part of a <a href="/#worlds">3-D world</a> — no timers, no lives, nothing to lose.</p>
     </div>
@@ -414,7 +424,7 @@
       </div>
       <div>
         <p class="fh">Word tools</p>
-        <ul><li><a href="/tools/">All word tools</a></li><li><a href="/tools/word-unscrambler/">Word unscrambler</a></li><li><a href="/tools/#anagram">Anagram solver</a></li><li><a href="/tools/#finder">Word finder</a></li></ul>
+        <ul><li><a href="/tools/">All word tools</a></li><li><a href="/tools/word-unscrambler/">Word unscrambler</a></li><li><a href="/tools/anagram-solver/">Anagram solver</a></li><li><a href="/tools/word-finder/">Word finder</a></li><li><a href="/tools/scrabble-word-finder/">Scrabble word finder</a></li><li><a href="/tools/words-with-letters/">Words with letters</a></li></ul>
       </div>
       <div>
         <p class="fh">Help</p>
