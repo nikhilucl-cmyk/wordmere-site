@@ -1,0 +1,56 @@
+# Tells Bing (and the other IndexNow engines: Yandex, Seznam, Naver) about
+# every page in the sitemap as soon as GitHub Pages finishes publishing a
+# change, instead of waiting for their crawlers to notice.
+#
+# Runs on page_build so it fires only after the new version is live —
+# pinging earlier would get the old version crawled. Can also be run by
+# hand from the Actions tab.
+#
+# The key is public by design: IndexNow verifies ownership by fetching
+# https://wordmere.com/ab5c06ff4b8d21f81392b956dc7af0ed.txt and checking it contains the same key.
+# Don't delete that file.
+name: IndexNow
+
+on:
+  page_build:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    if: github.event_name == 'workflow_dispatch' || github.event.build.status == 'built'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Submit sitemap URLs to IndexNow
+        env:
+          INDEXNOW_KEY: ab5c06ff4b8d21f81392b956dc7af0ed
+        run: |
+          python3 - <<'PY'
+          import json, os, re, sys, urllib.request, urllib.error
+          key = os.environ["INDEXNOW_KEY"]
+          urls = re.findall(r"<loc>([^<]+)</loc>", open("sitemap.xml", encoding="utf-8").read())
+          if not urls:
+              sys.exit("sitemap.xml has no <loc> entries")
+          body = json.dumps({
+              "host": "wordmere.com",
+              "key": key,
+              "keyLocation": f"https://wordmere.com/{key}.txt",
+              "urlList": urls,
+          }).encode()
+          req = urllib.request.Request("https://api.indexnow.org/indexnow", data=body,
+                                       headers={"Content-Type": "application/json; charset=utf-8"})
+          try:
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  code = r.status
+          except urllib.error.HTTPError as e:
+              code = e.code
+          meaning = {200: "accepted", 202: "accepted, key being verified", 400: "bad request",
+                     403: "key not valid", 422: "URLs don't match the host", 429: "too many requests"}
+          print(f"IndexNow: HTTP {code} ({meaning.get(code, 'unexpected')}) for {len(urls)} URLs")
+          for u in urls: print("  ", u)
+          sys.exit(0 if code in (200, 202) else 1)
+          PY
