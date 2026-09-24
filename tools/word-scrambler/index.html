@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Word Unscrambler — Every Word From Your Letters</title>
-<meta name="description" content="Free word unscrambler. Enter your letters and get every word you can make from them, sorted by length. 104,562 words, works on any word game, no sign-up.">
-<link rel="canonical" href="https://wordmere.com/tools/word-unscrambler/">
+<title>Word Scrambler — Make a Jumbled Word Puzzle</title>
+<meta name="description" content="Free word scrambler. Paste a list of words and get them jumbled, ready for a worksheet, a quiz or a party game. Includes an answer key.">
+<link rel="canonical" href="https://wordmere.com/tools/word-scrambler/">
 <meta name="theme-color" content="#E9F6FE">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Wordmere">
-<meta property="og:title" content="Word Unscrambler — Every Word From Your Letters">
-<meta property="og:description" content="Free word unscrambler. Enter your letters and get every word you can make from them, sorted by length. 104,562 words, works on any word game, no sign-up.">
-<meta property="og:url" content="https://wordmere.com/tools/word-unscrambler/">
+<meta property="og:title" content="Word Scrambler — Make a Jumbled Word Puzzle">
+<meta property="og:description" content="Free word scrambler. Paste a list of words and get them jumbled, ready for a worksheet, a quiz or a party game. Includes an answer key.">
+<meta property="og:url" content="https://wordmere.com/tools/word-scrambler/">
 <meta property="og:image" content="https://wordmere.com/img/social-card.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Word Unscrambler — Every Word From Your Letters">
-<meta name="twitter:description" content="Free word unscrambler. Enter your letters and get every word you can make from them, sorted by length. 104,562 words, works on any word game, no sign-up.">
+<meta name="twitter:title" content="Word Scrambler — Make a Jumbled Word Puzzle">
+<meta name="twitter:description" content="Free word scrambler. Paste a list of words and get them jumbled, ready for a worksheet, a quiz or a party game. Includes an answer key.">
 <meta name="twitter:image" content="https://wordmere.com/img/social-card.jpg">
 <link rel="icon" href="/img/favicon-32.png" sizes="32x32">
 <link rel="icon" href="/img/favicon-16.png" sizes="16x16">
@@ -23,7 +23,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
 <link rel="stylesheet" href="/fonts/fonts.css">
 <link rel="preload" as="fetch" href="/tools/words.txt?v=2" crossorigin>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Word unscrambler", "url": "https://wordmere.com/tools/word-unscrambler/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "description": "Free word unscrambler. Enter your letters and get every word you can make from them, sorted by length. 104,562 words, works on any word game, no sign-up.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Word tools", "item": "https://wordmere.com/tools/"}, {"@type": "ListItem", "position": 3, "name": "Word unscrambler", "item": "https://wordmere.com/tools/word-unscrambler/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Word scrambler", "url": "https://wordmere.com/tools/word-scrambler/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "description": "Free word scrambler. Paste a list of words and get them jumbled, ready for a worksheet, a quiz or a party game. Includes an answer key.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Word tools", "item": "https://wordmere.com/tools/"}, {"@type": "ListItem", "position": 3, "name": "Word scrambler", "item": "https://wordmere.com/tools/word-scrambler/"}]}]}</script>
 <style>
   :root{
     --page:#E9F6FE; --white:#FFFFFF; --mist:#D6EEFB;
@@ -418,17 +418,20 @@
   </div></nav>
 
   <main class="toolwrap">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <a href="/tools/">Word tools</a> › <span aria-current="page">Word unscrambler</span></nav>
-    <h1>Word unscrambler</h1>
-    <p class="sub">Put in the letters you're holding. You'll get back every word they can make, longest first. Works for any word game, not just ours.</p>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <a href="/tools/">Word tools</a> › <span aria-current="page">Word scrambler</span></nav>
+    <h1>Word scrambler</h1>
+    <p class="sub">Paste your words, one per line or separated by commas. You get each one jumbled, with the answer beside it — ready to paste into a worksheet or a quiz.</p>
 
     <div class="panel">
       <form id="f" novalidate>
         <div class="field">
-          <div class="grow"><label for="letters">Your letters</label><input type="text" id="letters" name="letters" value="STONE" placeholder="e.g. STONE" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="err"></div><div><label for="len">Length</label><select id="len" name="len"><option value="0">Any</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
-          <button class="solve" id="go" type="submit" disabled>Unscramble</button>
+          <div class="grow"><label for="words">Your words</label><textarea id="words" name="words" rows="4" placeholder="One word per line, or separated by commas" spellcheck="false" aria-describedby="err">ORANGE
+MEADOW
+LIGHTHOUSE
+PUZZLE</textarea></div>
+          <button class="solve" id="go" type="submit" disabled>Scramble</button>
         </div>
-        
+        <p class="hint">Letters only. Anything longer than two letters gets scrambled; the answer key is shown next to each one.</p>
         <p class="err" id="err" role="alert" hidden></p>
         <p class="status" id="status" aria-live="polite">Loading the dictionary…</p>
       </form>
@@ -437,17 +440,17 @@
 
     <div class="prose">
       
-      <h2>How it works</h2>
-      <p>Type up to twelve letters and the tool checks them against 104,562 English words between three and eight letters long. A word only appears if your letters can actually spell it — each letter is used no more times than you have it. Results are grouped by length, because in most word games the long ones are worth the most.</p>
-      <h2>Using it on a letter-wheel puzzle</h2>
-      <p>Enter every letter on the wheel, repeats included. Set the length to the number of blanks in the row you're stuck on and the answer usually jumps out. If you're playing <a href="/">Wordmere</a>, a hint reveals a letter for free.</p>
-      <h2>Unscrambler or anagram solver?</h2>
-      <p>The unscrambler finds words that use <em>some</em> of your letters. If you need a word that uses <em>every</em> letter exactly once, the <a href="/tools/anagram-solver/">anagram solver</a> is the one you want.</p>
+      <h2>Making a worksheet</h2>
+      <p>Paste a spelling list, a set of topic words or the names of everyone at a party. Each word comes back jumbled with the answer next to it, so you can copy the scrambled column into a handout and keep the answers for yourself. Words of one or two letters are left alone — there's nothing to scramble.</p>
+      <h2>Every jumble is different</h2>
+      <p>The letters are shuffled fresh each time, and the tool won't hand back a "scramble" that is identical to the original word. Press Search again if a particular jumble looks too easy — short words with repeated letters sometimes land close to the real thing.</p>
+      <h2>The other direction</h2>
+      <p>This tool makes puzzles. To solve one, the <a href="/tools/word-unscrambler/">word unscrambler</a> finds every word your letters can make, and the <a href="/tools/anagram-solver/">anagram solver</a> finds the ones that use every letter exactly once.</p>
       
       <div class="related">
+        <a class="rel" href="/tools/word-unscrambler/"><b>Word unscrambler</b><span>Every word from your letters</span></a>
         <a class="rel" href="/tools/anagram-solver/"><b>Anagram solver</b><span>Words that use every letter</span></a>
         <a class="rel" href="/tools/word-finder/"><b>Word finder</b><span>Search by pattern, start, end or length</span></a>
-        <a class="rel" href="/tools/scrabble-word-finder/"><b>Scrabble word finder</b><span>Highest-scoring words from your rack</span></a>
         <a class="rel" href="/"><b>Wordmere</b><span>The cosy word game this dictionary comes from.</span></a>
       </div>
       <a class="backhome" href="/">Back to Wordmere</a>
@@ -498,13 +501,26 @@
     err.hidden=true;
     if(!WK.dict) return;
 
-  var raw=WK.clean(val('letters'));
-  if(!raw) return fail('Enter some letters first.');
-  if(raw.length<3) return fail('Enter at least three letters.');
-  setv('letters',raw);
-  var have=WK.counts(raw), L=+val('len')||0, hits=[];
-  for(var n=Math.min(8,raw.length); n>=3; n--){ if(L&&n!==L) continue; (WK.byLen[n]||[]).forEach(function(w){ if(WK.makeable(w,have,0)) hits.push({w:w, top:n>=Math.min(raw.length,7)}); }); }
-  done(hits, hits.length+' words from '+raw);
+  var raw=(val('words')||'').toUpperCase().split(/[^A-Z]+/).filter(function(w){ return w.length>0; });
+  if(!raw.length) return fail('Paste at least one word.');
+  if(raw.length>200) return fail('That is more than 200 words — trim the list a little.');
+  var short=raw.filter(function(w){ return w.length<3; });
+  function scramble(w){
+    var a=w.split(''), best=w, tries=0;
+    while(tries++<30){
+      for(var i=a.length-1;i>0;i--){ var j=(Math.random()*(i+1))|0, t=a[i]; a[i]=a[j]; a[j]=t; }
+      best=a.join('');
+      if(best!==w) return best;
+    }
+    return best;
+  }
+  var rows=raw.map(function(w){
+    return w.length<3 ? {w:w, s:w, skip:true} : {w:w, s:scramble(w)};
+  });
+  var html='<div class="group"><h2>Scrambled <span>'+rows.length+'</span></h2><ul class="pairs">'
+    + rows.map(function(r){ return '<li class="pair"><b>'+r.s+'</b><span>'+(r.skip?'too short':r.w)+'</span></li>'; }).join('')
+    + '</ul></div>';
+  out(html, rows.length+' word'+(rows.length===1?'':'s')+' scrambled'+(short.length?' — '+short.length+' left alone (under three letters)':''));
   }
   WK.onReady(function(e){
     if(e){ status.textContent='The dictionary could not load. Refresh the page to try again.'; return; }

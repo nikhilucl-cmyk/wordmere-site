@@ -40,7 +40,7 @@
       <form id="f" novalidate>
         <div class="field">
           {{FORM}}
-          <button class="solve" id="go" type="submit" disabled>Search</button>
+          <button class="solve" id="go" type="submit" disabled>{{CTA}}</button>
         </div>
         {{HINT}}
         <p class="err" id="err" role="alert" hidden></p>
@@ -83,7 +83,7 @@
   });
   f.addEventListener('submit', function(ev){ ev.preventDefault(); solve(); });
   var len=document.getElementById('len'); if(len) len.addEventListener('change', solve);
-  f.querySelectorAll('input').forEach(function(i){ i.addEventListener('input', function(){ err.hidden=true; }); });
+  f.querySelectorAll('input, textarea').forEach(function(i){ i.addEventListener('input', function(){ err.hidden=true; }); });
 })();
 </script>
 </body>
