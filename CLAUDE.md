@@ -53,7 +53,7 @@ editing. Both areas live in this repo, so a wrong assumption ships instantly.
 
 ## Generated files — do not hand-edit
 
-The five tool pages under `/tools/<slug>/index.html` are generated:
+The ten tool pages under `/tools/<slug>/index.html` are generated:
 
     python3 build/tools.py          # run from the repo root
 
@@ -75,6 +75,24 @@ with a `?v=N` cache-buster. **If you change the dictionary format, bump that
 version in `tools/wordkit.js` and `build/tool_template.html`** — otherwise
 browsers mix a cached old dictionary with new code and every word silently
 looks "rare".
+
+The two puzzle makers (`word-search-maker`, `crossword-maker`) load **no
+dictionary at all** — their words come from the person making the puzzle. They
+use `tools/makerkit.js` instead, and a tool opts out of the dictionary with
+`needs_dict=False` in its `SPEC`, which drops the `words.txt` preload and the
+`wordkit.js` tag from that page. Keep it that way: pulling 274 KB of gzipped
+dictionary onto a page that never reads it costs about 20 Lighthouse points.
+
+**`tools/makerkit.js` has tests. Run them after any change to it:**
+
+    node build/test_makerkit.js
+
+They check the two invariants that can silently produce a wrong puzzle: every
+word in a word search reads out of the grid exactly once at the position the
+answer key claims (random filler letters can otherwise spell a second copy),
+and every run of two or more letters in a crossword is a word somebody wrote a
+clue for. Both makers retry their layout when those fail, so a regression
+shows up as a hang or a dropped word rather than an obvious break.
 
 ## Adding a page
 

@@ -22,10 +22,10 @@
 <link rel="apple-touch-icon" href="/img/icon-180.png">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
 <link rel="stylesheet" href="/fonts/fonts.css">
-<link rel="preload" as="fetch" href="/tools/words.txt?v=2" crossorigin>
-<script type="application/ld+json">{{SCHEMA}}</script>
+{{PRELOAD}}<script type="application/ld+json">{{SCHEMA}}</script>
 {{STYLE}}
 {{TOOLCSS}}
+{{EXTRACSS}}
 </head>
 <body>
 <div class="shell">
@@ -44,7 +44,7 @@
         </div>
         {{HINT}}
         <p class="err" id="err" role="alert" hidden></p>
-        <p class="status" id="status" aria-live="polite">Loading the dictionary…</p>
+        <p class="status" id="status" aria-live="polite">{{LOADING}}</p>
       </form>
       <div id="out"></div>
     </div>
@@ -62,7 +62,7 @@
   {{FOOT}}
 </div>
 
-<script src="/tools/wordkit.js?v=2"></script>
+{{ENGINE}}
 <script>
 (function(){
   var f=document.getElementById('f'), go=document.getElementById('go'), err=document.getElementById('err'),
@@ -74,15 +74,12 @@
   function done(hits,msg){ out(hits.length ? WK.group(hits) : '<p class="status">No words found. Try different letters.</p>', hits.length ? msg : ''); }
   function solve(){
     err.hidden=true;
-    if(!WK.dict) return;
+{{GUARD}}
 {{SOLVE}}
   }
-  WK.onReady(function(e){
-    if(e){ status.textContent='The dictionary could not load. Refresh the page to try again.'; return; }
-    go.disabled=false; status.textContent='104,562 words ready.'; solve();
-  });
+{{BOOT}}
   f.addEventListener('submit', function(ev){ ev.preventDefault(); solve(); });
-  var len=document.getElementById('len'); if(len) len.addEventListener('change', solve);
+  f.querySelectorAll('select').forEach(function(s){ s.addEventListener('change', solve); });
   f.querySelectorAll('input, textarea').forEach(function(i){ i.addEventListener('input', function(){ err.hidden=true; }); });
 })();
 </script>

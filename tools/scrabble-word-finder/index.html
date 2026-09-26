@@ -408,6 +408,7 @@
     .backhome{width:100%; justify-content:center;}
   }
 </style>
+
 </head>
 <body>
 <div class="shell">
@@ -445,9 +446,9 @@
       <p>Put a letter that's already on the board in the second box and every result will include it. To see every word from your letters regardless of score, the <a href="/tools/word-unscrambler/">word unscrambler</a> lists them by length.</p>
       <p class="tm">Scrabble® is a registered trademark of Hasbro, Inc. in the USA and Canada, and of J.W. Spear &amp; Sons Limited, a Mattel company, elsewhere. Wordmere is not affiliated with or endorsed by either. Word validity here follows the Wordmere dictionary, not an official tournament word list.</p>
       <div class="related">
-        <a class="rel" href="/tools/word-unscrambler/"><b>Word unscrambler</b><span>Every word from your letters</span></a>
-        <a class="rel" href="/tools/anagram-solver/"><b>Anagram solver</b><span>Words that use every letter</span></a>
-        <a class="rel" href="/tools/word-finder/"><b>Word finder</b><span>Search by pattern, start, end or length</span></a>
+        <a class="rel" href="/tools/words-with-letters/"><b>Words with letters</b><span>Words that contain the letters you choose</span></a>
+        <a class="rel" href="/tools/five-letter-word-solver/"><b>Five-letter word solver</b><span>Narrow 5-letter words by what you know</span></a>
+        <a class="rel" href="/tools/random-word-generator/"><b>Random word generator</b><span>Pick random words, any length</span></a>
         <a class="rel" href="/"><b>Wordmere</b><span>The cosy word game this dictionary comes from.</span></a>
       </div>
       <a class="backhome" href="/">Back to Wordmere</a>
@@ -466,7 +467,7 @@
       </div>
       <div>
         <p class="fh">Word tools</p>
-        <ul><li><a href="/tools/">All word tools</a></li><li><a href="/tools/word-unscrambler/">Word unscrambler</a></li><li><a href="/tools/anagram-solver/">Anagram solver</a></li><li><a href="/tools/word-finder/">Word finder</a></li><li><a href="/tools/five-letter-word-solver/">Five-letter solver</a></li><li><a href="/tools/scrabble-word-finder/">Scrabble word finder</a></li><li><a href="/tools/words-with-letters/">Words with letters</a></li><li><a href="/tools/random-word-generator/">Random word generator</a></li><li><a href="/tools/word-scrambler/">Word scrambler</a></li></ul>
+        <ul><li><a href="/tools/">All word tools</a></li><li><a href="/tools/word-unscrambler/">Word unscrambler</a></li><li><a href="/tools/anagram-solver/">Anagram solver</a></li><li><a href="/tools/word-finder/">Word finder</a></li><li><a href="/tools/five-letter-word-solver/">Five-letter solver</a></li><li><a href="/tools/scrabble-word-finder/">Scrabble word finder</a></li><li><a href="/tools/words-with-letters/">Words with letters</a></li><li><a href="/tools/random-word-generator/">Random word generator</a></li><li><a href="/tools/word-scrambler/">Word scrambler</a></li><li><a href="/tools/word-search-maker/">Word search maker</a></li><li><a href="/tools/crossword-maker/">Crossword maker</a></li></ul>
       </div>
       <div>
         <p class="fh">Help</p>
@@ -525,7 +526,7 @@
     go.disabled=false; status.textContent='104,562 words ready.'; solve();
   });
   f.addEventListener('submit', function(ev){ ev.preventDefault(); solve(); });
-  var len=document.getElementById('len'); if(len) len.addEventListener('change', solve);
+  f.querySelectorAll('select').forEach(function(s){ s.addEventListener('change', solve); });
   f.querySelectorAll('input, textarea').forEach(function(i){ i.addEventListener('input', function(){ err.hidden=true; }); });
 })();
 </script>

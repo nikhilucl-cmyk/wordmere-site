@@ -22,6 +22,8 @@ TOOLS = [
   ('five-letter-word-solver','Five-letter word solver','Narrow 5-letter words by what you know'),
   ('random-word-generator', 'Random word generator','Pick random words, any length'),
   ('word-scrambler',        'Word scrambler',       'Scramble a list of words for a puzzle'),
+  ('word-search-maker',     'Word search maker',    'Build a printable word search from your own words'),
+  ('crossword-maker',       'Crossword maker',      'Turn your words and clues into a printable crossword'),
 ]
 
 TOOL_CSS = """<style>
@@ -106,6 +108,16 @@ def mid(i, label, val='', ph='', mx=8):
 def ta(i, label, val='', ph='', rows=4):
     return (f'<div class="grow"><label for="{i}">{label}</label><textarea id="{i}" name="{i}" rows="{rows}" '
             f'placeholder="{ph}" spellcheck="false" aria-describedby="err">{val}</textarea></div>')
+
+def tinp(i, label, val='', ph='', mx=48, cls='grow'):
+    """A plain sentence-case text field — the uppercase letter-tile styling
+    that suits a rack of letters is wrong for a puzzle title."""
+    return (f'<div class="{cls} plain"><label for="{i}">{label}</label><input type="text" id="{i}" name="{i}" '
+            f'value="{val}" placeholder="{ph}" maxlength="{mx}" autocomplete="off" aria-describedby="err"></div>')
+
+def wide(block):
+    """Force a control onto its own full-width row inside .field."""
+    return block.replace('class="grow"', 'class="wide"', 1)
 
 def sel(i, label, options, width='mid'):
     opts = ''.join(f'<option value="{v}"{" selected" if s else ""}>{t}</option>' for v, t, s in options)
@@ -361,10 +373,222 @@ SPEC['word-scrambler'] = dict(
       <h2>The other direction</h2>
       <p>This tool makes puzzles. To solve one, the <a href="/tools/word-unscrambler/">word unscrambler</a> finds every word your letters can make, and the <a href="/tools/anagram-solver/">anagram solver</a> finds the ones that use every letter exactly once.</p>""")
 
+MAKER_CSS = """<style>
+  /* The two puzzle makers: a square letter grid that has to survive a
+     phone, a laptop and a sheet of A4 without being re-laid-out. */
+  .field .wide{flex:1 1 100%; min-width:0;}
+  @media (min-width:900px){ .field{flex-wrap:wrap;} }
+  .plain input[type=text]{font-family:var(--body); font-weight:600; font-size:16px; letter-spacing:.01em; text-transform:none;}
+  .plain input[type=text]::placeholder{font-weight:500;}
+  #out{min-height:620px;}
+  .pzbar{display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:22px;}
+  .ghost{font-family:var(--display); font-weight:800; font-size:15px; color:#0A4A63; background:var(--page);
+    border:0; border-radius:12px; padding:13px 20px; cursor:pointer; box-shadow:inset 0 0 0 2px rgba(14,58,80,.18);}
+  .ghost:hover{box-shadow:inset 0 0 0 2px var(--tq);}
+  .pznote{font-size:13.5px; color:var(--ink-faint); font-weight:600;}
+  .pzsec{margin-top:24px;}
+  .pzhead{font-family:var(--display); font-weight:800; font-size:clamp(19px,3vw,25px); letter-spacing:-.02em;
+    margin:0 0 14px; color:var(--ink); text-wrap:balance;}
+  .pzgrid{container-type:inline-size; max-width:620px; margin:0 auto;}
+  .pz{table-layout:fixed; border-collapse:collapse; width:100%;}
+  .pz td{padding:0; border:1px solid rgba(14,58,80,.18); background:var(--white);}
+  .pz td span{display:flex; align-items:center; justify-content:center; aspect-ratio:1/1; position:relative;
+    font-family:var(--display); font-weight:700; font-size:14px; line-height:1; color:var(--ink);}
+  .pzgrid .pz td span{font-size:calc(58cqi / var(--n));}
+  .pz.key td span{color:#7593A1; font-weight:600;}
+  .pz.key td span.hit{color:#06323A; font-weight:800; background:#BDEEF6; box-shadow:inset 0 0 0 1px rgba(16,112,127,.35);}
+  .cw td.blk{background:var(--mist); border-color:rgba(14,58,80,.10);}
+  .cw td span i{position:absolute; top:4%; left:7%; font-style:normal; font-family:var(--body); font-weight:700;
+    font-size:.52em; color:#3E6270; line-height:1;}
+  .cw.key td span{color:#06323A;}
+  .findh,.cluesh{font-family:var(--display); font-weight:800; font-size:17px; letter-spacing:-.015em; margin:22px 0 10px; color:var(--ink);}
+  .findlist{display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none;}
+  .findlist li{font-family:var(--display); font-weight:700; font-size:14.5px; letter-spacing:.05em; color:var(--ink);
+    background:var(--page); padding:8px 12px; border-radius:9px;}
+  .clues{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:clamp(16px,3vw,30px); margin-top:8px;}
+  .cluelist{margin:0; padding:0; list-style:none; display:grid; gap:9px;}
+  .cluelist li{display:flex; gap:9px; font-size:15px; color:var(--ink-soft); line-height:1.45;}
+  .cluelist b{flex:0 0 auto; min-width:1.4em; font-family:var(--display); font-weight:800; color:var(--ink);}
+  .cluelist em{font-style:normal; color:var(--ink-faint); font-weight:600;}
+  .vh{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap;}
+  @media (max-width:600px){ #out{min-height:520px;} .ghost{width:100%;} .pznote{width:100%;} }
+
+  @media print{
+    @page{margin:14mm;}
+    body{background:#fff; color:#000;}
+    .nav,.sitefoot,.crumbs,.prose,form,.pzbar,.toolwrap h1,.toolwrap .sub{display:none !important;}
+    .pzhead,.findh,.cluesh,.cluelist li,.cluelist b,.cluelist em,.findlist li{color:#000;}
+    .toolwrap{max-width:none; padding:0;}
+    .panel{background:#fff; box-shadow:none; border-radius:0; padding:0;}
+    #out{min-height:0;}
+    .pzgrid{max-width:min(100%, calc(var(--n) * 11mm));}
+    .pz td{border-color:#111;}
+    .pz td span,.pz.key td span{color:#000;}
+    .pz.key td span.hit{background:#D9D9D9; box-shadow:none; color:#000;}
+    .cw td.blk{background:#fff; border-color:transparent;}
+    .cw.key td.blk{background:#fff;}
+    .pzsec{break-inside:avoid;}
+    .keysec{break-before:page;}
+    .findlist li{background:none; box-shadow:inset 0 0 0 1px #999;}
+  }
+</style>"""
+
+WS_DEFAULT = 'OTTER\nWILLOW\nHERON\nRIVER\nMEADOW\nPEBBLE\nREEDS\nMOSS'
+CW_DEFAULT = ('OTTER: river swimmer with a taste for fish\n'
+              'WILLOW: tree that leans over the water\n'
+              'HERON: long-legged fisher, stands very still\n'
+              'MEADOW: open grassy ground\n'
+              'PEBBLE: small smooth stone\n'
+              'REEDS: tall stems at the water\'s edge\n'
+              'MOSS: soft green cover on a damp log')
+
+SPEC['word-search-maker'] = dict(
+ cta='Make puzzle',
+ needs_dict=False,
+ extra_css=MAKER_CSS,
+ title='Word Search Maker — Create a Printable Word Search',
+ desc='Free word search maker. Paste your own words, pick the size and difficulty, then print the puzzle with its answer key. No sign-up, no watermark.',
+ sub='Paste a spelling list, a set of topic words, or the names of everyone coming to the party. You get a grid, a word list and a matching answer key, ready to print.',
+ form=(wide(ta('words', 'Your words — one per line', WS_DEFAULT, 'OTTER\nWILLOW\nHERON', 6))
+       + tinp('title', 'Puzzle title (optional)', 'Riverbank words', 'Week 3 spellings')
+       + sel('size', 'Grid size', [('0', 'Fit to the words', True), ('10', '10 × 10', False), ('12', '12 × 12', False),
+                                   ('15', '15 × 15', False), ('18', '18 × 18', False), ('22', '22 × 22', False)])
+       + sel('dirs', 'Difficulty', [('2', 'Easy — across and down', False),
+                                    ('4', 'Medium — adds diagonals', True),
+                                    ('8', 'Hard — adds backwards', False)])),
+ hint='Three letters or more. Spaces and punctuation are stripped, so <code>ICE CREAM</code> becomes <code>ICECREAM</code>.',
+ js=r"""
+  var p=MK.parseWords(val('words'),22);
+  if(!p.words.length) return fail('Add some words first — one per line, three letters or more.');
+  if(p.words.length>44) return fail('That is more than a grid can hold. Keep it to 44 words or fewer.');
+  var res=MK.wordsearch(p.words,{dirs:+val('dirs')||4, size:+val('size')||0});
+  var title=(val('title')||'').trim();
+
+  function grid(key){
+    var h='<div class="pzgrid" style="--n:'+res.size+'" role="img" aria-label="'
+         +(key?'Answer key. ':'')+'Word search grid, '+res.size+' by '+res.size+' letters.">'
+         +'<table class="pz'+(key?' key':'')+'" role="presentation"><tbody>';
+    for(var r=0;r<res.size;r++){
+      h+='<tr>';
+      for(var c=0;c<res.size;c++){ var i=r*res.size+c;
+        h+='<td><span'+(key&&res.solved[i]?' class="hit"':'')+'>'+res.grid[i]+'</span></td>'; }
+      h+='</tr>';
+    }
+    return h+'</tbody></table></div>';
+  }
+
+  var found=res.placed.map(function(x){return x.word;}).sort();
+  var html='<div class="pzbar"><button type="button" class="ghost" data-print>Print or save as PDF</button>'
+      +'<span class="pznote">'+res.size+' × '+res.size+' grid · '+found.length+' word'+(found.length===1?'':'s')+'</span></div>'
+    +'<section class="pzsec">'+(title?'<h2 class="pzhead">'+MK.esc(title)+'</h2>':'')+grid(false)
+      +'<h3 class="findh">Find these words</h3><ul class="findlist">'
+      +found.map(function(w){return '<li>'+w+'</li>';}).join('')+'</ul></section>'
+    +'<section class="pzsec keysec"><h2 class="pzhead">Answer key'+(title?' — '+MK.esc(title):'')+'</h2>'+grid(true)
+      +'<ul class="vh">'+res.placed.map(function(p){
+          return '<li>'+p.word+' starts at row '+(p.r+1)+', column '+(p.c+1)+', reading '+MK.dirName(p.dr,p.dc)+'.</li>';
+        }).join('')+'</ul></section>';
+
+  var note=[];
+  if(p.short.length) note.push(p.short.length+' entr'+(p.short.length===1?'y was':'ies were')+' under three letters and left out');
+  if(p.long.length) note.push(p.long.length+' too long for a grid ('+p.long.join(', ')+')');
+  if(res.unplaced.length) note.push("couldn't fit "+res.unplaced.join(', ')+' — try a bigger grid');
+  out(html, note.length ? note.join('; ')+'.' : 'Press Make puzzle again for a different layout.');""",
+ prose="""
+      <h2>What the difficulty setting changes</h2>
+      <p>Easy hides words left-to-right and top-to-bottom only, which is right for children who are still reading in one direction. Medium adds the two downward diagonals. Hard adds every backwards direction, so a word can run right-to-left or bottom-to-top — eight directions in all. The grid size stays the same; only the hiding places change.</p>
+      <h2>Printing it</h2>
+      <p>Press <em>Print or save as PDF</em> and the page strips itself back to the puzzle — no navigation, no form, no colour to drain your cartridge. The answer key prints on its own sheet, so you can hand out the first page and keep the second. In the print dialog, choose <em>Save as PDF</em> as the destination if you want a file to email instead.</p>
+      <h2>Getting a tighter grid</h2>
+      <p>Leave the size on <em>Fit to the words</em> and the grid is only as big as it needs to be — it grows on its own if a word won't fit. Words share letters where they cross, so a list with a lot of common letters packs in more tightly. If a word is reported as not fitting, it is longer than one side of the grid; pick a larger size and it will go in.</p>
+      <h2>Two things this will not do</h2>
+      <p>It will not hide a word twice. If the random filler letters happen to spell one of your words somewhere else, the grid is redrawn until they don't — otherwise the answer key would point at the wrong place. And it won't keep your list: nothing is uploaded or stored, so copy it somewhere if you want it next week.</p>
+      <h2>Making the other kind of puzzle</h2>
+      <p>The <a href="/tools/crossword-maker/">crossword maker</a> takes the same list plus a clue for each word. The <a href="/tools/word-scrambler/">word scrambler</a> jumbles a list for a quick warm-up sheet, and the <a href="/tools/word-unscrambler/">word unscrambler</a> is for solving one.</p>""")
+
+SPEC['crossword-maker'] = dict(
+ cta='Make crossword',
+ needs_dict=False,
+ extra_css=MAKER_CSS,
+ title='Crossword Maker — Make a Printable Crossword Puzzle',
+ desc='Free crossword maker. Enter your own words and clues, and get a numbered crossword grid with Across and Down lists plus an answer key, ready to print.',
+ sub='Give it a word and a clue on each line. It works out where the words cross, numbers the grid, and prints with the answers on a separate sheet.',
+ form=(wide(ta('entries', 'One per line — WORD: clue', CW_DEFAULT, 'OTTER: river swimmer', 7))
+       + tinp('title', 'Puzzle title (optional)', 'Riverbank crossword', 'Chapter 4 review')),
+ hint='Separate the word from its clue with a colon, a comma or a dash. A line with no clue still goes in the grid.',
+ js=r"""
+  var p=MK.parseClued(val('entries'),18);
+  if(!p.entries.length) return fail('Add some entries first — one word per line, three letters or more.');
+  if(p.entries.length>34) return fail('That is more than this will lay out. Keep it to 34 entries or fewer.');
+  var res=MK.crossword(p.entries);
+  var title=(val('title')||'').trim();
+
+  function grid(key){
+    var h='<div class="pzgrid" style="--n:'+res.cols+'" role="img" aria-label="'
+         +(key?'Completed crossword grid. ':'Empty crossword grid. ')+res.rows+' rows by '+res.cols+' columns.">'
+         +'<table class="pz cw'+(key?' key':'')+'" role="presentation"><tbody>';
+    for(var y=0;y<res.rows;y++){
+      h+='<tr>';
+      for(var x=0;x<res.cols;x++){
+        var cell=res.cells[y][x];
+        h+= cell ? '<td class="open"><span>'+(cell.n?'<i>'+cell.n+'</i>':'')+(key?cell.ch:'')+'</span></td>'
+                 : '<td class="blk"><span></span></td>';
+      }
+      h+='</tr>';
+    }
+    return h+'</tbody></table></div>';
+  }
+  function clues(list,heading){
+    if(!list.length) return '';
+    return '<div><h3 class="cluesh">'+heading+'</h3><ul class="cluelist">'
+      + list.map(function(e){
+          return '<li><b>'+e.n+'</b><span>'+(e.clue?MK.esc(e.clue):'<em>no clue given</em>')+' <em>('+e.word.length+')</em></span></li>';
+        }).join('')
+      + '</ul></div>';
+  }
+
+  var n=res.across.length+res.down.length;
+  var html='<div class="pzbar"><button type="button" class="ghost" data-print>Print or save as PDF</button>'
+      +'<span class="pznote">'+res.rows+' × '+res.cols+' grid · '+n+' entr'+(n===1?'y':'ies')+'</span></div>'
+    +'<section class="pzsec">'+(title?'<h2 class="pzhead">'+MK.esc(title)+'</h2>':'')+grid(false)
+      +'<div class="clues">'+clues(res.across,'Across')+clues(res.down,'Down')+'</div></section>'
+    +'<section class="pzsec keysec"><h2 class="pzhead">Answer key'+(title?' — '+MK.esc(title):'')+'</h2>'+grid(true)
+      +'<ul class="vh">'+res.across.concat(res.down).map(function(e){
+          return '<li>'+e.n+' '+(e.dr?'Down':'Across')+': '+e.word+'.</li>';
+        }).join('')+'</ul></section>';
+
+  var note=[];
+  if(p.short.length) note.push(p.short.length+' entr'+(p.short.length===1?'y was':'ies were')+' under three letters and left out');
+  if(p.long.length) note.push(p.long.join(', ')+' too long to lay out');
+  if(p.noclue.length) note.push(p.noclue.length+' entr'+(p.noclue.length===1?'y has':'ies have')+' no clue yet');
+  if(res.unplaced.length) note.push('no crossing point for '+res.unplaced.map(function(e){return e.word;}).join(', '));
+  out(html, note.length ? note.join('; ')+'.' : 'Every word crossed. Press Make crossword again for a different layout.');""",
+ prose="""
+      <h2>How to write the list</h2>
+      <p>One entry per line, the word first, then the clue: <code>OTTER: river swimmer</code>. A comma or a dash works just as well as a colon. Spaces inside an answer are removed, so <code>ICE AGE</code> becomes one seven-letter entry. A line with no clue still goes into the grid and is listed as having no clue yet, which is useful when you are building the grid first and writing the clues afterwards.</p>
+      <h2>Why a word sometimes doesn't go in</h2>
+      <p>Every entry has to cross an entry that is already placed, sharing a letter at the crossing square. If a word has no letter in common with anything else on the grid, there is nowhere legal to put it and it is reported rather than quietly dropped. Adding one more word that shares a letter with it usually pulls it in. Lists that share plenty of vowels interlock most easily.</p>
+      <h2>The rule that keeps it a crossword</h2>
+      <p>Two entries may only touch at a crossing square. Words never run straight into one another, and a letter that isn't a crossing never sits shoulder-to-shoulder with a neighbour — otherwise the grid would read out words nobody wrote a clue for. That constraint is why the finished grid is a little sparser than you might expect, and why every run of letters in it appears in the Across or Down list.</p>
+      <h2>Printing and the answer key</h2>
+      <p>Press <em>Print or save as PDF</em>. The puzzle and its clues print on the first sheet and the filled grid on a second, so the answers never show through on the handout. Choose <em>Save as PDF</em> in the print dialog if you want a file instead of paper. Nothing is uploaded — the grid is worked out in your browser, so your clues stay on your machine.</p>
+      <h2>Related tools</h2>
+      <p>The <a href="/tools/word-search-maker/">word search maker</a> takes the same word list without clues. If you're solving rather than setting, the <a href="/tools/word-finder/">word finder</a> matches a pattern like <code>C??SS</code>, and the <a href="/tools/anagram-solver/">anagram solver</a> handles the anagram clues.</p>""")
+
+PRELOAD = '<link rel="preload" as="fetch" href="/tools/words.txt?v=2" crossorigin>\n'
+ENGINE_DICT = '<script src="/tools/wordkit.js?v=2"></script>'
+ENGINE_MAKER = '<script src="/tools/makerkit.js?v=1"></script>'
+BOOT_DICT = """  WK.onReady(function(e){
+    if(e){ status.textContent='The dictionary could not load. Refresh the page to try again.'; return; }
+    go.disabled=false; status.textContent='104,562 words ready.'; solve();
+  });"""
+BOOT_PLAIN = """  go.disabled=false; solve();"""
+
 TEMPLATE = open(os.path.join(ROOT, 'build/tool_template.html'), encoding='utf-8').read()
 
 def related(slug):
-    cards = [f'<a class="rel" href="/tools/{s}/"><b>{n}</b><span>{d}</span></a>' for s, n, d in TOOLS if s != slug][:3]
+    i = [t[0] for t in TOOLS].index(slug)
+    ring = [TOOLS[(i + k) % len(TOOLS)] for k in range(1, 4)]
+    cards = [f'<a class="rel" href="/tools/{s}/"><b>{n}</b><span>{d}</span></a>' for s, n, d in ring]
     cards.append('<a class="rel" href="/"><b>Wordmere</b><span>The cosy word game this dictionary comes from.</span></a>')
     return '\n        '.join(cards)
 
@@ -372,7 +596,8 @@ def build(slug, name):
     s = SPEC[slug]
     url = f'https://wordmere.com/tools/{slug}/'
     schema = {"@context": "https://schema.org", "@graph": [
-      {"@type": "WebApplication", "name": name, "url": url, "applicationCategory": "UtilitiesApplication",
+      {"@type": "WebApplication", "name": name, "url": url,
+       "applicationCategory": "EducationalApplication" if slug.endswith("-maker") else "UtilitiesApplication",
        "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "description": s['desc'],
        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
        "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}},
@@ -380,13 +605,20 @@ def build(slug, name):
        {"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"},
        {"@type": "ListItem", "position": 2, "name": "Word tools", "item": "https://wordmere.com/tools/"},
        {"@type": "ListItem", "position": 3, "name": name, "item": url}]}]}
+    dictionary = s.get('needs_dict', True)
     page = TEMPLATE
     for k, v in {
         'TITLE': s['title'], 'DESC': s['desc'], 'URL': url, 'NAME': name, 'SUB': s['sub'],
         'SCHEMA': json.dumps(schema, ensure_ascii=False), 'STYLE': STYLE, 'TOOLCSS': TOOL_CSS,
+        'EXTRACSS': s.get('extra_css', ''),
         'NAV': NAV, 'FOOT': FOOT, 'FORM': s['form'], 'HINT': f'<p class="hint">{s["hint"]}</p>' if s.get('hint') else '',
         'PROSE': s['prose'], 'TM': f'<p class="tm">{s["tm"]}</p>' if s.get('tm') else '',
         'RELATED': related(slug), 'SOLVE': s['js'], 'CTA': s.get('cta', 'Search'),
+        'PRELOAD': PRELOAD if dictionary else '',
+        'ENGINE': ENGINE_DICT if dictionary else ENGINE_MAKER,
+        'GUARD': '    if(!WK.dict) return;' if dictionary else '',
+        'BOOT': BOOT_DICT if dictionary else BOOT_PLAIN,
+        'LOADING': 'Loading the dictionary…' if dictionary else 'Building your puzzle…',
     }.items():
         page = page.replace('{{' + k + '}}', v)
     assert '{{' not in page, re.findall(r'\{\{\w+\}\}', page)

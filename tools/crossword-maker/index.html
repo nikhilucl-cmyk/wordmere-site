@@ -3,27 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Random Word Generator — Any Length, Common or Obscure</title>
-<meta name="description" content="Free random word generator. Pick how many words you want and how long they should be, from a dictionary of 104,562 English words. No sign-up.">
-<link rel="canonical" href="https://wordmere.com/tools/random-word-generator/">
+<title>Crossword Maker — Make a Printable Crossword Puzzle</title>
+<meta name="description" content="Free crossword maker. Enter your own words and clues, and get a numbered crossword grid with Across and Down lists plus an answer key, ready to print.">
+<link rel="canonical" href="https://wordmere.com/tools/crossword-maker/">
 <meta name="theme-color" content="#E9F6FE">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Wordmere">
-<meta property="og:title" content="Random Word Generator — Any Length, Common or Obscure">
-<meta property="og:description" content="Free random word generator. Pick how many words you want and how long they should be, from a dictionary of 104,562 English words. No sign-up.">
-<meta property="og:url" content="https://wordmere.com/tools/random-word-generator/">
+<meta property="og:title" content="Crossword Maker — Make a Printable Crossword Puzzle">
+<meta property="og:description" content="Free crossword maker. Enter your own words and clues, and get a numbered crossword grid with Across and Down lists plus an answer key, ready to print.">
+<meta property="og:url" content="https://wordmere.com/tools/crossword-maker/">
 <meta property="og:image" content="https://wordmere.com/img/social-card.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Random Word Generator — Any Length, Common or Obscure">
-<meta name="twitter:description" content="Free random word generator. Pick how many words you want and how long they should be, from a dictionary of 104,562 English words. No sign-up.">
+<meta name="twitter:title" content="Crossword Maker — Make a Printable Crossword Puzzle">
+<meta name="twitter:description" content="Free crossword maker. Enter your own words and clues, and get a numbered crossword grid with Across and Down lists plus an answer key, ready to print.">
 <meta name="twitter:image" content="https://wordmere.com/img/social-card.jpg">
 <link rel="icon" href="/img/favicon-32.png" sizes="32x32">
 <link rel="icon" href="/img/favicon-16.png" sizes="16x16">
 <link rel="apple-touch-icon" href="/img/icon-180.png">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
 <link rel="stylesheet" href="/fonts/fonts.css">
-<link rel="preload" as="fetch" href="/tools/words.txt?v=2" crossorigin>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Random word generator", "url": "https://wordmere.com/tools/random-word-generator/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "description": "Free random word generator. Pick how many words you want and how long they should be, from a dictionary of 104,562 English words. No sign-up.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Word tools", "item": "https://wordmere.com/tools/"}, {"@type": "ListItem", "position": 3, "name": "Random word generator", "item": "https://wordmere.com/tools/random-word-generator/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebApplication", "name": "Crossword maker", "url": "https://wordmere.com/tools/crossword-maker/", "applicationCategory": "EducationalApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "description": "Free crossword maker. Enter your own words and clues, and get a numbered crossword grid with Across and Down lists plus an answer key, ready to print.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Word tools", "item": "https://wordmere.com/tools/"}, {"@type": "ListItem", "position": 3, "name": "Crossword maker", "item": "https://wordmere.com/tools/crossword-maker/"}]}]}</script>
 <style>
   :root{
     --page:#E9F6FE; --white:#FFFFFF; --mist:#D6EEFB;
@@ -408,7 +407,65 @@
     .backhome{width:100%; justify-content:center;}
   }
 </style>
+<style>
+  /* The two puzzle makers: a square letter grid that has to survive a
+     phone, a laptop and a sheet of A4 without being re-laid-out. */
+  .field .wide{flex:1 1 100%; min-width:0;}
+  @media (min-width:900px){ .field{flex-wrap:wrap;} }
+  .plain input[type=text]{font-family:var(--body); font-weight:600; font-size:16px; letter-spacing:.01em; text-transform:none;}
+  .plain input[type=text]::placeholder{font-weight:500;}
+  #out{min-height:620px;}
+  .pzbar{display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:22px;}
+  .ghost{font-family:var(--display); font-weight:800; font-size:15px; color:#0A4A63; background:var(--page);
+    border:0; border-radius:12px; padding:13px 20px; cursor:pointer; box-shadow:inset 0 0 0 2px rgba(14,58,80,.18);}
+  .ghost:hover{box-shadow:inset 0 0 0 2px var(--tq);}
+  .pznote{font-size:13.5px; color:var(--ink-faint); font-weight:600;}
+  .pzsec{margin-top:24px;}
+  .pzhead{font-family:var(--display); font-weight:800; font-size:clamp(19px,3vw,25px); letter-spacing:-.02em;
+    margin:0 0 14px; color:var(--ink); text-wrap:balance;}
+  .pzgrid{container-type:inline-size; max-width:620px; margin:0 auto;}
+  .pz{table-layout:fixed; border-collapse:collapse; width:100%;}
+  .pz td{padding:0; border:1px solid rgba(14,58,80,.18); background:var(--white);}
+  .pz td span{display:flex; align-items:center; justify-content:center; aspect-ratio:1/1; position:relative;
+    font-family:var(--display); font-weight:700; font-size:14px; line-height:1; color:var(--ink);}
+  .pzgrid .pz td span{font-size:calc(58cqi / var(--n));}
+  .pz.key td span{color:#7593A1; font-weight:600;}
+  .pz.key td span.hit{color:#06323A; font-weight:800; background:#BDEEF6; box-shadow:inset 0 0 0 1px rgba(16,112,127,.35);}
+  .cw td.blk{background:var(--mist); border-color:rgba(14,58,80,.10);}
+  .cw td span i{position:absolute; top:4%; left:7%; font-style:normal; font-family:var(--body); font-weight:700;
+    font-size:.52em; color:#3E6270; line-height:1;}
+  .cw.key td span{color:#06323A;}
+  .findh,.cluesh{font-family:var(--display); font-weight:800; font-size:17px; letter-spacing:-.015em; margin:22px 0 10px; color:var(--ink);}
+  .findlist{display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none;}
+  .findlist li{font-family:var(--display); font-weight:700; font-size:14.5px; letter-spacing:.05em; color:var(--ink);
+    background:var(--page); padding:8px 12px; border-radius:9px;}
+  .clues{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:clamp(16px,3vw,30px); margin-top:8px;}
+  .cluelist{margin:0; padding:0; list-style:none; display:grid; gap:9px;}
+  .cluelist li{display:flex; gap:9px; font-size:15px; color:var(--ink-soft); line-height:1.45;}
+  .cluelist b{flex:0 0 auto; min-width:1.4em; font-family:var(--display); font-weight:800; color:var(--ink);}
+  .cluelist em{font-style:normal; color:var(--ink-faint); font-weight:600;}
+  .vh{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap;}
+  @media (max-width:600px){ #out{min-height:520px;} .ghost{width:100%;} .pznote{width:100%;} }
 
+  @media print{
+    @page{margin:14mm;}
+    body{background:#fff; color:#000;}
+    .nav,.sitefoot,.crumbs,.prose,form,.pzbar,.toolwrap h1,.toolwrap .sub{display:none !important;}
+    .pzhead,.findh,.cluesh,.cluelist li,.cluelist b,.cluelist em,.findlist li{color:#000;}
+    .toolwrap{max-width:none; padding:0;}
+    .panel{background:#fff; box-shadow:none; border-radius:0; padding:0;}
+    #out{min-height:0;}
+    .pzgrid{max-width:min(100%, calc(var(--n) * 11mm));}
+    .pz td{border-color:#111;}
+    .pz td span,.pz.key td span{color:#000;}
+    .pz.key td span.hit{background:#D9D9D9; box-shadow:none; color:#000;}
+    .cw td.blk{background:#fff; border-color:transparent;}
+    .cw.key td.blk{background:#fff;}
+    .pzsec{break-inside:avoid;}
+    .keysec{break-before:page;}
+    .findlist li{background:none; box-shadow:inset 0 0 0 1px #999;}
+  }
+</style>
 </head>
 <body>
 <div class="shell">
@@ -419,36 +476,46 @@
   </div></nav>
 
   <main class="toolwrap">
-    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <a href="/tools/">Word tools</a> › <span aria-current="page">Random word generator</span></nav>
-    <h1>Random word generator</h1>
-    <p class="sub">Random English words, as many as you need. Useful for games, writing prompts, passwords you can actually say out loud, or naming things.</p>
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <a href="/tools/">Word tools</a> › <span aria-current="page">Crossword maker</span></nav>
+    <h1>Crossword maker</h1>
+    <p class="sub">Give it a word and a clue on each line. It works out where the words cross, numbers the grid, and prints with the answers on a separate sheet.</p>
 
     <div class="panel">
       <form id="f" novalidate>
         <div class="field">
-          <div class="mid"><label for="count">How many</label><select id="count" name="count"><option value="1">1</option><option value="5" selected>5</option><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></div><div><label for="len">Length</label><select id="len" name="len"><option value="0">Any</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div><div class="mid"><label for="pool">Word type</label><select id="pool" name="pool"><option value="common" selected>Defined words</option><option value="all">All words, incl. obscure</option></select></div><div class="mid"><label for="starts">Starts with</label><input type="text" id="starts" name="starts" value="" placeholder="optional" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="err"></div>
-          <button class="solve" id="go" type="submit" disabled>Generate</button>
+          <div class="wide"><label for="entries">One per line — WORD: clue</label><textarea id="entries" name="entries" rows="7" placeholder="OTTER: river swimmer" spellcheck="false" aria-describedby="err">OTTER: river swimmer with a taste for fish
+WILLOW: tree that leans over the water
+HERON: long-legged fisher, stands very still
+MEADOW: open grassy ground
+PEBBLE: small smooth stone
+REEDS: tall stems at the water's edge
+MOSS: soft green cover on a damp log</textarea></div><div class="grow plain"><label for="title">Puzzle title (optional)</label><input type="text" id="title" name="title" value="Riverbank crossword" placeholder="Chapter 4 review" maxlength="48" autocomplete="off" aria-describedby="err"></div>
+          <button class="solve" id="go" type="submit" disabled>Make crossword</button>
         </div>
-        
+        <p class="hint">Separate the word from its clue with a colon, a comma or a dash. A line with no clue still goes in the grid.</p>
         <p class="err" id="err" role="alert" hidden></p>
-        <p class="status" id="status" aria-live="polite">Loading the dictionary…</p>
+        <p class="status" id="status" aria-live="polite">Building your puzzle…</p>
       </form>
       <div id="out"></div>
     </div>
 
     <div class="prose">
       
-      <h2>Everyday words or the whole dictionary</h2>
-      <p>"Defined words" draws from the 29,355 that carry a real dictionary definition — the ones a person can read aloud without blinking. It is not a hand-picked list, so the odd proper noun or technical term slips through. "All words" opens up the full 104,562, including the obscure corners that only exist in word-game dictionaries.</p>
-      <h2>What people use it for</h2>
-      <p>Party games where everyone needs a word to act out or draw. Writing prompts when a blank page is winning. Picking a name for a project. Building a passphrase out of several short words, which is easier to remember and harder to guess than a mangled single word.</p>
-      <h2>Press again for a fresh set</h2>
-      <p>Every press gives a new selection, and no word repeats within one set. If you want words that fit a shape rather than random ones, the <a href="/tools/word-finder/">word finder</a> searches by pattern, and the <a href="/tools/word-unscrambler/">unscrambler</a> works from letters you already hold.</p>
+      <h2>How to write the list</h2>
+      <p>One entry per line, the word first, then the clue: <code>OTTER: river swimmer</code>. A comma or a dash works just as well as a colon. Spaces inside an answer are removed, so <code>ICE AGE</code> becomes one seven-letter entry. A line with no clue still goes into the grid and is listed as having no clue yet, which is useful when you are building the grid first and writing the clues afterwards.</p>
+      <h2>Why a word sometimes doesn't go in</h2>
+      <p>Every entry has to cross an entry that is already placed, sharing a letter at the crossing square. If a word has no letter in common with anything else on the grid, there is nowhere legal to put it and it is reported rather than quietly dropped. Adding one more word that shares a letter with it usually pulls it in. Lists that share plenty of vowels interlock most easily.</p>
+      <h2>The rule that keeps it a crossword</h2>
+      <p>Two entries may only touch at a crossing square. Words never run straight into one another, and a letter that isn't a crossing never sits shoulder-to-shoulder with a neighbour — otherwise the grid would read out words nobody wrote a clue for. That constraint is why the finished grid is a little sparser than you might expect, and why every run of letters in it appears in the Across or Down list.</p>
+      <h2>Printing and the answer key</h2>
+      <p>Press <em>Print or save as PDF</em>. The puzzle and its clues print on the first sheet and the filled grid on a second, so the answers never show through on the handout. Choose <em>Save as PDF</em> in the print dialog if you want a file instead of paper. Nothing is uploaded — the grid is worked out in your browser, so your clues stay on your machine.</p>
+      <h2>Related tools</h2>
+      <p>The <a href="/tools/word-search-maker/">word search maker</a> takes the same word list without clues. If you're solving rather than setting, the <a href="/tools/word-finder/">word finder</a> matches a pattern like <code>C??SS</code>, and the <a href="/tools/anagram-solver/">anagram solver</a> handles the anagram clues.</p>
       
       <div class="related">
-        <a class="rel" href="/tools/word-scrambler/"><b>Word scrambler</b><span>Scramble a list of words for a puzzle</span></a>
-        <a class="rel" href="/tools/word-search-maker/"><b>Word search maker</b><span>Build a printable word search from your own words</span></a>
-        <a class="rel" href="/tools/crossword-maker/"><b>Crossword maker</b><span>Turn your words and clues into a printable crossword</span></a>
+        <a class="rel" href="/tools/word-unscrambler/"><b>Word unscrambler</b><span>Every word from your letters</span></a>
+        <a class="rel" href="/tools/anagram-solver/"><b>Anagram solver</b><span>Words that use every letter</span></a>
+        <a class="rel" href="/tools/word-finder/"><b>Word finder</b><span>Search by pattern, start, end or length</span></a>
         <a class="rel" href="/"><b>Wordmere</b><span>The cosy word game this dictionary comes from.</span></a>
       </div>
       <a class="backhome" href="/">Back to Wordmere</a>
@@ -485,7 +552,7 @@
   </footer>
 </div>
 
-<script src="/tools/wordkit.js?v=2"></script>
+<script src="/tools/makerkit.js?v=1"></script>
 <script>
 (function(){
   var f=document.getElementById('f'), go=document.getElementById('go'), err=document.getElementById('err'),
@@ -497,30 +564,56 @@
   function done(hits,msg){ out(hits.length ? WK.group(hits) : '<p class="status">No words found. Try different letters.</p>', hits.length ? msg : ''); }
   function solve(){
     err.hidden=true;
-    if(!WK.dict) return;
 
-  var n=+val('count')||5, L=+val('len')||0, pool=val('pool'), st=WK.clean(val('starts'));
-  setv('starts',st);
-  var source=[];
-  (L?[L]:[3,4,5,6,7,8]).forEach(function(k){ (WK.byLen[k]||[]).forEach(function(w){
-    if(pool==='common' && !WK.isCommon(w)) return;
-    if(st && w.indexOf(st)!==0) return;
-    source.push(w); }); });
-  if(!source.length) return fail('Nothing matches that. Try "include rare words", a different length, or fewer starting letters.');
-  var picked=[], used={};
-  for(var i=0; i<n*40 && picked.length<Math.min(n,source.length); i++){
-    var w=source[(Math.random()*source.length)|0];
-    if(used[w]) continue; used[w]=1; picked.push({w:w, top:true});
+
+  var p=MK.parseClued(val('entries'),18);
+  if(!p.entries.length) return fail('Add some entries first — one word per line, three letters or more.');
+  if(p.entries.length>34) return fail('That is more than this will lay out. Keep it to 34 entries or fewer.');
+  var res=MK.crossword(p.entries);
+  var title=(val('title')||'').trim();
+
+  function grid(key){
+    var h='<div class="pzgrid" style="--n:'+res.cols+'" role="img" aria-label="'
+         +(key?'Completed crossword grid. ':'Empty crossword grid. ')+res.rows+' rows by '+res.cols+' columns.">'
+         +'<table class="pz cw'+(key?' key':'')+'" role="presentation"><tbody>';
+    for(var y=0;y<res.rows;y++){
+      h+='<tr>';
+      for(var x=0;x<res.cols;x++){
+        var cell=res.cells[y][x];
+        h+= cell ? '<td class="open"><span>'+(cell.n?'<i>'+cell.n+'</i>':'')+(key?cell.ch:'')+'</span></td>'
+                 : '<td class="blk"><span></span></td>';
+      }
+      h+='</tr>';
+    }
+    return h+'</tbody></table></div>';
   }
-  out('<div class="group"><h2>Your words <span>'+picked.length+'</span></h2><ul class="words">'
-      + picked.map(function(p){ return '<li class="top'+(WK.isCommon(p.w)?'':' rare')+'">'+p.w+'</li>'; }).join('')
-      + '</ul></div>',
-      picked.length+' of '+source.length.toLocaleString()+' matching words — press Search again for a new set');
+  function clues(list,heading){
+    if(!list.length) return '';
+    return '<div><h3 class="cluesh">'+heading+'</h3><ul class="cluelist">'
+      + list.map(function(e){
+          return '<li><b>'+e.n+'</b><span>'+(e.clue?MK.esc(e.clue):'<em>no clue given</em>')+' <em>('+e.word.length+')</em></span></li>';
+        }).join('')
+      + '</ul></div>';
   }
-  WK.onReady(function(e){
-    if(e){ status.textContent='The dictionary could not load. Refresh the page to try again.'; return; }
-    go.disabled=false; status.textContent='104,562 words ready.'; solve();
-  });
+
+  var n=res.across.length+res.down.length;
+  var html='<div class="pzbar"><button type="button" class="ghost" data-print>Print or save as PDF</button>'
+      +'<span class="pznote">'+res.rows+' × '+res.cols+' grid · '+n+' entr'+(n===1?'y':'ies')+'</span></div>'
+    +'<section class="pzsec">'+(title?'<h2 class="pzhead">'+MK.esc(title)+'</h2>':'')+grid(false)
+      +'<div class="clues">'+clues(res.across,'Across')+clues(res.down,'Down')+'</div></section>'
+    +'<section class="pzsec keysec"><h2 class="pzhead">Answer key'+(title?' — '+MK.esc(title):'')+'</h2>'+grid(true)
+      +'<ul class="vh">'+res.across.concat(res.down).map(function(e){
+          return '<li>'+e.n+' '+(e.dr?'Down':'Across')+': '+e.word+'.</li>';
+        }).join('')+'</ul></section>';
+
+  var note=[];
+  if(p.short.length) note.push(p.short.length+' entr'+(p.short.length===1?'y was':'ies were')+' under three letters and left out');
+  if(p.long.length) note.push(p.long.join(', ')+' too long to lay out');
+  if(p.noclue.length) note.push(p.noclue.length+' entr'+(p.noclue.length===1?'y has':'ies have')+' no clue yet');
+  if(res.unplaced.length) note.push('no crossing point for '+res.unplaced.map(function(e){return e.word;}).join(', '));
+  out(html, note.length ? note.join('; ')+'.' : 'Every word crossed. Press Make crossword again for a different layout.');
+  }
+  go.disabled=false; solve();
   f.addEventListener('submit', function(ev){ ev.preventDefault(); solve(); });
   f.querySelectorAll('select').forEach(function(s){ s.addEventListener('change', solve); });
   f.querySelectorAll('input, textarea').forEach(function(i){ i.addEventListener('input', function(){ err.hidden=true; }); });
