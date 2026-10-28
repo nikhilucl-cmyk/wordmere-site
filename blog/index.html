@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/img/icon-180.png">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
 <link rel="stylesheet" href="/fonts/fonts.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Blog", "name": "Wordmere Notes", "url": "https://wordmere.com/blog/", "description": "Notes from building Wordmere: word lists, puzzle generators, retention, and the bugs that only show up once real people are playing.", "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "blogPost": [{"@type": "BlogPosting", "headline": "Why your word game’s dictionary is lying to you", "url": "https://wordmere.com/blog/word-list-problem/", "datePublished": "2026-10-10", "description": "Open word lists accept words no human would play. Why a word game needs two dictionaries, not one, and the cheap signal we used to tell them apart."}]}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Notes", "item": "https://wordmere.com/blog/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Blog", "name": "Wordmere Notes", "url": "https://wordmere.com/blog/", "description": "Notes from building Wordmere: word lists, puzzle generators, retention, and the bugs that only show up once real people are playing.", "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "blogPost": [{"@type": "BlogPosting", "headline": "Our retention magic number was a mirage", "url": "https://wordmere.com/blog/retention-magic-number/", "datePublished": "2026-10-28", "description": "Six levels in session one doubled our day-one retention. We shipped a release that moved that number by a third, and retention stayed flat. What we got wrong."}, {"@type": "BlogPosting", "headline": "Word search generators print wrong answer keys", "url": "https://wordmere.com/blog/word-search-answer-keys/", "datePublished": "2026-10-28", "description": "A word search is a grid and a separate answer key, built by different code. Here is the bug that makes them disagree, how often it fires, and the cheap fix."}, {"@type": "BlogPosting", "headline": "The two rules that make a crossword a crossword", "url": "https://wordmere.com/blog/crossword-adjacency-rules/", "datePublished": "2026-10-28", "description": "A crossword generator is easy to write and hard to write correctly. The gap is two adjacency rules, and here is what the grids look like without each of them."}, {"@type": "BlogPosting", "headline": "Why your word game’s dictionary is lying to you", "url": "https://wordmere.com/blog/word-list-problem/", "datePublished": "2026-10-10", "description": "Open word lists accept words no human would play. Why a word game needs two dictionaries, not one, and the cheap signal we used to tell them apart."}]}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Notes", "item": "https://wordmere.com/blog/"}]}]}</script>
 <style>
   :root{
     --page:#E9F6FE; --white:#FFFFFF; --mist:#D6EEFB;
@@ -368,6 +368,10 @@
   .tryit p{margin:0; flex:1 1 240px; font-size:15.5px; color:#5A3300; font-weight:600;}
   .tryit a{flex:0 0 auto; font-family:var(--display); font-weight:800; font-size:15px; color:#fff; text-decoration:none;
     background:linear-gradient(180deg,#D64A28,#BE3F22); border-radius:999px; padding:13px 24px; box-shadow:0 4px 0 #9E3319;}
+  .fig{margin:26px 0; padding:18px 20px 14px; background:var(--white); border-radius:18px;
+    box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 6px 18px rgba(14,58,80,.06);}
+  .fig svg{display:block; width:100%; height:auto;}
+  .figcap{margin:10px 0 0; font-size:14px; color:var(--ink-faint); line-height:1.5;}
   .endnote{margin-top:40px; padding-top:22px; border-top:1px solid var(--line-soft); font-size:15px; color:var(--ink-faint);}
   .endnote a{color:#0C6E92; font-weight:600; text-decoration:underline; text-underline-offset:3px;}
   .postlist{margin-top:34px; display:grid; gap:16px;}
@@ -404,6 +408,21 @@
       generators, retention, and the bugs that only show up once real people are playing.</p>
 
     <div class="postlist">
+      <a class="postcard" href="/blog/retention-magic-number/">
+        <h2>Our retention magic number was a mirage</h2>
+        <p>Players who cleared six levels in their first session came back at roughly double the rate. So we made more players clear six levels. Retention did not move at all.</p>
+        <span class="when"><time datetime="2026-10-28">28 October 2026</time></span>
+      </a>
+      <a class="postcard" href="/blog/word-search-answer-keys/">
+        <h2>Word search generators print wrong answer keys</h2>
+        <p>We switched off one check in our puzzle maker and ran it twenty thousand times. Thirty-seven per cent of the grids hid a word somewhere the answer key never mentioned.</p>
+        <span class="when"><time datetime="2026-10-28">28 October 2026</time></span>
+      </a>
+      <a class="postcard" href="/blog/crossword-adjacency-rules/">
+        <h2>The two rules that make a crossword a crossword</h2>
+        <p>Take either one out of our generator and the grids still look fine. Seventy-eight per cent and ninety-eight per cent of them respectively contain a run of letters nobody wrote a clue for.</p>
+        <span class="when"><time datetime="2026-10-28">28 October 2026</time></span>
+      </a>
       <a class="postcard" href="/blog/word-list-problem/">
         <h2>Why your word game’s dictionary is lying to you</h2>
         <p>Our Scrabble helper once told a player that REQUIZ was their best move. Here is why every open word list will do that to you, and the cheap fix.</p>
@@ -412,12 +431,12 @@
     </div>
 
     <div class="upnext">
-      <h2>What else is coming</h2>
-      <p>The bug that makes word search generators print wrong answer keys. The two rules that stop a
-        crossword turning into a letter jumble. And what the retention data actually says about why
-        players stop — which is not what we assumed.</p>
-      <p>In the meantime, the <a href="/tools/">word tools</a> are free and the
-        <a href="/">game</a> is the thing all of this is in aid of.</p>
+      <h2>What this is</h2>
+      <p>No roadmap, no release notes, no announcements. Each of these is one specific thing that went
+        wrong while we were building a word game, written up properly: what broke, how often, what we
+        did about it, and what the fix still does not handle.</p>
+      <p>The <a href="/tools/">word tools</a> are free and the <a href="/">game</a> is the thing all of
+        this is in aid of.</p>
     </div>
   </main>
 
