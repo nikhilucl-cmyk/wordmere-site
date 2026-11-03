@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/img/icon-180.png">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
 <link rel="stylesheet" href="/fonts/fonts.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Our retention magic number was a mirage", "description": "Six levels in session one doubled our day-one retention. We shipped a release that moved that number by a third, and retention stayed flat. What we got wrong.", "url": "https://wordmere.com/blog/retention-magic-number/", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://wordmere.com/blog/retention-magic-number/"}, "datePublished": "2026-10-28", "dateModified": "2026-10-28", "author": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "image": "https://wordmere.com/img/social-card.jpg", "inLanguage": "en"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Notes", "item": "https://wordmere.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "Our retention magic number was a mirage", "item": "https://wordmere.com/blog/retention-magic-number/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Our retention magic number was a mirage", "description": "Six levels in session one doubled our day-one retention. We shipped a release that moved that number by a third, and retention stayed flat. What we got wrong.", "url": "https://wordmere.com/blog/retention-magic-number/", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://wordmere.com/blog/retention-magic-number/"}, "datePublished": "2026-10-28", "dateModified": "2026-11-03", "author": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "image": "https://wordmere.com/img/social-card.jpg", "inLanguage": "en"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Notes", "item": "https://wordmere.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "Our retention magic number was a mirage", "item": "https://wordmere.com/blog/retention-magic-number/"}]}]}</script>
 <style>
   :root{
     --page:#E9F6FE; --white:#FFFFFF; --mist:#D6EEFB;
@@ -405,13 +405,12 @@
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <a href="/blog/">Notes</a> › <span aria-current="page">Our retention magic number was a mirage</span></nav>
     <article class="post">
       <h1>Our retention magic number was a mirage</h1>
-      <p class="sub">Players who cleared six levels in their first session came back at roughly double the rate. So we made more players clear six levels. Retention did not move at all.</p>
+      <p class="sub">Players who cleared six levels in their first session came back at roughly double the rate. So we made more players clear six levels. Retention didn't move at all.</p>
       <p class="meta"><time datetime="2026-10-28">28 October 2026</time> · The Wordmere team</p>
       <div class="article">
-      <p>Every product eventually finds a magic number. Ours was six levels.</p>
+      <p>We found our magic number in August. Six levels.</p>
 
-      <p>Plot how likely a new player is to come back the next day against how many levels they cleared in their very first session, and the chart is almost too tidy. It is flat and low up to about five. Somewhere between five and six it roughly doubles. It keeps climbing after that.</p>
-
+      <p>Plot how likely a new player is to come back the next day against how many levels they cleared in their very first session, and the chart is almost too tidy. Flat and low up to about five. Somewhere between five and six it roughly doubles. Then it keeps climbing.</p>
       <figure class="fig">
         <svg viewBox="0 0 660 300" role="img" aria-labelledby="figt figd">
           <title id="figt">Day-one retention by first-session depth, indexed to the shallowest group</title>
@@ -446,68 +445,72 @@
           as a multiple of the shallowest group. We publish shapes rather than levels, so the axis is a
           ratio &#8212; but the ratio is real and the step between five and six is where it happens.</figcaption>
       </figure>
+      <p>About half of our new players were finishing their first session down in the flat part. The brief writes itself.</p>
 
-      <p>About half of our new players were finishing their first session in the flat part of that curve. The brief writes itself: get more of them past five.</p>
+      <h2>So we built it</h2>
 
-      <h2>So we did</h2>
+      <p>We went at first-session depth head on. The opening levels were made quicker to read and quicker to clear, we pulled out the interruptions that fired before the threshold, and the moment a brand-new player finds their first word got rebuilt so that what the game is asking of you can't be missed.</p>
 
-      <p>We went at first-session depth directly. The opening levels were made quicker to read and quicker to clear. Interruptions before the threshold were taken out. The moment a brand-new player finds their first word was redesigned so that the thing the game is asking of them cannot be missed.</p>
+      <p>It worked. That's the annoying part. In one release, the share of new players clearing six or more levels on their first day went up by about a third.</p>
 
-      <p>It worked, in the sense that it did what it was supposed to do. In one release, the share of new players clearing six or more levels on their first day went up by about a third.</p>
+      <p>Day-one retention didn't move. Not slightly — it sat exactly where it had been sitting for two months, and it is sitting there now.</p>
 
-      <p>Day-one retention did not move. Not slightly &#8212; it sat exactly where it had been sitting for two months, and it is sitting there still.</p>
+      <div class="pull"><p>The threshold was real. It was never a cause. We moved the symptom and the illness didn't notice.</p></div>
 
-      <div class="pull"><p>The threshold was real. It was never a cause. We moved the symptom and the illness did not notice.</p></div>
+      <h2>The number was describing them, not steering them</h2>
 
-      <h2>Why the number lied</h2>
+      <p>A player who clears six levels in one sitting has told you something about themselves before your level design gets a vote. They were in the mood, they had twenty minutes, and they had nothing better to do with them. Depth was a <em>measurement</em> of that, and the intent is what comes back tomorrow — not the depth.</p>
 
-      <p>A player who clears six levels in one sitting has told you something about themselves before your level design gets a vote. They were in the mood. The game landed. They had twenty minutes and nothing better to do with them. Depth was a <em>measurement</em> of that intent, and intent is what comes back tomorrow.</p>
+      <p>Make the levels faster and you move the measurement. You haven't been anywhere near the thing it was measuring.</p>
 
-      <p>Make the levels faster and you move the measurement. You have not been anywhere near the thing it was measuring.</p>
+      <p>Written down now it looks obvious, which is the thing about this particular trap. It is the oldest one in product analytics and it still catches everybody, because the correlation is strong, the threshold is sharp, and shipping against a proxy feels identical to shipping against the real thing right up until the results come in. "Players who do X retain better" is not a finding. It is an invitation to ask the actual question, which is: and what happens if we <em>make</em> them do X?</p>
 
-      <p>This is the oldest trap in product analytics and it still catches everybody, because the correlation is strong, the threshold is sharp, and shipping against a proxy feels exactly like shipping against the real thing. &#8220;Players who do X retain better&#8221; is never a finding. It is an invitation to ask the actual question, which is: and if we <em>make</em> them do X?</p>
+      <p>There's a cheap way to ask that before you build anything. Go back through your own release history, find a change that already moved the proxy, and check whether the outcome followed. We had one of those. We didn't look.</p>
 
-      <p>The cheap way to ask it, before you build anything: find a change you have already shipped that moved the proxy, and check whether the outcome followed. If no such change exists in your history, you do not know yet, and that is worth saying out loud before a quarter of roadmap gets built on top of it.</p>
+      <h2>Two kinds of churn, and we fixed the wrong one</h2>
 
-      <h2>What the churn actually looked like</h2>
+      <p>The deeper mistake was treating early churn as one thing.</p>
 
-      <p>The deeper mistake was treating early churn as one thing. It is two, with opposite causes, and the bigger one is invisible if you go looking for difficulty.</p>
+      <p>It's two, with opposite causes, and the bigger one is invisible if you go in looking for difficulty — which we did, because difficulty is the thing a level designer knows how to fix.</p>
 
-      <p><strong>The early group is not stuck.</strong> They leave around twenty seconds into a level. Nobody is defeated at twenty seconds. Almost everyone who starts the first level finishes it, so the first level is not hard. And they leave with their hints unspent &#8212; they do not exhaust the help we gave them and give up, they never reach for it once. There is also a slice of installs, the single largest hole in our funnel, that opens the app, registers a screen view, and never starts a level at all.</p>
+      <p><strong>The early group isn't stuck.</strong> They leave around twenty seconds into a level. Nobody is defeated at twenty seconds. Almost everyone who starts the first level finishes it, so the first level isn't hard. And they leave with their hints unspent — they don't exhaust the help we gave them and give up, they never reach for it once. There's also a slice of installs that opens the app, registers a screen view and never starts a level at all, which is the single largest hole in our funnel and the one I think about most.</p>
 
-      <p>None of that is difficulty. It is cold start. You cannot fix it by making the puzzle easier, because they were not trying to solve the puzzle.</p>
+      <p>None of that is difficulty. It's cold start. You can't fix it by making the puzzle easier, because they were not trying to solve the puzzle.</p>
 
-      <p><strong>The second group is genuinely stuck</strong>, and they are much further in, at the point where the content first asks something real of you. Their median time on the last level they ever touch roughly doubles, and a third of them spend over two minutes on it before they go. That is difficulty churn, it responds to difficulty work, and it is a good deal smaller than the first group.</p>
+      <p><strong>The second group is genuinely stuck</strong>, and they're much further in, at the point where the content first asks something real of you. Their median time on the last level they ever touch roughly doubles, and a third of them spend over two minutes on it before they go. That's difficulty churn. It responds to difficulty work. It is also a good deal smaller than the first group.</p>
 
-      <p>We spent a release tuning the opening for a population that was not failing it.</p>
+      <p>So we spent a release tuning the opening for a population that wasn't failing it.</p>
 
-      <h2>The one number with a shape worth acting on</h2>
+      <h2>One number that actually had a shape</h2>
 
-      <p>Out of everything we looked at, one measurement behaved differently.</p>
+      <p>Out of everything we pulled, one measurement behaved differently enough to be worth something.</p>
 
-      <p>Take the first time a player is ever offered a rewarded video &#8212; in our case a rescue, triggered automatically when they stall rather than hunted for &#8212; and compare how often it is actually watched, by ordinal. The first one is far worse than the second. The second is worse than the third. It recovers from there, and keeps recovering.</p>
+      <p>Take the first time a player is ever offered a rewarded video — in our case a rescue, which fires automatically when they stall rather than being hunted for — and compare how often it's actually watched, by ordinal. The first one is far worse than the second. The second is worse than the third. It recovers from there, and keeps recovering.</p>
 
-      <p>The shape is the finding, not the level. A flat line would mean players simply dislike video ads, and the fix would be to show fewer of them. A line that starts low and climbs means the first one is a <em>surprise</em>, and the fix is something you do once per player: say what is about to happen before it happens, and never again.</p>
+      <p>The shape is the finding, not the level. A flat line would mean players simply dislike video ads, and the fix would be to show fewer of them. A line that starts low and climbs means the first one is a <em>surprise</em>, and the fix is something you do once per player: say what's about to happen before it happens, and then never again.</p>
 
-      <p>That is a much cheaper intervention than rebuilding your ad strategy, and we would not have known to reach for it from the average.</p>
+      <p>That's a far cheaper intervention than rebuilding an ad strategy, and we'd never have found it in the average.</p>
 
-      <h2>The part where we hold it loosely</h2>
+      <h2>Reasons we might still be wrong about that</h2>
 
-      <p>This reading is correlational too, and having just been caught by one correlation we are trying not to repeat the trick. Players who were already on their way out may tap and close, which would produce the same curve from the opposite direction.</p>
+      <p>This reading is correlational too, and having just been caught by one correlation we are trying hard not to do the same trick twice in one quarter. Players who were already on their way out may tap and close, which would produce the same curve from the opposite direction.</p>
 
-      <p>What argues against that: it is the only placement in the game that fires unprompted on a single tap; its completion rate is anomalously low against other placements running on the same ad stack; and the monotonic recovery by ordinal is hard to explain if the cause is the kind of player rather than the moment. The high ordinals are badly survivorship-biased &#8212; a player on their eleventh rescue has self-selected as someone who tolerates rescues. The first-attempt row is the clean one, because every player appears in it exactly once.</p>
+      <p>What argues against it: it's the only placement in the game that fires unprompted on a single tap; its completion rate is anomalously low against other placements running on the same ad stack; and the monotonic recovery by ordinal is hard to explain if the cause is the kind of player rather than the moment.</p>
 
-      <p>So it is being tested rather than believed, and the test is a confirmation step, not a formality.</p>
+      <p>The high ordinals are badly survivorship-biased, obviously. A player on their eleventh rescue has self-selected as somebody who tolerates rescues. The first-attempt row is the clean one, because every player appears in it exactly once, and that row is what the whole argument rests on.</p>
 
-      <h2>The generalisable bit</h2>
+      <p>So it's being tested rather than believed. If the test comes back flat we'll write that up too.</p>
+
+      <h2>What I'd tell someone else</h2>
 
       <ul>
-        <li><strong>A threshold in a correlation describes your users. It is not a lever on them.</strong> Before building against one, find a release that already moved it and check whether the outcome moved too.</li>
-        <li><strong>Split your churn before you diagnose it.</strong> Ours looked like one curve and was two populations with opposite causes. The larger one was invisible because it leaves before it does anything you thought to measure.</li>
-        <li><strong>Prefer findings with a shape.</strong> &#8220;This number is bad&#8221; tells you to improve it. &#8220;This number is bad and then recovers&#8221; tells you what <em>kind</em> of fix it is. The second is worth far more and costs one extra group-by.</li>
+        <li><strong>A threshold in a correlation describes your users. It isn't a lever on them.</strong> Before you build against one, go and find a release that already moved it and check whether the outcome moved as well. That takes an afternoon and it would have saved us a release.</li>
+        <li><strong>Split your churn before you diagnose it.</strong> Ours looked like one curve and turned out to be two populations with opposite causes, and the larger one was invisible because it leaves before it does anything we had thought to measure.</li>
       </ul>
 
-      <p>We kept the six-level work, for the record. The opening is better than it was, new players get further into it, and that is worth having on its own terms. It simply was not the retention fix, and we should not have needed the data to tell us twice.</p>
+      <p>And prefer findings that have a shape to them. "This number is bad" only tells you to improve it. "This number is bad and then recovers" tells you what <em>kind</em> of fix it needs, which is worth a great deal more and costs one extra group-by.</p>
+
+      <p>We kept the six-level work, for the record. The opening is better than it was, new players get further into it, and that's worth having on its own terms. It just wasn't the retention fix, and I'd like to be able to say we only needed the data to tell us that once.</p>
 
       <div class="tryit">
         <p>The game all of this is about is free, and the opening is the part we have rebuilt the most.</p>

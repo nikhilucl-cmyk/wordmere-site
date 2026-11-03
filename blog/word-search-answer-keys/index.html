@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/img/icon-180.png">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
 <link rel="stylesheet" href="/fonts/fonts.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Word search generators print wrong answer keys", "description": "A word search is a grid and a separate answer key, built by different code. Here is the bug that makes them disagree, how often it fires, and the cheap fix.", "url": "https://wordmere.com/blog/word-search-answer-keys/", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://wordmere.com/blog/word-search-answer-keys/"}, "datePublished": "2026-10-28", "dateModified": "2026-10-28", "author": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "image": "https://wordmere.com/img/social-card.jpg", "inLanguage": "en"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Notes", "item": "https://wordmere.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "Word search generators print wrong answer keys", "item": "https://wordmere.com/blog/word-search-answer-keys/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "Word search generators print wrong answer keys", "description": "A word search is a grid and a separate answer key, built by different code. Here is the bug that makes them disagree, how often it fires, and the cheap fix.", "url": "https://wordmere.com/blog/word-search-answer-keys/", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://wordmere.com/blog/word-search-answer-keys/"}, "datePublished": "2026-10-28", "dateModified": "2026-11-03", "author": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "image": "https://wordmere.com/img/social-card.jpg", "inLanguage": "en"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Notes", "item": "https://wordmere.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "Word search generators print wrong answer keys", "item": "https://wordmere.com/blog/word-search-answer-keys/"}]}]}</script>
 <style>
   :root{
     --page:#E9F6FE; --white:#FFFFFF; --mist:#D6EEFB;
@@ -408,25 +408,25 @@
       <p class="sub">We switched off one check in our puzzle maker and ran it twenty thousand times. Thirty-seven per cent of the grids hid a word somewhere the answer key never mentioned.</p>
       <p class="meta"><time datetime="2026-10-28">28 October 2026</time> · The Wordmere team</p>
       <div class="article">
-      <p>A word search is two artefacts, not one. There is a grid of letters, and there is an answer key that claims where each word is hidden. They are produced by different code, and when they disagree the person who gets told they are wrong is a child with a pencil.</p>
+      <p>A word search is two things, not one. There's a grid of letters, and there's an answer key claiming where each word is hidden. Different code produces each of them, and when the two disagree, the person who gets told they're wrong is a child with a pencil.</p>
 
-      <p>Here is how they come to disagree.</p>
+      <p>Here's how they come to disagree.</p>
 
       <h2>The naive generator is almost right</h2>
 
       <p>Everyone writes the same one. Sort the words longest first. For each, find every position and direction where it fits without contradicting a letter already on the grid, prefer the positions that overlap something (crossings make a tighter, better-looking puzzle), place it, record where it went. When every word is down, fill the empty cells with random letters. Print the grid, print the key.</p>
 
-      <p>That is our generator too, and it is correct right up to the last step, where the random letters get a vote.</p>
+      <p>That's our generator too, and it is correct right up to the last step, where the random letters get a vote.</p>
 
       <p>Say the puzzle contains <code>CAT</code>, placed across on row four. The key says row four. Three rows down, by pure chance, the filler has produced a <strong>C</strong>, an <strong>A</strong> and a <strong>T</strong> on a diagonal. There are now two CATs in the grid and exactly one of them is in the key. A child circles the other one, checks the answers, and your software tells them they are wrong.</p>
 
-      <h2>It is not a rare bug</h2>
+      <h2>How often? More often than I'd have guessed</h2>
 
-      <p>We can put a number on it, because the check that prevents it is one loop in our engine and the loop can be switched off.</p>
+      <p>We can put a number on this, because the check that prevents it is one loop in our engine and the loop can be switched off. So I switched it off.</p>
 
-      <p>With it off: twenty thousand puzzles, eight to fifteen words each, every word three to six letters, all eight directions enabled. <strong>37.1% contained at least one word readable somewhere the answer key did not claim.</strong></p>
+      <p>Twenty thousand puzzles, eight to fifteen words each, every word three to six letters, all eight directions enabled. <strong>37.1% contained at least one word readable somewhere the answer key did not claim.</strong></p>
 
-      <p>Broken down by word length, the picture gets sharper:</p>
+      <p>I would have said five per cent. Broken down by word length, the picture gets sharper:</p>
 
       <ul>
         <li>Three letters: <strong>12.7%</strong> forged, out of 77,252 placements.</li>
@@ -434,51 +434,55 @@
         <li>Five and six letters: <strong>zero</strong>, out of 137,475.</li>
       </ul>
 
-      <p>The whole bug lives in short words, which is precisely why it is so easy to ship. Your test list is OTTER, BADGER, HERON, WILLOW, and you will never see it. The first person to make an animal puzzle for a five-year-old &#8212; CAT, DOG, COW, OWL, FOX &#8212; gets a one-in-three chance of a lying answer key.</p>
+      <p>So the whole bug lives in short words, which is precisely why it is so easy to ship. Your test list is OTTER, BADGER, HERON, WILLOW, and you will never once see it. The first person to make an animal puzzle for a five-year-old — CAT, DOG, COW, OWL, FOX — gets a one-in-three chance of a lying answer key.</p>
 
-      <p>The arithmetic is not mysterious. A three-letter word needs three cells to line up. A fifteen-by-fifteen grid read in eight directions contains a few thousand three-cell runs, and every one of them is a lottery ticket. Buy enough tickets and you win something you did not want.</p>
+      <p>The arithmetic isn't mysterious once you look at it. A three-letter word needs three cells to line up. A fifteen-by-fifteen grid read in eight directions holds a few thousand three-cell runs, and every one of them is a lottery ticket. Buy enough tickets and eventually you win something you didn't want.</p>
 
       <div class="pull"><p>The change that made our puzzles look better also made them more likely to be wrong, and nothing about it looked like it touched correctness.</p></div>
 
-      <h2>The cosmetic choice that doubles it</h2>
+      <h2>The pretty version is the buggy version</h2>
 
-      <p>Our filler letters are not drawn uniformly from A to Z. They are drawn from the letters of the words being hidden.</p>
+      <p>Our filler letters aren't drawn uniformly from A to Z. They're drawn from the letters of the words being hidden.</p>
 
-      <p>That is purely a looks decision. A uniform fill scatters J, Q and Z across a grid of farmyard animals, and they read as signposts &#8212; you can find the hidden words by looking for the patches that are suspiciously boring. Drawing the padding from the puzzle&#8217;s own letters fixes that completely.</p>
+      <p>That is purely a looks decision. A uniform fill scatters J, Q and Z across a grid of farmyard animals and they read as signposts — you can find the hidden words by looking for the patches that are suspiciously boring. Drawing the padding from the puzzle's own letters kills that completely. It's the kind of change you make on a Friday afternoon and feel quite good about.</p>
 
       <p>It also biases every single filler cell towards exactly the letters your target words are made of.</p>
 
-      <p>Same twenty thousand puzzles, same seeds, uniform A&#8211;Z filler instead: <strong>20.6%</strong>. So the pretty version is roughly twice as likely to lie. And for longer words it is the difference between never and sometimes &#8212; in a separate run restricted to five- and six-letter words, the uniform fill produced not one forgery in twelve thousand puzzles, while the blended fill produced them in about one puzzle in fifty.</p>
+      <p>Same twenty thousand puzzles, same seeds, uniform A–Z filler instead: <strong>20.6%</strong>. The pretty version is roughly twice as likely to lie. And for longer words it is the difference between never and sometimes — in a separate run restricted to five- and six-letter words, the uniform fill produced not one forgery in twelve thousand puzzles, while the blended fill produced them in about one puzzle in fifty.</p>
 
-      <p>That is the part worth carrying away. A change made entirely for appearance moved a correctness property, in the wrong direction, with no code review on earth likely to catch it.</p>
+      <p>That's the part I'd carry away from the whole exercise. A change made entirely for appearance moved a correctness property in the wrong direction, and I can't construct the code review that would have caught it.</p>
 
-      <h2>The fix is cheap</h2>
+      <h2>Fixing it</h2>
 
-      <p>After filling, for every word in the key, find every position in the grid where it reads &#8212; in all eight directions, not just the ones the puzzle is using, because a backwards word is still a word a child can circle. Any hit that is not the position in the key is a forgery. Take one of its cells that is filler rather than part of a placed word, change the letter, and look again.</p>
+      <p>After filling, for every word in the key, find every position in the grid where it reads. All eight directions, not just the ones the puzzle is using, because a backwards word is still a word a child can circle. Any hit that isn't the position in the key is a forgery. Take one of its cells that is filler rather than part of a placed word, change the letter, look again.</p>
 
-      <p>Repeat until clean, with a bound. The bound matters: changing a letter to clear one forgery can create another, so this is a loop and not a pass. In practice it settles in a handful of iterations. The guard exists so that a pathological word list cannot hang the browser tab.</p>
+      <p>Repeat until clean, with a bound.</p>
 
-      <p>Run with the repair on, the same twenty thousand puzzles produce <strong>zero</strong> forgeries.</p>
+      <p>The bound matters more than it looks, because changing a letter to clear one forgery can create another — so this is a loop and not a pass. In practice it settles in a handful of iterations. The guard is there so that a pathological word list can't hang somebody's browser tab.</p>
 
-      <h2>What the repair cannot do</h2>
+      <p>Run with the repair back on, the same twenty thousand puzzles produce <strong>zero</strong> forgeries.</p>
 
-      <p>Occasionally a forged copy contains no filler at all &#8212; every one of its cells belongs to some word you deliberately placed, which means two of your own words have spelled a third between them. There is nothing to change. The repair gives up, the whole layout is discarded, and we lay the puzzle out again from scratch, growing the grid if we have to.</p>
+      <h2>The case the repair can't touch</h2>
 
-      <p>In those twenty thousand puzzles, that escape hatch never fired once. It is insurance, not a workhorse, and if you were trimming code you would be tempted to delete it. The reason it stays is that its absence is not a wrong answer. Its absence is an infinite loop.</p>
+      <p>Occasionally a forged copy contains no filler at all. Every one of its cells belongs to a word you deliberately placed, which means two of your own words have spelled a third between them, and there is nothing to change. The repair gives up, the whole layout is discarded, and we lay the puzzle out again from scratch, growing the grid if we have to.</p>
 
-      <h2>The part where we tell you it is not perfect</h2>
+      <p>In those twenty thousand puzzles, that escape hatch never fired once. It's insurance, not a workhorse, and if you were trimming code you would be tempted to delete it — I nearly did. The reason it stays is that its absence is not a wrong answer. Its absence is an infinite loop.</p>
 
-      <p>We only check the words in the key. The grid is full of accidental other words &#8212; there is a RAT and an ARE and a TEN in very nearly every puzzle we produce &#8212; and we do not care, because the key has never claimed them. Nobody circles a word that is not on the list.</p>
+      <h2>What we deliberately don't check</h2>
 
-      <p>A stricter generator would run a dictionary over the finished grid and refuse any real word anywhere. We deliberately do not. The puzzle makers load no dictionary at all; the words come from the person making the puzzle, and pulling a few hundred kilobytes of word list onto a page that never reads it costs about twenty Lighthouse points to solve a problem nobody has.</p>
+      <p>We only check the words in the key. The grid is full of accidental other words — there's a RAT and an ARE and a TEN in very nearly every puzzle we produce — and we don't care, because the key has never claimed them. Nobody circles a word that isn't on the list.</p>
 
-      <p>The narrow failure is the one that matters: the key says a word is <em>here</em>, and it is also <em>there</em>. That is the only case where the software tells a correct person they are wrong.</p>
+      <p>A stricter generator would run a dictionary over the finished grid and refuse any real word anywhere. We decided against that, partly on principle and mostly on weight: the puzzle makers load no dictionary at all, the words come from the person making the puzzle, and pulling a few hundred kilobytes of word list onto a page that never reads it costs about twenty Lighthouse points to solve a problem nobody has.</p>
 
-      <h2>The generalisable bit</h2>
+      <p>The narrow failure is the one that matters. The key says a word is <em>here</em>, and it is also <em>there</em>. That is the only case where the software tells a correct person they are wrong.</p>
 
-      <p>Any generator that emits both an artefact and a description of that artefact has this bug available to it. The grid and the key. The build and the manifest. The image and its alt text. The migration and the schema dump. Two code paths, one claim, and nobody checking that they still agree.</p>
+      <h2>Where else this hides</h2>
 
-      <p>The check is almost always cheaper than the generator that needed it. Read your own output back, and confirm it says what you said it says. Ours runs on every build, over a fixed set of word lists and forty random ones, and it is the reason this post has numbers in it rather than an apology.</p>
+      <p>Any generator that emits both a thing and a description of that thing has this bug available to it. The grid and the key. The build and the manifest. The migration and the schema dump — that one has bitten me twice.</p>
+
+      <p>Two code paths, one claim, and nobody checking that they still agree.</p>
+
+      <p>The check is almost always cheaper than the generator that needed it, which is the only reason I'd push this on anybody. Read your own output back, and confirm it says what you said it says. Ours runs on every build, over a fixed set of word lists and forty random ones, and it is the reason this post has numbers in it rather than an apology.</p>
 
       <div class="tryit">
         <p>The puzzle maker is free, runs entirely in your browser, and the answer keys are checked before you ever see them.</p>

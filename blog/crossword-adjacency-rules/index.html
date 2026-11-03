@@ -22,7 +22,7 @@
 <link rel="apple-touch-icon" href="/img/icon-180.png">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
 <link rel="stylesheet" href="/fonts/fonts.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "The two rules that make a crossword a crossword", "description": "A crossword generator is easy to write and hard to write correctly. The gap is two adjacency rules, and here is what the grids look like without each of them.", "url": "https://wordmere.com/blog/crossword-adjacency-rules/", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://wordmere.com/blog/crossword-adjacency-rules/"}, "datePublished": "2026-10-28", "dateModified": "2026-10-28", "author": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "image": "https://wordmere.com/img/social-card.jpg", "inLanguage": "en"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Notes", "item": "https://wordmere.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "The two rules that make a crossword a crossword", "item": "https://wordmere.com/blog/crossword-adjacency-rules/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "The two rules that make a crossword a crossword", "description": "A crossword generator is easy to write and hard to write correctly. The gap is two adjacency rules, and here is what the grids look like without each of them.", "url": "https://wordmere.com/blog/crossword-adjacency-rules/", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://wordmere.com/blog/crossword-adjacency-rules/"}, "datePublished": "2026-10-28", "dateModified": "2026-11-03", "author": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "image": "https://wordmere.com/img/social-card.jpg", "inLanguage": "en"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Notes", "item": "https://wordmere.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "The two rules that make a crossword a crossword", "item": "https://wordmere.com/blog/crossword-adjacency-rules/"}]}]}</script>
 <style>
   :root{
     --page:#E9F6FE; --white:#FFFFFF; --mist:#D6EEFB;
@@ -405,69 +405,73 @@
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <a href="/blog/">Notes</a> › <span aria-current="page">The two rules that make a crossword a crossword</span></nav>
     <article class="post">
       <h1>The two rules that make a crossword a crossword</h1>
-      <p class="sub">Take either one out of our generator and the grids still look fine. Seventy-eight per cent and ninety-eight per cent of them respectively contain a run of letters nobody wrote a clue for.</p>
+      <p class="sub">Take either rule out of our generator and the grids still look fine. They are not fine: 78% and 98% of them hide a run of letters that nobody wrote a clue for.</p>
       <p class="meta"><time datetime="2026-10-28">28 October 2026</time> · The Wordmere team</p>
       <div class="article">
-      <p>A crossword generator is easy to write and hard to write correctly, and the gap between the two is two rules that are not obvious until you print one out.</p>
+      <p>A crossword generator is easy to write and hard to write correctly, and the gap between those two is two rules that aren't obvious until you print one out and hand it to somebody.</p>
 
-      <p>The easy part takes an afternoon. Take the longest word and lay it across. For each remaining word, look for a letter it shares with something already on the grid and place it at ninety degrees through that letter. Score the candidates &#8212; more crossings is better, and growing the bounding box less is better &#8212; take the best, repeat. The result looks like a crossword.</p>
+      <p>The easy part takes an afternoon. I know, because it took me one. Take the longest word and lay it across. For each remaining word, look for a letter it shares with something already on the grid and place it at ninety degrees through that letter. Score the candidates — more crossings is better, growing the bounding box less is better — take the best, repeat. The result looks like a crossword.</p>
 
       <p>Then you print it, hand it to somebody, and they get stuck on a row that reads <code>RIVEROTTER</code>.</p>
 
       <h2>Rule one: a word may not run straight into another word</h2>
 
-      <p>The cell immediately before a word&#8217;s first letter, and the cell immediately after its last, must both be empty.</p>
+      <p>The cell immediately before a word's first letter, and the cell immediately after its last, must both be empty.</p>
 
-      <p>It is easy to assume you get this for free, because every placement in a generator like ours has to cross something, and a crossing is perpendicular. But consider RIVER sitting across, ending at column nine. Now OTTER comes along, crosses some down word, and the arithmetic puts its first letter at column ten on the same row. Both words are legal. Both cross something. The row now reads RIVEROTTER, and the solver has to work out that it is two answers wearing a trench coat.</p>
+      <p>I assumed I got this for free, on the grounds that every placement in a generator like ours has to cross something, and a crossing is perpendicular. That's wrong, and here's why. RIVER is sitting across, ending at column nine. OTTER comes along, crosses some down word, and the arithmetic puts its first letter at column ten on the same row. Both words are legal. Both cross something. The row now reads RIVEROTTER, and the solver has to work out that it is two answers in a trench coat.</p>
 
-      <p>With the rule removed, <strong>77.9% of three thousand generated grids contained at least one run of two or more letters that nobody had written a clue for</strong> &#8212; 4,197 such runs in total. A sample of the actual output: <code>RIVEROTTER</code>, <code>PEPPERICED</code>, <code>OTTERSCALA</code>, <code>PEPPERL</code>, <code>REEDH</code>.</p>
+      <p>With the rule removed, <strong>77.9% of three thousand generated grids contained at least one run of two or more letters that nobody had written a clue for</strong> — 4,197 such runs in total. Real output, not invented examples: <code>RIVEROTTER</code>, <code>PEPPERICED</code>, <code>OTTERSCALA</code>, <code>PEPPERL</code>, <code>REEDH</code>.</p>
 
-      <h2>Rule two: a letter that is not a crossing may not touch a neighbour side-on</h2>
+      <h2>Rule two: a letter that isn't a crossing may not touch a neighbour side-on</h2>
 
-      <p>This is the subtler one, and it is the rule people leave out.</p>
+      <p>This is the subtle one, and it's the rule people leave out.</p>
 
-      <p>Take OTTER running across. Every one of its five letters has a cell above it and a cell below it. If the cell above the first T happens to be occupied by a letter belonging to some other word, then that column now contains a run of two letters &#8212; the T and whatever is on top of it &#8212; and that run is not an answer. It is not numbered. It is not in the clue list. It is just there, and the solver cannot tell it apart from a real entry.</p>
+      <p>Take OTTER running across. Every one of its five letters has a cell above it and a cell below it. If the cell above the first T happens to be occupied by a letter belonging to some other word, then that column now contains a run of two letters — the T and whatever is sitting on top of it — and that run is not an answer. It isn't numbered. It isn't in the clue list. It is just there, and the solver can't tell it apart from a real entry.</p>
 
-      <p>The exception is the entire point of the rule. At a crossing, touching is exactly what is supposed to happen. So the check has two branches, and they are opposites:</p>
+      <p>The exception is the entire point of the rule. At a crossing, touching is exactly what's supposed to happen. So the check has two branches, and they are opposites:</p>
 
       <ul>
-        <li>If the cell we are about to write is <strong>already occupied</strong>, this is a crossing. The letter must match the one that is there, and the perpendicular neighbours are somebody else&#8217;s problem &#8212; they belong to the word we are crossing.</li>
+        <li>If the cell we're about to write is <strong>already occupied</strong>, this is a crossing. The letter must match the one that's there, and the perpendicular neighbours are somebody else's problem — they belong to the word we are crossing.</li>
         <li>If the cell is <strong>empty</strong>, this is a new letter of ours, and both of its perpendicular neighbours must be empty too.</li>
       </ul>
 
       <p>Those two branches are the difference between a crossword and a letter jumble.</p>
 
-      <p>With the rule removed, <strong>98.0% of grids contained an unclued run</strong> &#8212; 19,119 of them across three thousand grids, which is about six per puzzle. The output is a blizzard of two-letter debris: <code>TS</code>, <code>MC</code>, <code>GL</code>, <code>PI</code>, <code>EE</code>. Each one is a place where two answers brushed past each other.</p>
+      <p>With the rule removed, <strong>98.0% of grids contained an unclued run</strong> — 19,119 of them across three thousand grids, which is about six per puzzle. The output is a blizzard of two-letter debris: <code>TS</code>, <code>MC</code>, <code>GL</code>, <code>PI</code>, <code>EE</code>. Each one is a place where two answers brushed past each other.</p>
 
       <p>With both rules in place: zero unclued runs in three thousand grids.</p>
 
-      <div class="pull"><p>Both rules are local &#8212; one cell and its neighbours. Both of the failures they prevent are global. That mismatch is why you cannot test this inside the generator.</p></div>
+      <div class="pull"><p>Both rules are local — one cell and its neighbours. Both of the failures they prevent are global. That mismatch is why you cannot test this inside the generator.</p></div>
 
-      <h2>Why you do not notice</h2>
+      <h2>Why you don't notice</h2>
 
-      <p>Because you look at the grid with all the answers in it, and your eye follows the words you intended to put there. The spurious runs are invisible to the person who placed the words and glaring to the person trying to solve them. We have all shipped a bug we were structurally unable to see.</p>
+      <p>Because you look at the grid with all the answers in it, and your eye follows the words you intended to put there. The spurious runs are invisible to the person who placed the words and glaring to the person trying to solve them.</p>
 
-      <p>So the check cannot live in the generator&#8217;s head. It has to be a pass over the finished grid: walk every maximal run of two or more letters, across and down, and assert that each one is a word somebody wrote a clue for, that it is numbered, and that it appears in the lists. That single assertion is what separates a crossword from a jumble, and it is the one we run on every build.</p>
+      <p>Everybody has shipped a bug they were structurally unable to see. This is the cleanest example I have got.</p>
+
+      <p>Which is why the check can't live in the generator's head. It has to be a pass over the finished grid: walk every maximal run of two or more letters, across and down, and assert that each one is a word somebody wrote a clue for, that it is numbered, and that it appears in the lists. That single assertion is what separates a crossword from a jumble, and it runs on every build.</p>
 
       <h2>The corner you paint yourself into</h2>
 
-      <p>A related trap, since you will hit it immediately after fixing the first two. Greedy placement with a deterministic choice is a disaster: the first few words decide the shape of everything that follows, and the locally best opening move is very often the one that leaves nowhere to go.</p>
+      <p>One more, since you'll hit it about ten minutes after fixing the first two. Greedy placement with a deterministic choice is a disaster: the first few words decide the shape of everything that follows, and the locally best opening move is very often the one that leaves nowhere to go.</p>
 
-      <p>We try forty different orderings of the same word list, break near-ties in the scoring at random, and keep whichever grid fits the most words in the smallest bounding box. And a word that genuinely cannot cross anything &#8212; give the generator AAA, BBB and CCC and only one of them can be placed &#8212; is reported back as unplaced rather than quietly dropped. Silently losing a word is the other way a puzzle maker lies to you.</p>
+      <p>We try forty different orderings of the same word list, break near-ties in the scoring at random, and keep whichever grid fits the most words into the smallest bounding box. Forty is not a researched number. It's where the improvement stopped being visible and the tab still felt instant.</p>
 
-      <h2>The part where we tell you it is not perfect</h2>
+      <p>And a word that genuinely cannot cross anything — give the generator AAA, BBB and CCC and only one of them can be placed — is reported back as unplaced rather than quietly dropped. Silently losing a word is the other way a puzzle maker lies to you.</p>
 
-      <p>These two rules make a grid <em>legal</em>. They do not make it <em>good</em>.</p>
+      <h2>What this grid isn't</h2>
 
-      <p>A newspaper crossword has properties ours does not: rotational symmetry, no unchecked letters (every square belongs to both an across answer and a down answer), a minimum entry length, and a single connected block of squares. We enforce none of that. What we produce is the free-form criss-cross grid you would print for a classroom or a party &#8212; every entry crosses at least one other, nothing reads that should not, and the overall shape is whatever the words gave us.</p>
+      <p>These two rules make a grid <em>legal</em>. They don't make it <em>good</em>.</p>
 
-      <p>Getting a symmetric, fully-checked grid needs a different algorithm entirely: start from a pattern of black squares and fill it, backtracking when you fail, with a dictionary to fill it from. That is a much larger program, and on a free tool where the words are supplied by the person making the puzzle it would solve a problem nobody brought us.</p>
+      <p>A newspaper crossword has properties ours doesn't: rotational symmetry, no unchecked letters (every square belongs to both an across answer and a down answer), a minimum entry length, a single connected block of squares. We enforce none of that. What we produce is the free-form criss-cross grid you'd print for a classroom or a party — every entry crosses at least one other, nothing reads that shouldn't, and the overall shape is whatever the words gave us.</p>
 
-      <h2>The generalisable bit</h2>
+      <p>Getting a symmetric, fully-checked grid needs a different algorithm entirely: start from a pattern of black squares and fill it, backtracking when you fail, with a dictionary to fill it from. That is a much larger program, and on a free tool where the words are supplied by the person making the puzzle it would solve a problem nobody brought us. I would quite like to build it anyway.</p>
 
-      <p>Both rules here are decisions about a single cell and its immediate neighbours. Both of the failures they prevent are properties of the finished grid that no individual placement is responsible for. Local rule, global failure &#8212; and when that is the shape of a problem, you need the rule in two places.</p>
+      <h2>Local rule, global failure</h2>
 
-      <p>Put the rule where the decision is made, so the generator cannot produce the bad thing. Put the proof where the artefact is finished, so you find out when the rule was wrong. Neither is sufficient on its own. A generator whose rules you trust but whose output you have never read back is a well-commented guess.</p>
+      <p>Both rules here are decisions about a single cell and its immediate neighbours. Both of the failures they prevent are properties of the finished grid that no individual placement is responsible for.</p>
+
+      <p>When that's the shape of a problem, you need the rule in two places. Put it where the decision is made, so the generator can't produce the bad thing. Put the proof where the artefact is finished, so you find out when the rule was wrong. Neither one is enough on its own — a generator whose rules you trust but whose output you have never read back is a well-commented guess.</p>
 
       <div class="tryit">
         <p>The crossword maker is free and runs in your browser. Type your words and clues, and it will tell you if one of them could not be placed.</p>
