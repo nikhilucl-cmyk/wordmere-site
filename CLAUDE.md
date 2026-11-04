@@ -21,6 +21,17 @@ They must keep returning 200 and must keep their exact paths:
 means buyers drop bids. There is exactly ONE copy, at the repo root — never
 create a second one anywhere.
 
+**`_config.yml` keeps internal files off the public web.** Pages serves
+every file in this branch. Until Nov 2026 that included `/CLAUDE.md` and
+`/build/blog.py` — the latter containing the full prose of every blog post,
+which is duplicate content competing with the posts. Jekyll is now enabled
+purely so `_config.yml`'s `exclude:` list can drop them. There is no theme and
+no front matter anywhere; pages are copied verbatim, exactly as before.
+
+**Do not re-add `.nojekyll`.** It disables Jekyll, the `exclude:` list stops
+applying, and those files go public again. If you add a page it publishes
+normally — nothing needs listing in `_config.yml`.
+
 **Two verification files at the root must never be deleted.** Both are
 re-fetched by machines on a schedule, and deleting either silently breaks
 verification:

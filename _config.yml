@@ -1,0 +1,20 @@
+# This branch is published by GitHub Pages. Jekyll is enabled for one reason
+# only: so that the paths below can be kept OUT of the published site. There
+# is no theme, no layouts and no front matter anywhere — every page is copied
+# verbatim, exactly as it was under .nojekyll.
+#
+# Why these are excluded:
+#   CLAUDE.md  internal working instructions; served at wordmere.com/CLAUDE.md
+#   build/     the page generators. No secrets, but build/blog.py contains the
+#              full prose of every blog post, and a served copy is duplicate
+#              content competing with the posts themselves. The templates in
+#              here also contain {{PLACEHOLDER}} tags that Jekyll would try to
+#              interpret as Liquid if it ever read them.
+#
+# If you add a page, it publishes as normal; nothing needs listing here.
+# Do NOT re-add .nojekyll — that disables Jekyll and these files go public
+# again. See the README of this config in CLAUDE.md.
+exclude:
+  - CLAUDE.md
+  - build
+  - .claude
