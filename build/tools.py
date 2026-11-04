@@ -17,11 +17,11 @@ TOOLS = [
   ('word-unscrambler',     'Word unscrambler',     'Every word from your letters'),
   ('anagram-solver',       'Anagram solver',       'Words that use every letter'),
   ('word-finder',          'Word finder',          'Search by pattern, start, end or length'),
-  ('scrabble-word-finder', 'Scrabble word finder', 'Highest-scoring words from your rack'),
+  ('scrabble-word-finder', 'Scrabble word finder', 'Highest-scoring plays from your rack, blanks included'),
   ('words-with-letters',   'Words with letters',   'Words that contain the letters you choose'),
   ('five-letter-word-solver','Five-letter word solver','Narrow 5-letter words by what you know'),
   ('random-word-generator', 'Random word generator','Pick random words, any length'),
-  ('word-scrambler',        'Word scrambler',       'Scramble a list of words for a puzzle'),
+  ('word-scrambler',        'Word scramble maker',  'Jumble a word list into a puzzle, with an answer key'),
   ('word-search-maker',     'Word search maker',    'Build a printable word search from your own words'),
   ('crossword-maker',       'Crossword maker',      'Turn your words and clues into a printable crossword'),
 ]
@@ -208,7 +208,7 @@ SPEC['word-finder'] = dict(
 
 SPEC['scrabble-word-finder'] = dict(
  cta='Find plays',
- title='Scrabble Word Finder — Highest-Scoring Words From Your Rack',
+ title='Scrabble Word Finder With Blanks — Best Plays Ranked',
  desc='Free Scrabble word finder. Enter your rack, including blank tiles, and see every playable word ranked by score, with letters on the board included.',
  sub='Enter the tiles on your rack — use ? for a blank. Add a letter from the board if you want to build through it. Every word comes back ranked by score.',
  form=inp('rack','Your rack','QUIZERS','e.g. RETAINS or AE?RT',7) + mid('board','Letter on board','','optional',3) + LEN,
@@ -339,8 +339,8 @@ SPEC['random-word-generator'] = dict(
 
 SPEC['word-scrambler'] = dict(
  cta='Scramble',
- title='Word Scrambler — Make a Jumbled Word Puzzle',
- desc='Free word scrambler. Paste a list of words and get them jumbled, ready for a worksheet, a quiz or a party game. Includes an answer key.',
+ title='Word Scramble Maker — Free Jumbled Word Generator',
+ desc='Free word scramble maker. Paste a list of words and the generator jumbles each one for a worksheet, a quiz or a party game, with an answer key.',
  sub='Paste your words, one per line or separated by commas. You get each one jumbled, with the answer beside it — ready to paste into a worksheet or a quiz.',
  form=ta('words','Your words','ORANGE\nMEADOW\nLIGHTHOUSE\nPUZZLE','One word per line, or separated by commas'),
  hint='Letters only. Anything longer than two letters gets scrambled; the answer key is shown next to each one.',
@@ -496,6 +496,9 @@ SPEC['word-search-maker'] = dict(
  prose="""
       <h2>What the difficulty setting changes</h2>
       <p>Easy hides words left-to-right and top-to-bottom only, which is right for children who are still reading in one direction. Medium adds the two downward diagonals. Hard adds every backwards direction, so a word can run right-to-left or bottom-to-top — eight directions in all. The grid size stays the same; only the hiding places change.</p>
+      <h2>Find-a-word, word sleuth, letter soup</h2>
+      <p>The same puzzle goes by different names depending on where you went to school. It's a find-a-word in Australia and New Zealand, a word sleuth in South Africa, and a <em>sopa de letras</em> — letter soup — across the Spanish-speaking world. Some people call it a word hunt. They are all this: a grid of letters with words hidden in it, and this maker builds any of them.</p>
+
       <h2>Printing it</h2>
       <p>Press <em>Print or save as PDF</em> and the page strips itself back to the puzzle — no navigation, no form, no colour to drain your cartridge. The answer key prints on its own sheet, so you can hand out the first page and keep the second. In the print dialog, choose <em>Save as PDF</em> as the destination if you want a file to email instead.</p>
       <h2>Getting a tighter grid</h2>
