@@ -83,6 +83,92 @@ BLOG_CSS = """<style>
 
 POSTS = [
 dict(
+ slug='crash-free-rate-denominator',
+ date='2026-11-04',
+ title='Your crash-free rate is lying to you',
+ h1='Your crash-free rate is lying to you',
+ sub='One Monday our Android crash-free rate fell 8.8 points. The crash was real and the stack trace was real, but almost none of it was happening to anyone with a phone.',
+ desc='Our Android crash-free rate fell 8.8 points overnight. 108 of 130 crashes came from x86_64 emulator installs, and our analytics never saw one of them.',
+ body="""
+      <p>One Monday in October our Android crash-free rate fell 8.8 points overnight, to 88.87%. One issue accounted for nearly all of it: 108 of the 130 crashes we logged that week.</p>
+
+      <p>I spent the first hour of that morning certain we had shipped a launch crash. We hadn't. Almost none of those crashes were happening to anyone holding a phone.</p>
+
+      <h2>What the stack trace said</h2>
+
+      <p>The error was a <code>SoLoaderDSONotFoundError</code> — "couldn't find DSO to load: libc++_shared.so" — thrown during startup, in <code>MainApplication</code>, before the app had drawn anything. A missing native library at launch is about as bad as a crash gets. It's unrecoverable, it's instant, and the user sees a dead icon.</p>
+
+      <p>It was also entirely real. The trace was not corrupted, the symbolication was fine, and the devices reporting it were listed as OnePlus 8 Pros running Android 11. If you stopped reading there, as I nearly did, you would start bisecting releases.</p>
+
+      <h2>Four things that didn't add up</h2>
+
+      <p>The first was the native library folder. The crash report named <code>lib/x86_64</code> — an Intel chip. A real OnePlus 8 Pro is ARM. Whatever was running our app was not the phone the report named.</p>
+
+      <p>The second was the package manifest. The installs carried every language split we ship and no CPU-architecture split at all, which is not a shape the Play Store produces. That's what an XAPK-style sideload looks like, or an emulator on a PC with a device model typed into it.</p>
+
+      <p>Third, the device spread was far too clean. 77% called themselves OnePlus 8 Pro and 23% Huawei, and <strong>100% of them were on Android 11</strong>. Real populations are never 100% anything.</p>
+
+      <p>And 53% of the crashes happened with the app in the background. People do not launch a word game and immediately background it, over and over, half the time.</p>
+
+      <p>None of those four is conclusive on its own. Together they describe a machine, not a person.</p>
+
+      <div class="pull"><p>The crash was real. The stack trace was real. The users were not, and nothing in the crash dashboard is designed to tell you that.</p></div>
+
+      <h2>Our two dashboards disagreed and we believed the wrong one</h2>
+
+      <p>Here's the part I'd not thought about before that morning. The crash happens in <code>onCreate</code>, before our analytics SDK finishes starting. So these sessions never reach analytics at all.</p>
+
+      <p>Which means the crash reporter counted them and the analytics product didn't. Two tools, same week, different populations — and the discrepancy wasn't an integration bug to go and fix, it was the answer. The gap between those two numbers <em>was</em> the fake installs.</p>
+
+      <p>I'd always treated a mismatch between analytics and crash reporting as something to reconcile. It's better read as a signal in its own right.</p>
+
+      <h2>What the number should have been</h2>
+
+      <p>Take that one issue out and crash-free users for the week was about 96.7%, not 88.87%. The real-device crashes behind that figure were a thin, unglamorous list: a view-manager <code>ClassCastException</code> on some older builds, a handful of Hermes segfaults, a couple of <code>libc</code> aborts, and then single instances of four unrelated things.</p>
+
+      <p>That's a normal week. It needed a morning of ordinary bug-fixing, not an incident.</p>
+
+      <p>The difference between those two numbers is the difference between "stop everything" and "carry on" — and the metric that was supposed to tell us which one we were in had been computed over a population that included software pretending to be phones.</p>
+
+      <h2>The fix I nearly shipped was worse than the bug</h2>
+
+      <p>My first instinct was to exclude the OnePlus 8 Pro from our device catalogue so the noise would stop.</p>
+
+      <p>That would have been a genuinely bad call, and I'm glad I slept on it. The OnePlus 8 Pro is a real phone that real people own. Filtering the model name would have hidden every future crash suffered by anyone who actually owns one, in order to tidy up a chart. The thing worth filtering on is the architecture — <code>x86_64</code> where we ship ARM — not the name the device claims.</p>
+
+      <p>It's a small distinction and it would have been an expensive one to get wrong, because the damage wouldn't have shown up as a bug. It would have shown up as an absence, months later, which is the kind of mistake you never find.</p>
+
+      <h2>Three weeks later, by Google</h2>
+
+      <p>In the middle of the month the same family of error came back on a newer build — this time <code>libreactnative.so</code>, 33 events across four devices. Same cause, different culprit: Google's own pre-launch report and Test Lab, running our app on <code>Sdk_gphone64_x86_64</code> emulators.</p>
+
+      <p>Our app bundle ships arm64 and armv7 only. SoLoader goes looking for <code>lib/x86_64</code>, doesn't find it, and dies at launch. Every time Google tests our app for us, it files a crash against us for not supporting a chip no phone in our install base has.</p>
+
+      <p>I find that funnier than I should. It is also the clearest possible demonstration that a crash in your dashboard is not evidence that a person had a bad time.</p>
+
+      <h2>What we actually changed</h2>
+
+      <p>Less than you'd think. We did not add an x86_64 slice to the bundle — it would grow the download for every real user to satisfy a test harness and some sideloads, and that trade is not worth making.</p>
+
+      <p>What changed was the reading. Before trusting a movement in crash-free rate we now check the architecture and the split manifest, and analytics models beginning <code>sdk_gphone</code> are excluded outright. The number on the dashboard is still wrong; we just no longer act on it without looking underneath.</p>
+
+      <p>One thing still open, and I don't have a clean answer: Play Console computes its own user-perceived crash rate against a bad-behaviour threshold, and I don't know whether these installs count toward it. If they do, emulator traffic can push a healthy app over a distribution threshold. That's worth knowing and I haven't finished chasing it.</p>
+
+      <h2>Any health metric has a denominator</h2>
+
+      <p>Crash-free rate is a percentage, and the argument above is entirely about what went into the bottom half of it.</p>
+
+      <p>Every health metric you watch has this property — error rate, conversion, uptime, p99 latency. Each one is computed over a population that somebody defined, usually long before you got there, usually as "everything we could see". Bots, emulators, test harnesses, scrapers and sideloads all land in "everything we could see", and none of them can have a bad experience, because there is nobody there to have it.</p>
+
+      <p>So when a number you trust moves sharply and the cause isn't obvious, it's worth one look at who is in the denominator before you go looking for what you broke. We lost most of a day to not doing that. The check took twenty minutes once somebody thought to run it.</p>
+
+      <div class="tryit">
+        <p>The game this all happened to is free, and it runs on ARM like everything else.</p>
+        <a href="/">Play Wordmere</a>
+      </div>
+
+      <p class="endnote">We build <a href="/">Wordmere</a>, a cosy word game where the words you find assemble a small world around you. We publish the shapes of our numbers rather than the numbers themselves; the ratios here are real, the absolute levels are ours to keep. These posts are the things that went wrong on the way.</p>"""),
+dict(
  slug='retention-magic-number',
  date='2026-10-28',
  updated='2026-11-03',
