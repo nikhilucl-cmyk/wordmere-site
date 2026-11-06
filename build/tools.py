@@ -24,6 +24,9 @@ TOOLS = [
   ('word-scrambler',        'Word scramble maker',  'Jumble a word list into a puzzle, with an answer key'),
   ('word-search-maker',     'Word search maker',    'Build a printable word search from your own words'),
   ('crossword-maker',       'Crossword maker',      'Turn your words and clues into a printable crossword'),
+  ('multi-word-anagram-solver','Multi-word anagram solver','Anagrams that take two or three words'),
+  ('word-ladder-solver',    'Word ladder solver',   'The shortest chain from one word to another'),
+  ('cryptogram-maker',      'Cryptogram maker',     'Turn a quote into a printable letter-swap puzzle'),
 ]
 
 TOOL_CSS = """<style>
@@ -245,7 +248,7 @@ SPEC['scrabble-word-finder'] = dict(
  tm='Scrabble® is a registered trademark of Hasbro, Inc. in the USA and Canada, and of J.W. Spear &amp; Sons Limited, a Mattel company, elsewhere. Wordmere is not affiliated with or endorsed by either. Word validity here follows the Wordmere dictionary, not an official tournament word list.')
 
 SPEC['words-with-letters'] = dict(
- title='Words With Letters — Find Words Containing Any Letters You Choose',
+ title='Words With Letters — Find Words Containing Your Letters',
  desc='Free tool to find words containing the letters you choose, in any position and any order. Search words with Q and Z, words with two Es, and more.',
  sub='Choose the letters a word has to include. You get every word that contains all of them, in any order and any position — and it can have other letters too.',
  form=inp('has','Letters it must contain','QZ','e.g. QZ or XYZ',8) + LEN,
@@ -339,6 +342,7 @@ SPEC['random-word-generator'] = dict(
 
 SPEC['word-scrambler'] = dict(
  cta='Scramble',
+ needs_dict=False,
  title='Word Scramble Maker — Free Jumbled Word Generator',
  desc='Free word scramble maker. Paste a list of words and the generator jumbles each one for a worksheet, a quiz or a party game, with an answer key.',
  sub='Paste your words, one per line or separated by commas. You get each one jumbled, with the answer beside it — ready to paste into a worksheet or a quiz.',
@@ -576,6 +580,408 @@ SPEC['crossword-maker'] = dict(
       <p>Press <em>Print or save as PDF</em>. The puzzle and its clues print on the first sheet and the filled grid on a second, so the answers never show through on the handout. Choose <em>Save as PDF</em> in the print dialog if you want a file instead of paper. Nothing is uploaded — the grid is worked out in your browser, so your clues stay on your machine.</p>
       <h2>Related tools</h2>
       <p>The <a href="/tools/word-search-maker/">word search maker</a> takes the same word list without clues. If you're solving rather than setting, the <a href="/tools/word-finder/">word finder</a> matches a pattern like <code>C??SS</code>, and the <a href="/tools/anagram-solver/">anagram solver</a> handles the anagram clues.</p>""")
+
+
+ANAG_CSS = """<style>
+  /* Multi-word results are phrases, not single words: they need to wrap as
+     units so a two-word answer never breaks across a line. */
+  .phr{display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none;}
+  .phr li{display:flex; align-items:baseline; gap:7px; background:var(--page); border-radius:11px; padding:9px 13px;
+    box-shadow:inset 0 0 0 1px rgba(14,58,80,.08);}
+  .phr li b{font-family:var(--display); font-weight:800; font-size:15.5px; letter-spacing:.09em; color:var(--ink);}
+  .phr li i{font-style:normal; font-weight:700; color:var(--ink-faint); font-size:12px;}
+  .phr li.rare b{color:#4B6C7A;}
+</style>"""
+
+SPEC['multi-word-anagram-solver'] = dict(
+ cta='Find anagrams',
+ extra_css=ANAG_CSS,
+ title='Multi-Word Anagram Solver — Phrase Anagrams',
+ desc='Free multi-word anagram solver. Enter a name, word or phrase and find the two- and three-word anagrams its letters can spell. 104,562 words, no sign-up.',
+ sub='Enter a word, a name or a phrase. This finds the anagrams that need more than one word — the ones a single-word solver will never show you.',
+ form=inp('letters','Letters, word or phrase','DORMITORY','e.g. DORMITORY', 18)
+      + sel('pool','Dictionary', [('common','Everyday words',True),('all','Every word (obscure too)',False)]),
+ hint='Spaces and punctuation are ignored, so you can paste a whole phrase. Six to eighteen letters.',
+ js=r"""
+  var raw=WK.clean(val('letters'));
+  if(!raw) return fail('Enter a word, a name or a phrase first.');
+  if(raw.length<6) return fail('Enter at least six letters — there is nothing to split into two words below that.');
+  if(raw.length>18) return fail('Eighteen letters is the limit. Trim the phrase a little.');
+  var co = val('pool') !== 'all';
+
+  /* One sorted-letters index of the dictionary, built on first use and kept
+     for the rest of the visit. Looking a remainder up in it is what makes
+     the two-word search instant instead of quadratic. */
+  var MAPS = window.__wmAmap || (window.__wmAmap = {});
+  function amap(common){
+    var k = common ? 'c' : 'a';
+    if(MAPS[k]) return MAPS[k];
+    var m = {}, d = WK.dict;
+    for(var i=0;i<d.length;i++){
+      var w = d[i];
+      if(common && !WK.isCommon(w)) continue;
+      var key = w.split('').sort().join('');
+      (m[key] = m[key] || []).push(w);
+    }
+    return MAPS[k] = m;
+  }
+  function keyOf(c){
+    var ks = Object.keys(c).sort(), s = '';
+    for(var i=0;i<ks.length;i++){ for(var n=0;n<c[ks[i]];n++) s += ks[i]; }
+    return s;
+  }
+  function take(have, w){
+    var r = {}, k;
+    for(k in have) r[k] = have[k];
+    for(var i=0;i<w.length;i++){
+      var ch = w.charAt(i);
+      if(!r[ch]) return null;
+      r[ch]--; if(!r[ch]) delete r[ch];
+    }
+    return r;
+  }
+  function size(c){ var n=0, k; for(k in c) n += c[k]; return n; }
+
+  var M = amap(co), have = WK.counts(raw), n = raw.length, d = WK.dict;
+
+  var one = (M[raw.split('').sort().join('')] || []).slice();
+
+  var cands = [];
+  for(var i=0;i<d.length;i++){
+    var w = d[i];
+    if(w.length < 3 || w.length > n-3) continue;
+    if(co && !WK.isCommon(w)) continue;
+    if(WK.makeable(w, have, 0)) cands.push(w);
+  }
+  cands.sort(function(a,b){ return b.length - a.length || (a < b ? -1 : 1); });
+
+  var two = [], three = [], seen = {}, CAP = 400, t0 = Date.now();
+
+  for(i=0;i<cands.length;i++){
+    var rem = take(have, cands[i]);
+    var part = M[keyOf(rem)];
+    if(!part) continue;
+    for(var j=0;j<part.length;j++){
+      var k2 = [cands[i], part[j]].sort().join(' ');
+      if(!seen[k2]){ seen[k2] = 1; two.push(k2); }
+    }
+  }
+
+  /* Three words is the expensive half, so it runs second, stops at CAP
+     results and gives up after a second rather than freezing the tab. */
+  outer:
+  for(i=0;i<cands.length;i++){
+    var r1 = take(have, cands[i]);
+    if(size(r1) < 6) continue;
+    for(var j2=i;j2<cands.length;j2++){
+      var r2 = take(r1, cands[j2]);
+      if(r2 === null || size(r2) < 3) continue;
+      var p3 = M[keyOf(r2)];
+      if(p3){
+        for(var m3=0;m3<p3.length;m3++){
+          var k3 = [cands[i], cands[j2], p3[m3]].sort().join(' ');
+          if(!seen[k3]){ seen[k3] = 1; three.push(k3); }
+        }
+      }
+      if(three.length >= CAP) break outer;
+    }
+    if(Date.now() - t0 > 1000) break;
+  }
+
+  /* Balanced splits read best, so the longest shortest-word wins. */
+  function rank(a,b){
+    var A=a.split(' '), B=b.split(' ');
+    function lo(x){ var v=99; for(var i=0;i<x.length;i++) v=Math.min(v,x[i].length); return v; }
+    function hi(x){ var v=0;  for(var i=0;i<x.length;i++) v=Math.max(v,x[i].length); return v; }
+    return lo(B)-lo(A) || hi(B)-hi(A) || (a<b?-1:1);
+  }
+  two.sort(rank); three.sort(rank);
+
+  function phrases(list, limit){
+    return '<ul class="phr">' + list.slice(0, limit).map(function(p){
+      var ws = p.split(' '), rare = false;
+      for(var i=0;i<ws.length;i++){ if(!WK.isCommon(ws[i])) rare = true; }
+      return '<li' + (rare ? ' class="rare" title="Includes a less common word"' : '') + '>'
+           + ws.map(function(w){ return '<b>' + w + '</b>'; }).join('<i>+</i>') + '</li>';
+    }).join('') + '</ul>';
+  }
+
+  var html = '';
+  if(one.length)
+    html += '<div class="group"><h2>One word <span>' + one.length + '</span></h2><ul class="words">'
+          + one.map(function(w){ return '<li class="top' + (WK.isCommon(w)?'':' rare') + '">' + w + '</li>'; }).join('')
+          + '</ul></div>';
+  if(two.length)
+    html += '<div class="group"><h2>Two words <span>' + two.length + '</span></h2>' + phrases(two, 250) + '</div>';
+  if(three.length)
+    html += '<div class="group"><h2>Three words <span>' + three.length + (three.length >= CAP ? '+' : '') + '</span></h2>'
+          + phrases(three, 150) + '</div>';
+
+  if(!html){
+    return out('<p class="status">Nothing splits ' + raw + ' into whole words.'
+      + (co ? ' Try the full dictionary — it includes obscure words this one leaves out.' : ' Try a different set of letters.')
+      + '</p>', '');
+  }
+  var total = one.length + two.length + three.length;
+  out(html, total + ' anagram' + (total===1?'':'s') + ' of ' + raw
+      + (three.length >= CAP ? ' — showing the first ' + CAP + ' three-word splits' : ''));""",
+ prose="""
+      <h2>Why one word is often not enough</h2>
+      <p><code>DORMITORY</code> has no single-word anagram. Split it in two and it becomes <code>DIRTY ROOM</code>. That is the whole reason this tool exists: an ordinary <a href="/tools/anagram-solver/">anagram solver</a> looks for one word that uses all your letters, and for most inputs there isn't one. Here the letters get divided between two or three words instead, and every one of them has to be a real dictionary word with nothing left over.</p>
+      <h2>Everyday words or the whole list</h2>
+      <p>Leave the dictionary on everyday words and you get answers you'd actually say out loud. Switch to every word and the search opens up to all 104,562 entries, including obscure ones and names — more results, most of them unusable. Start narrow. Widen it only when nothing comes back.</p>
+      <h2>Reading the results</h2>
+      <p>Two-word answers come first and the list is complete — every valid split is there. Three-word answers are capped, because the number of ways to cut a long phrase into three grows fast; you get the first few hundred, sorted so the ones built from longer words appear at the top. Anything containing a less common word is dimmed slightly.</p>
+      <h2>Names, phrases and cryptic clues</h2>
+      <p>Paste a name with the spaces in and they're ignored, so <code>CLINT EASTWOOD</code> is treated as fourteen letters. This is the kind of anagram a cryptic crossword setter uses for a long clue, and the kind people make out of their own names. For a clue where you know some letter positions, the <a href="/tools/word-finder/">word finder</a> is the better tool.</p>""")
+
+
+CRYP_CSS = """<style>
+  /* A cryptogram has to be legible on a phone and writable on paper, so the
+     letter cells are a clamped square with the cipher letter underneath. */
+  #out{min-height:460px;}
+  .crypbody{display:flex; flex-wrap:wrap; gap:15px 19px; margin:0;}
+  .crypw{display:flex; gap:4px;}
+  .cgrp{display:flex; flex-direction:column; align-items:center; gap:4px;}
+  .cbox{width:clamp(21px,4.1vw,27px); height:clamp(27px,5vw,33px); border-radius:6px; background:var(--white);
+    box-shadow:inset 0 0 0 1px rgba(14,58,80,.22); display:flex; align-items:center; justify-content:center;
+    font-family:var(--display); font-weight:800; font-size:clamp(13px,2.5vw,16px); color:#06323A;}
+  .cbox.given{background:#BDEEF6; box-shadow:inset 0 0 0 1px rgba(16,112,127,.35);}
+  .cbox.solid{background:none; box-shadow:none; color:var(--ink);}
+  .cltr{font-family:var(--display); font-weight:700; font-size:clamp(10px,2.1vw,12.5px); color:#3E6270; letter-spacing:.07em;}
+  .cgrp.mark .cbox{box-shadow:none; background:none; color:var(--ink-soft); font-weight:700;}
+  .cgrp.mark .cltr{visibility:hidden;}
+  .subtab{display:flex; flex-wrap:wrap; gap:7px; margin:0; padding:0; list-style:none;}
+  .subtab li{display:flex; flex-direction:column-reverse; align-items:center; gap:4px;}
+  .crypkey{display:flex; flex-wrap:wrap; gap:6px; margin:0; padding:0; list-style:none;}
+  .crypkey li{font-family:var(--display); font-weight:700; font-size:14px; letter-spacing:.04em; color:var(--ink);
+    background:var(--page); border-radius:8px; padding:7px 10px;}
+  .cryptext{font-size:clamp(16px,2.2vw,19px); line-height:1.55; color:var(--ink); font-weight:600; margin:0; max-width:62ch;}
+  @media print{
+    .cbox{box-shadow:inset 0 0 0 1px #111 !important; background:#fff !important; color:#000 !important;}
+    .cbox.given{background:#D9D9D9 !important;}
+    .cbox.solid{box-shadow:none !important;}
+    .cltr{color:#000 !important;}
+    .cgrp.mark .cbox{box-shadow:none !important; color:#000 !important;}
+    .crypkey li{background:none; box-shadow:inset 0 0 0 1px #999; color:#000;}
+    .cryptext{color:#000;}
+  }
+</style>"""
+
+CRYP_DEFAULT = 'The quick brown fox jumps over the lazy dog.'
+
+SPEC['cryptogram-maker'] = dict(
+ cta='Make cryptogram',
+ needs_dict=False,
+ extra_css=MAKER_CSS + CRYP_CSS,
+ title='Cryptogram Maker — Printable Cryptogram Puzzles',
+ desc='Free cryptogram maker. Turn any quote into a printable letter-substitution puzzle, choose how many letters to give away, and print the answer key.',
+ sub='Type a quote, a saying or a message. Every letter is swapped for a different one, and you get a printable puzzle with a solving grid and a separate answer key.',
+ form=wide(ta('text','Your quote or message', CRYP_DEFAULT, 'Type or paste the sentence to encipher', 3))
+      + tinp('title','Puzzle title (optional)','','e.g. Monday warm-up', 48, 'mid')
+      + sel('give','Letters given away', [('0','None — hardest',False),('2','Two letters',True),('4','Four letters',False),('v','All the vowels',False)]),
+ hint='Punctuation and spaces stay as they are — only letters get swapped. No letter is ever enciphered as itself.',
+ js=r"""
+  var text=(val('text')||'').replace(/\s+/g,' ').trim();
+  if(!text) return fail('Type a quote or a message first.');
+  if(text.length>320) return fail('That is '+text.length+' characters. Keep it under 320 so the puzzle fits a page.');
+  var letters=text.toUpperCase().replace(/[^A-Z]/g,'');
+  if(letters.length<12) return fail('Use at least twelve letters, or there is not enough to solve.');
+  var title=(val('title')||'').trim(), give=val('give');
+  var AL='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+  /* A cryptogram where some letter stands for itself is a broken puzzle, so
+     the permutation has to be a derangement — no fixed points anywhere. */
+  function derange(){
+    var p=AL.slice(), i, j, t;
+    for(var attempt=0; attempt<80; attempt++){
+      for(i=p.length-1;i>0;i--){ j=(Math.random()*(i+1))|0; t=p[i]; p[i]=p[j]; p[j]=t; }
+      var ok=true;
+      for(i=0;i<26;i++){ if(p[i]===AL[i]){ ok=false; break; } }
+      if(ok) return p;
+    }
+    for(i=0;i<26;i++){ if(p[i]===AL[i]){ j=(i+1)%26; t=p[i]; p[i]=p[j]; p[j]=t; } }
+    return p;
+  }
+  var perm=derange(), enc={}, dec={};
+  for(var i=0;i<26;i++){ enc[AL[i]]=perm[i]; dec[perm[i]]=AL[i]; }
+
+  /* Only letters that actually appear can be given away — revealing a Z that
+     is not in the text tells the solver nothing. */
+  var used={}, order=[];
+  for(i=0;i<letters.length;i++){ var c=letters.charAt(i); if(!used[c]){ used[c]=1; order.push(c); } }
+  var given={}, want = give==='v' ? 0 : (+give||0);
+  if(give==='v'){ 'AEIOU'.split('').forEach(function(v){ if(used[v]) given[v]=1; }); }
+  else if(want>0){
+    var bag=order.slice();
+    for(i=bag.length-1;i>0;i--){ var j2=(Math.random()*(i+1))|0, t2=bag[i]; bag[i]=bag[j2]; bag[j2]=t2; }
+    bag.slice(0, Math.min(want, bag.length)).forEach(function(c){ given[c]=1; });
+  }
+
+  function cell(ch, reveal){
+    if(!/[A-Z]/.test(ch))
+      return '<span class="cgrp mark"><span class="cbox">'+MK.esc(ch)+'</span><span class="cltr">·</span></span>';
+    var shown = reveal ? ch : (given[ch] ? ch : '');
+    return '<span class="cgrp"><span class="cbox'+(reveal?' solid':(given[ch]?' given':''))+'">'+shown+'</span>'
+         + '<span class="cltr">'+enc[ch]+'</span></span>';
+  }
+  function body(reveal){
+    return '<div class="crypbody">' + text.toUpperCase().split(' ').filter(Boolean).map(function(word){
+      return '<span class="crypw">' + word.split('').map(function(ch){ return cell(ch, reveal); }).join('') + '</span>';
+    }).join('') + '</div>';
+  }
+
+  /* The working grid: every cipher letter the solver will meet, with a blank
+     to write the plain letter above it. */
+  var seenC={}, cipherLetters=[];
+  for(i=0;i<letters.length;i++){ var e=enc[letters.charAt(i)]; if(!seenC[e]){ seenC[e]=1; cipherLetters.push(e); } }
+  cipherLetters.sort();
+  var grid='<ul class="subtab">'+cipherLetters.map(function(cl){
+      var plain=dec[cl];
+      return '<li><span class="cltr">'+cl+'</span><span class="cbox'+(given[plain]?' given':'')+'">'+(given[plain]?plain:'')+'</span></li>';
+    }).join('')+'</ul>';
+
+  var gnote = give==='v' ? Object.keys(given).length+' vowels given'
+            : (Object.keys(given).length ? Object.keys(given).length+' letter'+(Object.keys(given).length===1?'':'s')+' given' : 'nothing given away');
+
+  var html='<div class="pzbar"><button type="button" class="ghost" data-print>Print or save as PDF</button>'
+      +'<span class="pznote">'+letters.length+' letters · '+cipherLetters.length+' of 26 in play · '+gnote+'</span></div>'
+    +'<section class="pzsec">'+(title?'<h2 class="pzhead">'+MK.esc(title)+'</h2>':'<h2 class="pzhead">Cryptogram</h2>')
+      +body(false)
+      +'<h3 class="findh">Your solving grid</h3>'+grid+'</section>'
+    +'<section class="pzsec keysec"><h2 class="pzhead">Answer key'+(title?' — '+MK.esc(title):'')+'</h2>'
+      +'<p class="cryptext">'+MK.esc(text)+'</p>'
+      +'<h3 class="findh">The cipher</h3><ul class="crypkey">'
+      +cipherLetters.map(function(cl){ return '<li>'+cl+' = '+dec[cl]+'</li>'; }).join('')
+      +'</ul></section>';
+
+  out(html, 'Press Make cryptogram again for a fresh cipher.');""",
+ prose="""
+      <h2>What a cryptogram is</h2>
+      <p>Every letter of the alphabet is swapped for a different one, consistently, for the whole message. If E became Q in one word it is Q in every word. Spaces and punctuation are left alone, which is what makes the puzzle solvable — word lengths, apostrophes and the shape of short words are most of the evidence you have.</p>
+      <h2>No letter stands for itself</h2>
+      <p>The cipher is built as a derangement: a shuffle of the alphabet with no letter left in its own place. That matters more than it sounds. A puzzle where T happens to encipher to T has a free answer sitting in it, and an experienced solver will spot it. Press the button again and you get an entirely new cipher for the same text.</p>
+      <h2>Choosing how much to give away</h2>
+      <p>Giving nothing away is the proper version and it is genuinely hard for a first-timer. Two letters is a reasonable classroom setting. Four is gentle. Giving all the vowels turns it into a different and much easier puzzle — close to a fill-in-the-blanks — which is about right for younger children or a warm-up.</p>
+      <h2>Where to start solving</h2>
+      <p>Count the letters. The most frequent one in ordinary English prose is usually E, then T, A and O. A one-letter word is A or I. A three-letter word that keeps appearing is very often THE, and that single guess cracks three letters at once. Apostrophes are a gift: the letter after one is nearly always S, T or a vowel in a contraction.</p>
+      <h2>Printing it</h2>
+      <p>Press <em>Print or save as PDF</em>. The puzzle and its solving grid come out on the first sheet, the answer key on a second, so you can hand out the first page without the answers showing through. Nothing leaves your browser — the cipher is generated on your machine, so your quote stays on it.</p>
+      <h2>The other makers</h2>
+      <p>The <a href="/tools/word-search-maker/">word search maker</a> and the <a href="/tools/crossword-maker/">crossword maker</a> build their puzzles from your own word list, and the <a href="/tools/word-scrambler/">word scramble maker</a> jumbles a list of words one at a time.</p>""")
+
+
+LAD_CSS = """<style>
+  /* The ladder reads top to bottom with the letter that changed on each rung
+     picked out, because that is the only thing a solver is looking for. */
+  .lad{list-style:none; margin:0; padding:0; display:grid; gap:7px; justify-items:center;}
+  .lad li{display:flex; gap:6px;}
+  .lad li span{display:flex; align-items:center; justify-content:center; width:clamp(32px,6.6vw,42px); aspect-ratio:1/1;
+    background:var(--white); border-radius:10px; font-family:var(--display); font-weight:800;
+    font-size:clamp(15px,2.9vw,20px); letter-spacing:.02em; color:var(--ink); box-shadow:inset 0 0 0 1px rgba(14,58,80,.12);}
+  .lad li span.chg{background:linear-gradient(180deg,#5AD9EC,var(--tq)); color:#06323A;
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.45);}
+  .lad li.rare span{color:#4B6C7A;}
+  .ladfoot{margin:16px 0 0; color:var(--ink-faint); font-size:13.5px; text-align:center;}
+</style>"""
+
+SPEC['word-ladder-solver'] = dict(
+ cta='Build the ladder',
+ extra_css=LAD_CSS,
+ title='Word Ladder Solver — Shortest Chain Between Words',
+ desc='Free word ladder solver. Enter two words of the same length and get the shortest chain between them, changing one letter at a time, every rung a real word.',
+ sub='Give it two words the same length. It finds the shortest chain from one to the other, changing a single letter at each step, with every rung a real word.',
+ form=mid('start','Start word','COLD','e.g. COLD') + mid('end','End word','WARM','e.g. WARM')
+      + sel('pool','Dictionary', [('common','Everyday words',True),('all','Every word (obscure too)',False)]),
+ hint='Three to eight letters, and both words the same length. Each step changes exactly one letter — no adding, removing or rearranging.',
+ js=r"""
+  var a=WK.clean(val('start')), b=WK.clean(val('end'));
+  if(!a || !b) return fail('Enter a start word and an end word.');
+  setv('start',a); setv('end',b);
+  if(a.length !== b.length)
+    return fail('Both words need the same length — '+a+' has '+a.length+' letters, '+b+' has '+b.length+'.');
+  if(a.length < 3 || a.length > 8) return fail('Word ladders here run from three to eight letters.');
+  if(a === b) return fail('Those are the same word. Pick two different ones.');
+  var co = val('pool') !== 'all';
+  if(!WK.has(a)) return fail(a+' is not in the dictionary.');
+  if(!WK.has(b)) return fail(b+' is not in the dictionary.');
+  if(co && !WK.isCommon(a)) return fail(a+' is an unusual word. Switch to every word to use it as a rung.');
+  if(co && !WK.isCommon(b)) return fail(b+' is an unusual word. Switch to every word to use it as a rung.');
+
+  /* Words of one length, bucketed by each position blanked out. Two words are
+     one letter apart exactly when they share a bucket, so the graph is built
+     once per length and reused for every search in the visit. */
+  var CACHE = window.__wmLadder || (window.__wmLadder = {});
+  function graph(L, common){
+    var k = L + (common ? 'c' : 'a');
+    if(CACHE[k]) return CACHE[k];
+    var pool = (WK.byLen[L] || []).filter(function(w){ return !common || WK.isCommon(w); });
+    var bk = {};
+    for(var i=0;i<pool.length;i++){
+      var w = pool[i];
+      for(var p=0;p<L;p++){
+        var key = w.substring(0,p) + '_' + w.substring(p+1);
+        (bk[key] = bk[key] || []).push(w);
+      }
+    }
+    return CACHE[k] = { n: pool.length, bk: bk };
+  }
+
+  var L = a.length, G = graph(L, co);
+  var prev = {}, q = [a], qi = 0;
+  prev[a] = null;
+  while(qi < q.length){
+    var w = q[qi++];
+    if(w === b) break;
+    for(var p=0;p<L;p++){
+      var nbs = G.bk[w.substring(0,p) + '_' + w.substring(p+1)];
+      if(!nbs) continue;
+      for(var i=0;i<nbs.length;i++){
+        var nb = nbs[i];
+        if(prev[nb] === undefined){ prev[nb] = w; q.push(nb); }
+      }
+    }
+  }
+
+  if(prev[b] === undefined){
+    return out('<p class="status">There is no ladder from '+a+' to '+b+'.'
+      + (co ? ' Every rung has to be an everyday word — switching to every word opens up far more stepping stones.'
+            : ' Some words simply sit in their own corner of the dictionary with nothing one letter away.')
+      + '</p>', '');
+  }
+
+  var path = [], cur = b;
+  while(cur !== null && cur !== undefined){ path.push(cur); cur = prev[cur]; }
+  path.reverse();
+
+  var rungs = path.map(function(w, i){
+    var before = i ? path[i-1] : null, cells = '';
+    for(var k=0;k<w.length;k++){
+      var changed = before && before.charAt(k) !== w.charAt(k);
+      cells += '<span' + (changed ? ' class="chg"' : '') + '>' + w.charAt(k) + '</span>';
+    }
+    return '<li' + (WK.isCommon(w) ? '' : ' class="rare" title="Less common word"') + '>' + cells + '</li>';
+  }).join('');
+
+  var steps = path.length - 1;
+  var html = '<div class="group"><h2>' + a + ' to ' + b
+           + ' <span>' + steps + ' step' + (steps===1?'':'s') + '</span></h2>'
+           + '<ol class="lad">' + rungs + '</ol>'
+           + '<p class="ladfoot">No shorter ladder exists'
+           + (co ? ' using everyday words.' : ' in the dictionary.') + '</p></div>';
+  out(html, steps + ' step' + (steps===1?'':'s') + ', ' + path.length + ' rungs, searched '
+      + G.n.toLocaleString() + ' ' + L + '-letter words.');""",
+ prose="""
+      <h2>The rules of a word ladder</h2>
+      <p>Change one letter at a time. Every step has to land on a real word, and the letters stay where they are — no adding, removing or shuffling. <code>COLD</code> to <code>WARM</code> is the famous one, and it takes four steps: <code>COLD</code>, <code>CORD</code>, <code>CARD</code>, <code>WARD</code>, <code>WARM</code>. The puzzle was invented by Lewis Carroll, who called it Doublets and set them as a weekly column in 1879.</p>
+      <h2>What "shortest" means here</h2>
+      <p>The tool treats the dictionary as a map: every word of your length is a place, and two places are connected if they differ by one letter. It then walks outwards from your start word a step at a time, so the first route it reaches the end by is necessarily the shortest one. If it says six steps, there is no five-step ladder. There may well be other six-step ladders — this shows one of them.</p>
+      <h2>When there is no ladder at all</h2>
+      <p>Plenty of pairs have none. Some words have no neighbours whatsoever — change any single letter and you get a non-word — so they sit alone and no ladder can reach them. Others belong to a cluster that simply never connects to the one you're aiming at. The everyday-words setting makes this far more likely, because it throws away the obscure words that often form the bridge. Switch to every word and a surprising number of dead ends open up.</p>
+      <h2>Setting one as a puzzle</h2>
+      <p>Pick two words that are related but opposite — <code>HEAD</code> and <code>TAIL</code>, <code>BLACK</code> and <code>WHITE</code>, <code>WHEAT</code> and <code>BREAD</code> — and check the ladder here first so you know it exists and how long it runs. Give your solvers the two ends and the number of rungs. Four- and five-letter words make the best puzzles: three-letter ladders are over too quickly, and anything above six tends to need words nobody uses.</p>
+      <h2>Related tools</h2>
+      <p>The <a href="/tools/word-finder/">word finder</a> matches a pattern like <code>C?LD</code>, which is the manual version of what each rung of this search does. For rearranging letters rather than replacing them, try the <a href="/tools/anagram-solver/">anagram solver</a> or the <a href="/tools/multi-word-anagram-solver/">multi-word anagram solver</a>.</p>""")
 
 PRELOAD = '<link rel="preload" as="fetch" href="/tools/words.txt?v=2" crossorigin>\n'
 ENGINE_DICT = '<script src="/tools/wordkit.js?v=2"></script>'
