@@ -83,6 +83,458 @@ BLOG_CSS = """<style>
 
 POSTS = [
 dict(
+ slug='android-dev-launcher-leak',
+ date='2026-11-10',
+ updated='2026-11-10',
+ title='We shipped a barcode scanner in a word game',
+ h1='We shipped a barcode scanner in a word game',
+ sub='For fifteen builds our Android app carried a barcode reader, two unused font families and a GraphQL client. We had written the line that was meant to keep them out.',
+ desc='Fifteen Android builds shipped the Expo dev launcher despite an exclude rule, because the Gradle plugin joined the whole exclude list into one argument.',
+ body="""
+      <p>Our download was 77 MB. It is now 47 MB, and nothing was removed that any player could see.</p>
+
+      <p>About five of those megabytes were a development tool that should never have been in a store build at all. It had been there for fifteen consecutive releases. We had written the configuration line that excludes it, we could point at that line, and the line did nothing whatsoever.</p>
+
+      <h2>What was actually in the download</h2>
+
+      <p>The thing shipping was Expo's dev launcher — the in-app menu you use while developing, which has no business in a release. It does not travel light. It brought Jetpack Compose, an Apollo GraphQL client, two font families, and Google's ML Kit barcode scanning models.</p>
+
+      <p>It also registered an initialiser that ran at every launch. So every player opening a word game was, briefly, starting up a barcode reader.</p>
+
+      <p>I want to be clear that this is not an exotic failure. We had done the documented thing. There is an <code>exclude</code> list in the Gradle configuration, the dev launcher was on it, and we had shipped fifteen builds in the comfortable belief that this was handled.</p>
+
+      <h2>The exclude line that did nothing</h2>
+
+      <p>Expo's Gradle plugin passes that exclude list to a command-line tool. The helper it uses to build the command takes a key and a list of values, and it joins the list into <em>one</em> argument.</p>
+
+      <p>So a list of four package names arrived at the CLI as a single package name with spaces in it. Nothing matches a package called "a b c d", so nothing was excluded, and no error was raised — an exclude list that matches nothing is indistinguishable from an exclude list that had nothing to do.</p>
+
+      <p>The fix is four lines in a patch against that package: split on whitespace. We spent considerably longer being sure that was really the cause than fixing it, because the first three theories were wrong. It looked like a Gradle ordering problem, then a stale daemon, then a build-variant mix-up. It was none of those.</p>
+
+      <div class="pull"><p>A configuration that silently matches nothing looks exactly like a configuration that is working. That is the whole problem with exclusions.</p></div>
+
+      <h2>Why our build script never caught it</h2>
+
+      <p>We did have a check. The release script grepped the compiled dex for the dev launcher's class names, found nothing, and reported the build clean.</p>
+
+      <p>It found nothing because R8 had renamed those classes. Our minifier was hiding the thing our check was looking for, every single time, and the check reported success for fifteen builds.</p>
+
+      <p>What works is grepping the built artefact for strings that <em>survive</em> minification — the barcode library's native name, a bundled font file name, the initialiser's manifest entry. Those are resources and manifest entries, not classes, so nothing renames them. The release script now hard-fails on any of them, which means this particular mistake cannot ship again even if the exclude breaks a second time.</p>
+
+      <h2>The other twenty-five megabytes</h2>
+
+      <p>The dev launcher was the embarrassing find, not the biggest one.</p>
+
+      <p>Our world-card artwork shipped four image layers for each of ninety-five worlds, and the component only ever draws one of them. The other three had been designed for a parallax effect that was cut long before launch. That was the single largest item on the list.</p>
+
+      <p>Then the fonts. A theme file imported from a font package's top-level barrel, which pulls every weight of every family in it. Fifty-five font files shipped; nine were used.</p>
+
+      <p>On iOS the JavaScript bundle carried nearly five megabytes of Hermes debug information, because the build was not told where to write a source map, so it kept the debug data inline instead. And a handful of images were shipping at 1024 px to be drawn at 72 pt.</p>
+
+      <p>None of these is clever. They are all the same shape: something was configured once, the reason for it went away, and nothing in the pipeline measures the result.</p>
+
+      <h2>What we did not take out</h2>
+
+      <p>We left an ad network in place that costs a couple of megabytes and earns a small single-digit share of revenue on one platform. On paper it is the easiest remaining win. In practice removing a bidder changes the auction for the bidders that stay, and we were not confident enough about the second-order effect to trade it for two megabytes.</p>
+
+      <p>We also left a set of unused social-SDK components alone. The patch to strip them was written and then parked, because the gain was about a megabyte and the change touched the login and sharing paths, which are exactly the paths you do not want to debug remotely after a release.</p>
+
+      <p>Thirty megabytes was enough. The last five would have cost more than they were worth.</p>
+
+      <h2>Is it worth doing at all?</h2>
+
+      <p>Google's own rough guidance is that install conversion moves about a percentage point for every six megabytes. If that holds for us, thirty megabytes is a meaningful change to how many people who tap install actually get the game. We have not been able to measure it cleanly, because the size change shipped in a build that also changed other things, which is a mistake we keep making and keep writing down.</p>
+
+      <p>What I am confident about is narrower and duller: a word game should not contain a barcode scanner, and we could not have told you it did.</p>
+
+      <h2>Grep the artefact, not the config</h2>
+
+      <p>Every check we had was reading our intentions. The exclude list said the right thing. The build script looked for the right class. Both were describing what we meant rather than what came out.</p>
+
+      <p>Unzip the thing you are about to upload and look inside it. Search for strings that minification cannot touch. If you cannot explain why a file is in there, that is the finding — you do not need a size budget or a tool, just the willingness to open the box.</p>"""),
+dict(
+ slug='daily-puzzle-omissions',
+ date='2026-11-10',
+ updated='2026-11-10',
+ title='Our daily puzzle left out words for 347 days',
+ h1='Our daily puzzle left out words for 347 days',
+ sub='A player swipes a word that is plainly there on the wheel, the game says no, and something breaks between you. We had been doing that on almost every day of the year.',
+ desc='Our daily puzzle omitted at least one obvious word on 347 days out of 365. The generator kept the twelve commonest words rather than all the good ones.',
+ body="""
+      <p>The message said the daily was awful, that loads of common words were not part of it. That is the kind of complaint that is easy to wave off, because every word game gets it constantly and it is usually wrong. People swipe words that are not words.</p>
+
+      <p>This time there was a screen recording, and on it the rack does not move. The player swipes <code>PLAY</code>. Nothing. <code>PRAY</code>. Nothing. <code>RELY</code>. Nothing. Three ordinary words, all spellable from the letters on screen, all rejected.</p>
+
+      <h2>Twenty-one words, twelve kept</h2>
+
+      <p>The daily is built from a wheel of letters. A generator works out which words that wheel can spell, and the rack — the row of blanks you are filling in — is the list it decides to ask for.</p>
+
+      <p>That generator was taking the twelve commonest words and stopping. The day in the recording had a wheel spelling twenty-one perfectly ordinary four-to-six-letter words. Nine of them were simply not asked for, and swiping any of the nine got you a rejection.</p>
+
+      <p>From the player's side there is no way to tell that apart from a broken game. The dictionary looks wrong. In a sense it was.</p>
+
+      <h2>A floor that cut the wrong words</h2>
+
+      <p>Two of the missing words had a second, separate problem. The generator also applied a frequency floor, dropping anything below a commonness threshold, and <code>PAYER</code> and <code>REPAY</code> both fell under it.</p>
+
+      <p>A frequency floor is a reasonable idea. It is there to stop the puzzle demanding words nobody says. But commonness scores are built from written corpora, and they are unreliable in exactly the band a word game lives in — ordinary, short, slightly dull words that people use constantly and write down rarely. The floor was tuned to keep obscurity out and was quietly taking everyday words with it.</p>
+
+      <div class="pull"><p>A word you omit is not a gap in a list. It is a swipe the player makes, and a rejection they get back, and a reason to stop believing the game.</p></div>
+
+      <h2>How often: nearly always</h2>
+
+      <p>Having found it on one day, the obvious question was how many days. We had a year of generated puzzles sitting in the repository, so this was a script rather than an investigation.</p>
+
+      <p>Three hundred and forty-seven days out of three hundred and sixty-five left off at least one obvious word. Two hundred and seventy-nine left off three or more.</p>
+
+      <p>I had assumed we would find a bad week. It was the whole year, and it had been shipping daily the entire time.</p>
+
+      <p>Nobody caught it because each individual day looks fine. You open the puzzle, you solve the twelve words it asks for, and you never learn about the nine it did not. The failure is only visible to a player who tries a word that should work — which is to say, the more fluent the player, the worse the game looked.</p>
+
+      <h2>The rule we replaced it with</h2>
+
+      <p>The new rule has no quota in it at all. The rack is <em>exactly</em> the set of obvious words the wheel spells, in the length range the daily uses. Not the top twelve of them. All of them.</p>
+
+      <p>That inverts which thing gets rejected. Previously, if a wheel spelled too many good words, we trimmed the words. Now, if a wheel spells a set we cannot ask for in full, we throw away the wheel and pick a different one. There are plenty of wheels; there is only one first impression of a daily puzzle.</p>
+
+      <p>Concretely: a wheel is usable only if its obvious set lands between nine and twelve words with at least two long ones. Everything else is discarded at generation time. The whole year was rebuilt against the new rule — about a hundred wheels, with the puzzle identifiers kept stable so nobody's streak broke — and an audit script now has to report zero omissions before the content can be regenerated at all. There is a test pinning it.</p>
+
+      <h2>Why this is the opposite of our last dictionary problem</h2>
+
+      <p>We wrote earlier about a <a href="/blog/word-list-problem/">dictionary that accepted nonsense</a> — our own tool confidently recommending a word that is not a word. This is the mirror image, and it is the more damaging of the two.</p>
+
+      <p>Accepting a junk word costs a player a moment of confusion and a small amount of trust in the word list. Rejecting a real word costs you the player's belief that the game is working, and they are not wrong to lose it. One failure makes the game look generous and sloppy. The other makes it look broken.</p>
+
+      <p>If you are building the same thing and have to choose which way to err, err towards accepting. It is the cheaper mistake by a wide margin.</p>
+
+      <h2>What the rule costs us</h2>
+
+      <p>Throwing away wheels that spell too much means the pool of usable wheels is a lot smaller than it was, and it will eventually bind — a year is fine, several years of unique dailies is a different problem that we have not solved.</p>
+
+      <p>The rule also does nothing about a separate category of complaint. Our word bank tiers some genuinely odd words as "obvious" — a handful of archaic or technical entries that our frequency data rates far higher than any person would. Those now get <em>included</em>, correctly by the rule and wrongly by any human standard, and the daily asks for them. That is a problem in the word bank's tiering, not in this rule, and fixing it there is the right place rather than adding a second exception list here.</p>
+
+      <p>And the daily still refuses three-letter words by design. A player swiping <code>LAY</code> gets a rejection, exactly like the one that started all this. The difference is that it now says so explicitly rather than failing silently, which is the least we can do while the rule stands.</p>
+
+      <h2>Count the words you did not ask for</h2>
+
+      <p>The generalisable bit is a one-line audit, and I would run it against any generated puzzle content.</p>
+
+      <p>For every puzzle you ship, compute the set of valid answers the player can plausibly find, subtract the set you actually ask for, and look at the size of the difference. If it is not zero, those are rejections waiting to happen, and your players will find them long before your dashboards do.</p>"""),
+dict(
+ slug='ios-app-switcher-no-event',
+ date='2026-11-10',
+ updated='2026-11-10',
+ title='There is no event for swiping an app away',
+ h1='There is no event for swiping an app away',
+ sub='We had a metric meaning "the app vanished during a video". It took three analyses to work out that it meant at least three different things.',
+ desc='On iOS a swipe from the app switcher goes to inactive, never background, so it leaves no trace at all. Our crash metric was three behaviours under one name.',
+ body="""
+      <p>Of the rewarded videos our players started one week, well under half ended with the app still running. The rest were followed by a cold launch. We had an event for it, and the event was called <code>rewarded_ad_lost</code>.</p>
+
+      <p>The name was doing a lot of work it had not earned.</p>
+
+      <h2>First reading: we are crashing</h2>
+
+      <p>The obvious interpretation is that the app is dying under the ad. The timing supported it — most of the losses happened within thirty seconds of the video opening, with a median around ten. We had a plausible mechanism too: the game renders a 3-D scene behind the UI, and that scene kept rendering underneath every full-screen ad, because the hook that pauses it only reacted to a real background transition.</p>
+
+      <p>A memory-hungry renderer running under a video player on a phone is a good story. We wrote a fix, which pauses the scene whenever an ad goes up.</p>
+
+      <p>The fix was worth shipping. The story was wrong.</p>
+
+      <h2>Second reading: people are leaving on purpose</h2>
+
+      <p>Crashlytics had nothing. Not a reduced number of reports — nothing at all, for a failure supposedly affecting a large share of our ad views.</p>
+
+      <p>That is explicable: if the operating system kills your process for using too much memory, that is not a crash and no crash reporter will see it. But it meant the crash theory had no independent evidence, so we went back to the raw event stream and looked at what the sessions actually did.</p>
+
+      <p>Most of the lost videos were followed by a background transition and a relaunch within a minute. A large share of those had our own explicit backgrounding event attached. That is not a process being killed. That is a person leaving the app, waiting out the video they did not want to watch, and coming back.</p>
+
+      <p>So we rewrote the conclusion: around a third of full-screen ads were being escaped by players quitting out of them.</p>
+
+      <h2>The correction</h2>
+
+      <p>When this went to the founder, his reply was that he did not think all of these would be crashes. He was right, and more usefully he was right about a subset I had been confident about.</p>
+
+      <p>I had split the losses into "left on purpose" and "hard deaths", putting anything with no leave signal in the second bucket. More than a hundred interstitial losses had no leave signal at all, and I had called those real crashes.</p>
+
+      <p>They were not. On iOS, swiping an app away from the app switcher does not produce a background transition. The app goes to <code>inactive</code> and is then terminated. <code>inactive</code> is the state you also get for a phone call, a notification pulled down, or Control Centre — it is not a lifecycle event you would normally log, and we were not logging it.</p>
+
+      <p>So a deliberate force-quit and an out-of-memory kill look identical in our data. Both are: last event, then nothing, then a cold start.</p>
+
+      <div class="pull"><p>Absence of a leave signal is not evidence of a crash. On iOS it is the expected shape of the most deliberate exit a player can make.</p></div>
+
+      <p>What settled it was looking at who those sessions belonged to. Almost all of the supposed hard deaths came from players who also quit ads in ways that <em>did</em> leave a signal. People who had never once quit an ad produced almost none of them. A behaviour that clusters in the players who demonstrably do that behaviour is that behaviour, not a crash that happens to prefer them.</p>
+
+      <h2>Third reading, and the one that stuck</h2>
+
+      <p>A later analysis moved it again, and this is the version we now believe.</p>
+
+      <p>On the newest iPhones the pattern is much tighter than "a person decides to skip". The app leaves the foreground a median of about three seconds after the video opens — too fast to be a decision about content nobody has seen yet — then cold-starts a few seconds later, and most of the time the player immediately taps the same video again. Those players come back the next day at a <em>higher</em> rate than average, which is not what people who are sick of your ads do.</p>
+
+      <p>That is not skipping. That is the player force-quitting an app that has gone unresponsive behind an ad that never appeared, and then trying again because they wanted the reward. The share doing it had been climbing with every build since the summer.</p>
+
+      <p>Three readings, three different mechanisms, one event name.</p>
+
+      <h2>What we still cannot separate</h2>
+
+      <p>We have not closed this. The data still cannot distinguish a force-quit from a memory kill, because iOS genuinely does not tell you, and we should be honest that the third reading rests on timing and on return behaviour rather than on a signal that says what happened.</p>
+
+      <p>Two things would fix it and we have shipped neither. Logging the <code>inactive</code> transition itself would at least mark the sessions where the app was alive at the moment it disappeared. MetricKit reports memory-limit terminations after the fact, which is the only first-party way to confirm the kills. Until one of those is in, "the app went away" remains a category rather than a cause.</p>
+
+      <p>The scene-pause fix stayed in, incidentally. It is a reasonable thing to do for battery and heat regardless of whether it fixes anything else, and we removed the stability claim from the release notes once we knew it was not one.</p>
+
+      <h2>Two signals that will mislead you</h2>
+
+      <p>If you are instrumenting this on iOS, two specific traps cost us time.</p>
+
+      <p>Firebase's <code>user_engagement</code> event looks like a session-boundary signal and is not. It fires on every screen change, so a session full of them tells you nothing about backgrounding.</p>
+
+      <p>And the generic uncaught-exception event that crash reporting SDKs expose effectively never appears for real devices in our data. If you are watching it as a safety net, you are watching a line that stays at zero through every category of failure described above.</p>
+
+      <h2>Name the event for what you saw</h2>
+
+      <p>The mistake was upstream of all the analysis, and it was the name.</p>
+
+      <p><code>rewarded_ad_lost</code> encodes a conclusion. Everyone who read it, including me, started from "we lost the app" and went looking for the cause of a loss. Had it been called something flatter — we started a video and never observed it ending — the first question would have been what else could produce that, which is the question that actually took three attempts to ask.</p>
+
+      <p>Name events after the observation. Keep the interpretation in the analysis, where it can be wrong out loud and corrected, instead of baking it into a string that every future reader will inherit.</p>"""),
+dict(
+ slug='xcode-27-ios-27-launch',
+ date='2026-11-10',
+ updated='2026-11-10',
+ title='A new Xcode shipped an app that could not launch',
+ h1='A new Xcode shipped an app that could not launch',
+ sub='The first build we made with the new Xcode died at launch on every device running the new iOS. Nothing of ours ran, so nothing of ours reported it, and it read as churn.',
+ desc='Our first Xcode 27 build crashed at launch on every iOS 27 device. No code of ours ran, so it reached neither analytics nor crash reporting. It read as churn.',
+ body="""
+      <p>We found it on a phone in the house. Someone updated to the new iOS, opened the game, and it closed itself. Reinstalling did not help.</p>
+
+      <p>Our dashboards showed nothing wrong, and they were not broken. They were telling the truth about a population that no longer included anyone this was happening to.</p>
+
+      <h2>A trap before any of our code</h2>
+
+      <p>The phone had analytics sharing turned off, so there was no report from it. We reproduced it on a simulator running the same OS version and got a crash log within a minute.</p>
+
+      <p>The process died on a <code>SIGTRAP</code> inside a system function whose name says exactly what it is for: the runtime check for an app that has not adopted the scene lifecycle. The new iOS refuses to run an app that is linked against its SDK and still uses the old, pre-scene application lifecycle. It does not warn. It traps, at launch, before any application code executes.</p>
+
+      <p>That last part is the whole story. Not one line of ours ran. No analytics initialisation, no crash reporter, no remote config fetch. From our side the device simply stopped existing.</p>
+
+      <h2>Why a working app broke without us touching it</h2>
+
+      <p>Nothing about our lifecycle code had changed. What changed was the machine that built it.</p>
+
+      <p>The build in question was the first store build we had made with the new major version of Xcode. A new Xcode means a new SDK, and linking against a new SDK is how the operating system decides which generation of rules to hold you to. Everything we had shipped before was built against the previous SDK and was exempt — so players on the new iOS running our *older* release were completely fine, and players who had taken our newest update were locked out.</p>
+
+      <p>Updating the app was the thing that broke it. Staying behind was the safe choice. That is an unpleasant inversion to discover from a phone on your kitchen table.</p>
+
+      <div class="pull"><p>The compiler upgrade was the change. Nothing in the diff for that release had anything to do with it, which is why nothing in the diff was ever going to explain it.</p></div>
+
+      <h2>The cohort that looked like it left</h2>
+
+      <p>Work out who this hit and the shape is nasty. Every player who had our newest build and then updated their phone disappeared from our data on the day they updated, permanently, with no event marking the transition.</p>
+
+      <p>In every retention report, those people are churn. They look exactly like players who got bored. The only way to tell the difference is to go looking at retention split by OS version and build, which nobody does routinely because it is a strange thing to suspect.</p>
+
+      <p>We have written before about a <a href="/blog/crash-free-rate-denominator/">crash-free rate that was measuring the wrong population</a>. This is the same disease with the symptom inverted. There, phantom sessions were dragging a number down. Here, the affected sessions vanished entirely and every number looked healthy. A metric that only sees the people your code reaches cannot report on the people it does not.</p>
+
+      <h2>What the fix actually is</h2>
+
+      <p>Adopting the scene lifecycle on a React Native app is a config plugin plus a small Swift file. You declare a scene manifest in the app's property list, and you add a scene delegate that creates the window and starts React Native inside the callback for a scene connecting, rather than in the old application-did-finish-launching path. The application delegate keeps the things that genuinely belong to the process — analytics and attribution initialisation — and deep links get forwarded through to the new entry point.</p>
+
+      <p>It is about an hour of work once you know. Our plugin is unit-tested against the real generated delegate file rather than a fixture we wrote ourselves, which matters because the generated file changes between framework versions and a fixture would quietly stop representing it.</p>
+
+      <h2>The fix build that shipped without the fix</h2>
+
+      <p>This is the part worth the post.</p>
+
+      <p>We wrote the plugin, built, and sent it out. It still died. The plugin had not run, because the app configuration edit that registers it had not landed properly, and nothing anywhere in our pipeline checks that a config plugin actually took effect. The build succeeded. The archive validated. The app was byte-for-byte as broken as before.</p>
+
+      <p>Config plugins are code that edits generated native projects during a build you do not watch. They can silently not apply. So the release script now opens the built app, reads the property list, and refuses to continue if the scene manifest is not there.</p>
+
+      <p>That is the same lesson as several other things that have bitten us: assert against the artefact, not against the source that was supposed to produce it.</p>
+
+      <h2>Getting word to people whose app will not start</h2>
+
+      <p>There is a genuinely hard problem underneath the bug. The affected players could not be reached by remote config, because remote config is fetched by our code and our code never ran. There is no in-app message surface in an app that cannot launch.</p>
+
+      <p>Push notifications were the only channel left, since those are handled by the system before the app starts, and we used them — targeted at the specific broken build — to tell people an update was waiting. It worked for the minority who had granted notification permission. For everyone else there was no mechanism at all; they got the fix whenever they happened to update.</p>
+
+      <p>If you take one operational thing from this: the population you most need to reach in an emergency is the one your own tooling is least able to reach, and push permission is the only lever that still works when the app itself is dead.</p>
+
+      <h2>Install the new simulator on day one</h2>
+
+      <p>The preventable version of this is cheap and we were not doing it.</p>
+
+      <p>When a new major OS and a new major Xcode appear, install the matching simulator runtime and launch your existing app on it before you ship anything built with the new toolchain. Not a test suite — just open the app and see it draw a screen. The crash reproduced on the first try on a simulator that took ten minutes to download.</p>
+
+      <p>A new Xcode major is not a build-tooling upgrade. It is an opt-in to a new set of operating system rules, applied the moment the build is linked, and the first thing it can take away from you is launch.</p>"""),
+dict(
+ slug='notification-ask-timing',
+ date='2026-11-10',
+ updated='2026-11-10',
+ title='We asked for notifications earlier and got fewer',
+ h1='We asked for notifications earlier and got fewer',
+ sub='Our permission ask sat behind a level about half of new players never reach. Moving it earlier is the obvious fix. We shipped it, and it halved the number who said yes.',
+ desc='We moved our notification permission ask earlier so more players would see it. Many more saw it, far fewer granted it, and grants per install roughly halved.',
+ body="""
+      <p>Notifications are how you get a lapsed player back. If you never got permission, there is no mechanism — no email, no address, nothing. For a free game it is close to the only re-engagement channel that exists.</p>
+
+      <p>Ours was gated behind reaching level six.</p>
+
+      <h2>The gate sat exactly on the cliff</h2>
+
+      <p>Separately, we had worked out that first-session depth is the strongest early predictor we have. Players who get past about half a dozen levels in their first sitting come back at roughly double the rate of players who stop short of that, and the effect keeps climbing with depth.</p>
+
+      <p>The uncomfortable corollary is that around half of new players never reach six levels at all. They are the ones most likely to drift away, and they are therefore the ones we would most want to be able to reach later.</p>
+
+      <p>And the ask was gated at six. The people who most needed a recovery channel were precisely the people never offered one. Written down like that it is not a subtle problem, and the fix is not subtle either: move the ask earlier.</p>
+
+      <h2>What we changed</h2>
+
+      <p>We moved it to level three, behind a remote-config key so it could be reverted without a release. Everything else stayed the same — the same soft prompt, the same wording, the same flow into the system dialog.</p>
+
+      <p>The expectation was straightforward. Many more people would see the ask. Some fraction of those would say yes. The fraction might be a bit lower, because they were less invested, but the much larger denominator would more than cover it.</p>
+
+      <p>Exactly half of that happened.</p>
+
+      <h2>More asks, fewer grants</h2>
+
+      <p>Far more people saw it. Of those, nearly three quarters declined the soft prompt — a much worse rate than at level six.</p>
+
+      <p>The part that mattered: grants per install roughly halved. Not "grew more slowly". We ended up with about half as many players reachable by notification as before the change, having shown the ask to several times as many people.</p>
+
+      <p>The conversion of the system dialog itself did not move at all. Everyone who got as far as Apple's actual permission alert said yes at the same rate as before. The entire loss was in the soft prompt, on players who had been in the game for about ninety seconds.</p>
+
+      <div class="pull"><p>We did not convert fewer people because fewer saw the ask. We converted fewer because showing the ask to an uninvested player is how you spend it.</p></div>
+
+      <h2>One shot, and the soft prompt spends it</h2>
+
+      <p>Here is the mechanism we had not taken seriously.</p>
+
+      <p>A soft prompt — your own screen, asking whether the player would like reminders, before you trigger the real system dialog — is the standard pattern, and the reason for it is sound: the system dialog can only be shown once, ever, so you use your own screen to avoid burning it on a no.</p>
+
+      <p>But our soft prompt was also effectively one-shot. A player who declined it was not asked again. Of several hundred players who declined that soft prompt, exactly one ever went on to see the system dialog.</p>
+
+      <p>So the soft prompt was not protecting the permission. It was consuming it, on our own terms, at a moment we had chosen badly. We had built a mechanism to avoid spending a scarce resource too early and then spent the resource with it.</p>
+
+      <h2>The number we had been quoting was the wrong one</h2>
+
+      <p>Worse, we had been reporting this well for months without noticing.</p>
+
+      <p>The opt-in figure in our own reporting was the conversion of the system dialog — of people who reached Apple's alert, what share tapped Allow. That number was healthy and it was real. It was also conditional on three earlier steps, every one of which lost people.</p>
+
+      <p>Measured the way that actually matters — of everyone who installed the game, how many are reachable by notification — the true figure was a small fraction of the one we had been quoting. Roughly a fifth of it.</p>
+
+      <p>Neither number is wrong. One answers "is our permission alert well-timed", the other answers "can we reach our players", and we had been using the first to feel good about the second.</p>
+
+      <h2>We could not see the top of the funnel</h2>
+
+      <p>One reason this ran as long as it did: the event that fires when the soft prompt is shown was firing zero times.</p>
+
+      <p>It had been added to one of the two code paths that can trigger the ask. The other path — the one most players actually hit — consumed the prompt without logging it. So for months we had grant counts and dialog counts and no idea how many people had been asked, which is the denominator the whole question turns on.</p>
+
+      <p>It is an unglamorous class of bug and I suspect it is extremely common. If an event's count is exactly zero, that is not a quiet signal. It is a broken one.</p>
+
+      <h2>Where this reasoning breaks</h2>
+
+      <p>We reverted to level six, and I want to be careful about what that decision does and does not prove.</p>
+
+      <p>We tested the old prompt, earlier. We did not test a <em>better</em> prompt earlier. Our soft prompt at the time said very little about why anyone would want notifications, and asking a stranger ninety seconds into a game for a vague benefit is a weak offer at any level. It is entirely possible that a benefit-led prompt — tied to a streak the player can see they are about to start, or a daily reward that is visibly waiting — converts fine at level three. We have not run that, so the honest conclusion is narrower than "ask later".</p>
+
+      <p>It is also one game and one audience. Puzzle games are not social apps; a player with no friends in the game has less obvious reason to want a push, and the result may not transfer.</p>
+
+      <p>And the original problem is still there, untouched. Half of our new players still leave with no way for us to reach them. Reverting the gate restored the grant rate; it did nothing at all about the people behind the cliff. The real fix is to get more players past six levels, which is a content problem, and much harder than moving a number in a config file.</p>
+
+      <h2>Ask at investment, not at reach</h2>
+
+      <p>The thing I would carry to another product is that permission asks are not an impressions game, even though every instinct says they are.</p>
+
+      <p>Reach and conversion are not independent here. The earlier you ask, the more people see it and the worse they convert, and because the ask is one-shot, a bad ask is not a neutral outcome — it permanently removes that player from the pool. Showing it to twice as many of the wrong people does not get you more grants. It gets you fewer.</p>
+
+      <p>Before moving any permission prompt, work out what the player has at stake at that moment. If the honest answer is nothing yet, you are not widening the funnel. You are spending it.</p>"""),
+dict(
+ slug='idle-animation-loops',
+ date='2026-11-06',
+ updated='2026-11-06',
+ title='One animation loop costs the same as ten',
+ h1='One animation loop costs the same as ten',
+ sub='Left on a desk, our game kept redrawing sixty times a second. We switched off one of the eight animations running on that screen and measured again. Nothing moved.',
+ desc='Our idle game screen drew 60 frames a second. Switching off one of its eight animation loops saved nothing — the cost is per screen, not per animation.',
+ body="""
+      <p>Leave Wordmere open on a table and walk away. Nothing moves that you would really notice. A letter chip swells slightly and settles. A disc breathes. A flame flickers on the streak counter. The screen looks still.</p>
+
+      <p>It was drawing sixty frames a second, indefinitely, and spending about a third of a CPU core to do it.</p>
+
+      <p>That is the sort of thing that surfaces as a one-star review about battery on a four-year-old Android phone and surfaces nowhere else. So in October we sat down to measure it properly, expecting to come away with a ranked list of expensive animations to go and fix. We got something more useful and a lot less convenient.</p>
+
+      <h2>Eight loops, and switching one off changed nothing</h2>
+
+      <p>First we counted the infinite loops on the two screens people actually sit on. A level has the letter-chip breath, the disc breathe, an idle nudge that starts after six seconds and then runs forever, and a rescue cell that spins and pops once you have stalled. Three more appear only in certain states: a halo on the plane, the ads-free slot, the piggy pill. The home screen has two, the streak flame and the daily tile's flip and glow.</p>
+
+      <p>Then we switched them off one at a time and measured every configuration.</p>
+
+      <p>Switching off a single loop while any other was still running saved approximately nothing. Not a small amount — an amount we could not separate from the noise in the measurement. Switch all of them off and the screen dropped to zero frames per second and two to five per cent of a core. Switch any one of them back on, it genuinely did not matter which, and we were back to drawing on every vsync at twenty-five to thirty-five per cent.</p>
+
+      <p>I had assumed the cost would be roughly proportional to the number of animations running. It is not proportional at all. It is a step, and the step is at one.</p>
+
+      <h2>Why the saving is not additive</h2>
+
+      <p>This is obvious once you have seen it, which is the most irritating kind of obvious.</p>
+
+      <p>A frame is a whole-screen unit of work. Once anything has invalidated the view for this vsync, the pipeline does its pass — layout, draw, upload, composite — more or less regardless of how much of the screen actually changed. The second animation is joining a frame that was going to be drawn anyway, so it is close to free. The first one is not, because the first one is what turns the frame on.</p>
+
+      <p>So "how expensive is this animation" is the wrong question to profile. The expensive thing is not any particular animation. It is the existence of any animation at all, and one loop makes that decision on behalf of the entire screen.</p>
+
+      <p>Which is why per-component optimisation cannot help you here. You can make every animation on the screen twice as efficient and save nothing worth measuring, because you have not changed the number of frames.</p>
+
+      <div class="pull"><p>The cost is not in the animation. It is in the decision to draw a frame at all — and a single loop makes that decision for everything else on the screen.</p></div>
+
+      <h2>The measurement I had to throw away</h2>
+
+      <p>A study we had run a few weeks earlier, looking at a video backdrop, reported the home screen holding 72 to 76 frames a second. Two things are wrong with that sentence and I wrote it.</p>
+
+      <p>The capture windows labelled "Home" were not the home screen. They were level 2. Wrong screen, confidently labelled.</p>
+
+      <p>The other problem is worse, because it was visible on the page. A 60 Hz display cannot show you 76 frames a second. That number should have stopped me cold, and instead it sat in a table for a month looking like data. It was an artefact of how we were counting frames; the real figure was about sixty.</p>
+
+      <p>What caught it in the end was the new study producing clean zeros. Zero is a hard number to arrive at by accident, and once we had one we could see that the earlier table had never been measuring what it claimed.</p>
+
+      <h2>Kill switches beat rebuilds</h2>
+
+      <p>None of this would have been practical with a normal build loop. Eight loops is a lot of combinations, and if each one costs you a twenty-minute native build you will measure three of them and reason your way to the rest. Reasoning your way to the rest is exactly how we got the 76 fps table.</p>
+
+      <p>So we built two bits of throwaway tooling first. A deep link that toggles individual loops at runtime, roughly <code>wordmere://qa-idle?off=wheel,flame</code>, and a script that injects a fresh JavaScript bundle into an already-built APK. Together those turned a configuration change from a rebuild into about thirty seconds.</p>
+
+      <p>While we were in there we found four animated components still sitting in the tree that nothing imports any more. They cost exactly nothing, because they never render. We had been carrying them for months and would have happily profiled them.</p>
+
+      <h2>Settling, not deleting</h2>
+
+      <p>The blunt fix is to delete animations. That is a product decision wearing a performance costume, and the breathing chips are part of how the game feels to play. We did not want to pay for battery with character.</p>
+
+      <p>What shipped instead is a screen-wide idle rule. Every loop rests fifteen seconds after the last touch. The hint nudge pulses three times rather than forever. The flame burns for four seconds. The daily tile flips once instead of on a cycle. Touch anything and the whole screen wakes up.</p>
+
+      <p>On the emulator a level now sits around fifty frames a second while you are playing, falls to zero fifteen seconds after you stop, and returns to sixty-two the instant you tap. The home screen reaches zero about four seconds in, once the flame has finished. Both platforms behave the same way.</p>
+
+      <p>One detail worth knowing if you use Reanimated: <code>withRepeat</code> already respects the system Reduce Motion setting by default. Every player who had that switch turned on had been getting the idle behaviour free the entire time. We had shipped a battery feature by accident and filed it under accessibility.</p>
+
+      <h2>What this does not fix</h2>
+
+      <p>The figures above are emulator figures, on API 35. The shape of the result holds — all-or-nothing is a property of how frames work, not of that machine — but do not expect the percentages to match a real handset.</p>
+
+      <p>It does nothing at all for anyone actively playing, and that is on purpose. During play the screen should animate. We only fixed the case where the game is open and nobody is touching it, which happens more than you would think: a level left on screen while someone answers the door, the home screen while they decide whether to keep going.</p>
+
+      <p>It also leaves two things alone. The video backdrop is a separate problem that we measured separately. And the music costs three to five per cent of a core on its own, which no amount of frame work touches.</p>
+
+      <p>Finally, an honest deduction from our own result: animations built as a burst followed by a hold were already cheap, because a hold draws no frames. Some of what we "fixed" was not costing much to begin with. The win came from the loops that never stopped, not from the ones that paused.</p>
+
+      <h2>Measure the screen, not the component</h2>
+
+      <p>If you are profiling a UI with several animations running, measure configurations rather than components. The question "which of these is the expensive one" may simply have no answer, and you can lose a week looking for it.</p>
+
+      <p>The question that does have an answer is how many frames the screen draws when nobody is touching it, and what the smallest change is that takes that number to zero.</p>
+
+      <p>Zero, not fewer. Fewer frames is a different and much worse outcome, because it costs you the same wake-ups and gives you a visibly choppier animation. Either the screen is alive or it is asleep.</p>"""),
+dict(
  slug='crash-free-rate-denominator',
  date='2026-11-04',
  title='Your crash-free rate is lying to you',

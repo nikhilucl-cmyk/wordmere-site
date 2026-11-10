@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>One animation loop costs the same as ten — Wordmere</title>
+<meta name="description" content="Our idle game screen drew 60 frames a second. Switching off one of its eight animation loops saved nothing — the cost is per screen, not per animation.">
+<link rel="canonical" href="https://wordmere.com/blog/idle-animation-loops/">
+<meta name="theme-color" content="#E9F6FE">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Wordmere">
+<meta property="og:title" content="One animation loop costs the same as ten — Wordmere">
+<meta property="og:description" content="Our idle game screen drew 60 frames a second. Switching off one of its eight animation loops saved nothing — the cost is per screen, not per animation.">
+<meta property="og:url" content="https://wordmere.com/blog/idle-animation-loops/">
+<meta property="og:image" content="https://wordmere.com/img/social-card.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="One animation loop costs the same as ten — Wordmere">
+<meta name="twitter:description" content="Our idle game screen drew 60 frames a second. Switching off one of its eight animation loops saved nothing — the cost is per screen, not per animation.">
+<meta name="twitter:image" content="https://wordmere.com/img/social-card.jpg">
+<link rel="icon" href="/img/favicon-32.png" sizes="32x32">
+<link rel="icon" href="/img/favicon-16.png" sizes="16x16">
+<link rel="apple-touch-icon" href="/img/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInHWVyNJ.woff2">
+<link rel="stylesheet" href="/fonts/fonts.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BlogPosting", "headline": "One animation loop costs the same as ten", "description": "Our idle game screen drew 60 frames a second. Switching off one of its eight animation loops saved nothing — the cost is per screen, not per animation.", "url": "https://wordmere.com/blog/idle-animation-loops/", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://wordmere.com/blog/idle-animation-loops/"}, "datePublished": "2026-11-06", "dateModified": "2026-11-06", "author": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "publisher": {"@type": "Organization", "name": "Wordmere", "url": "https://wordmere.com/"}, "image": "https://wordmere.com/img/social-card.jpg", "inLanguage": "en"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"}, {"@type": "ListItem", "position": 2, "name": "Notes", "item": "https://wordmere.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "One animation loop costs the same as ten", "item": "https://wordmere.com/blog/idle-animation-loops/"}]}]}</script>
+<style>
+  :root{
+    --page:#E9F6FE; --white:#FFFFFF; --mist:#D6EEFB;
+    --sky:#73CBFD; --sky-soft:#A2E2FB; --tq:#2FC4DC; --tq-deep:#10707F; --sea:#0E7FA8;
+    --ink:#0E3A50; --ink-soft:#3E6B80; --ink-faint:#4E7484;
+    --sun:#EE9932; --sun-deep:#BE741C; --sun-hi:#FFB55C;
+    --coral:#D64A28; --coral-deep:#9E3319; --pink:#F8A0C0;
+    --tileface:#FDFBF3;
+    --line:rgba(14,58,80,.13); --line-soft:rgba(14,58,80,.07);
+    --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+    --body:"Outfit","Avenir Next",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--page); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;}
+  .shell{width:100%;}
+  :root{--gutter:max(18px, (100% - 1260px) / 2);}
+  .url{margin-left:8px; font:500 12px/1 var(--body); color:var(--ink-soft); background:#fff; border-radius:6px; padding:6px 12px;}
+
+  /* ── hero ─────────────────────────────────── */
+  .hero{position:relative; overflow:hidden; isolation:isolate; min-height:clamp(470px,54vw,660px); display:flex; flex-direction:column;}
+  .hero img.art{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:58% 62%; z-index:-2;}
+  .nav{position:relative; padding:16px var(--gutter);}
+  .navbar{
+    display:flex; align-items:center; gap:clamp(8px,1.4vw,18px); flex-wrap:wrap;
+    background:rgba(255,255,255,.72); -webkit-backdrop-filter:blur(14px) saturate(1.5); backdrop-filter:blur(14px) saturate(1.5);
+    border:1px solid rgba(255,255,255,.85); border-radius:999px; padding:8px 8px 8px 14px;
+    box-shadow:0 8px 26px rgba(14,58,80,.16);
+  }
+  .brand{text-decoration:none; color:inherit; display:flex; align-items:center; gap:9px;}
+  .brand,.footbrand .fb{cursor:pointer; border-radius:12px; transition:transform .15s ease;}
+  .brand img,.footbrand .fb img{transition:transform .18s ease, box-shadow .18s ease;}
+  .brand:hover img,.footbrand .fb:hover img{transform:translateY(-2px) rotate(-4deg); box-shadow:0 6px 14px rgba(14,58,80,.22);}
+  .brand:hover span,.footbrand .fb:hover strong{color:#0C6E92;}
+  .brand:focus-visible,.footbrand .fb:focus-visible{outline:3px solid var(--tq); outline-offset:4px;}
+  @media (prefers-reduced-motion:reduce){ .brand:hover img,.footbrand .fb:hover img{transform:none;} }
+  .brand img{width:30px; height:30px; border-radius:9px; display:block;}
+  .brand span{font-family:var(--display); font-weight:800; font-size:17px; letter-spacing:-.03em; color:var(--ink);}
+  .navbar ul{display:flex; gap:clamp(4px,1vw,10px); list-style:none; margin:0; padding:0;}
+  .navbar li a{color:inherit; text-decoration:none;}
+  .navbar li{font-size:14px; font-weight:600; color:var(--ink-soft); padding:8px 12px; border-radius:999px;}
+  .navbar li:first-child{color:var(--ink); background:rgba(14,58,80,.07);}
+  .navbar .top{text-decoration:none; display:inline-block;
+    margin-left:auto; font-family:var(--display); font-weight:800; font-size:14px; color:#fff;
+    background:linear-gradient(180deg,#D64A28,#BE3F22); border:0; border-radius:999px; padding:12px 22px;
+    box-shadow:0 4px 0 var(--coral-deep), 0 8px 16px rgba(201,69,38,.3); cursor:pointer;
+  }
+
+  .stage{position:relative; flex:1; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.95fr); align-items:center; gap:clamp(12px,3vw,36px); padding:clamp(6px,1.6vw,20px) var(--gutter) clamp(24px,3.6vw,48px);}
+  @media(max-width:820px){ .stage{grid-template-columns:1fr; gap:22px;} }
+  .copy{position:relative; isolation:isolate;}
+  .copy::before{content:""; position:absolute; inset:-30px -44px; z-index:-1; border-radius:28px;
+    background:radial-gradient(70% 76% at 34% 50%, rgba(255,255,255,.88) 0%, rgba(255,255,255,.62) 46%, rgba(255,255,255,0) 100%);}
+  .kicker{display:inline-flex; align-items:center; gap:8px; font:700 11px/1 var(--body); letter-spacing:.2em; text-transform:uppercase; color:var(--tq-deep); margin:0 0 12px;}
+  .kicker s{display:block; width:20px; height:3px; border-radius:2px; background:var(--sun); text-decoration:none;}
+  h1{font-family:var(--display); font-weight:800; font-size:clamp(36px,5.8vw,70px); line-height:.93; letter-spacing:-.04em; margin:0; color:var(--ink); text-wrap:balance;}
+  h1 em{font-style:normal; color:var(--sea);}
+  .copy > p{margin:15px 0 0; color:var(--ink-soft); font-size:clamp(14px,1.75vw,18px); max-width:38ch; font-weight:500;}
+  .cta{display:flex; gap:11px; flex-wrap:wrap; margin-top:22px;}
+  .btn{text-decoration:none;
+    display:inline-flex; align-items:center; gap:10px; cursor:pointer; text-align:left;
+    background:#000; color:#fff; border:1px solid rgba(255,255,255,.28); border-radius:11px;
+    padding:9px 18px 9px 15px; min-height:56px;
+    box-shadow:0 8px 20px rgba(14,58,80,.28); transition:transform .12s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn:active{transform:translateY(1px);}
+  .btn svg{width:26px; height:26px; flex:0 0 26px;}
+  .btn i{font-style:normal; display:grid; gap:2px;}
+  .btn small{font-family:var(--body); font-size:10.5px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:#EDEDED; line-height:1.1;}
+  .btn b{font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; font-weight:600; font-size:20px; letter-spacing:-.01em; line-height:1.08; color:#fff;}
+  .btn.two b{font-family:"Outfit",Arial,sans-serif; font-weight:600;}
+
+  /* ── the crossword we draw ourselves ──────── */
+  .board{position:relative; justify-self:center; display:grid; gap:clamp(6px,.9vw,10px); grid-template-columns:repeat(5,1fr); width:min(400px,84%);}
+  .cell{aspect-ratio:1; border-radius:clamp(10px,1.7vw,18px);}
+  .cell.f{
+    position:relative; display:grid; place-items:center; color:#fff;
+    font-family:var(--display); font-weight:800; letter-spacing:-.03em;
+    font-size:clamp(24px,4.6vw,50px); line-height:1;
+    background:linear-gradient(176deg,#E8973C 0%,#D07A18 55%,#BE6C13 100%);
+    box-shadow:
+      inset 0 clamp(2px,.35vw,4px) 0 rgba(255,255,255,.62),
+      inset 0 clamp(-5px,-.7vw,-3px) 0 rgba(120,62,0,.22),
+      inset 0 0 0 1px rgba(150,80,10,.2),
+      0 clamp(5px,.8vw,8px) 0 var(--sun-deep),
+      0 clamp(10px,1.5vw,16px) clamp(12px,1.8vw,22px) rgba(14,58,80,.26);
+    text-shadow:0 clamp(2px,.3vw,3px) 0 rgba(140,72,0,.42);
+  }
+  .cell.f::after{
+    content:""; position:absolute; left:8%; right:8%; top:6%; height:26%;
+    border-radius:999px; background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,0)); pointer-events:none;
+  }
+  .cell.e{
+    background:linear-gradient(176deg,#FFFEF8,#EFEADB);
+    box-shadow:
+      inset 0 clamp(3px,.45vw,5px) clamp(4px,.7vw,8px) rgba(14,58,80,.20),
+      inset 0 0 0 1px rgba(14,58,80,.10),
+      0 clamp(2px,.35vw,4px) 0 rgba(255,255,255,.75);
+  }
+  .cell.blank{background:transparent; box-shadow:none;}
+  .wheel{
+    position:absolute; right:-6%; bottom:-14%; width:clamp(112px,17vw,168px); aspect-ratio:1; border-radius:50%;
+    background:rgba(255,255,255,.93); box-shadow:0 10px 26px rgba(14,58,80,.22);
+  }
+  .wl{position:absolute; width:32%; aspect-ratio:1; border-radius:50%; display:grid; place-items:center;
+    font-family:var(--display); font-weight:800; font-size:clamp(14px,2.3vw,24px); color:#fff; line-height:1;
+    background:linear-gradient(176deg,#E8973C,#D07A18 62%,#BE6C13);
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.5), 0 4px 0 var(--sun-deep), 0 8px 14px rgba(14,58,80,.22);
+    text-shadow:0 2px 0 rgba(120,62,0,.45);}
+  .wl.off{background:linear-gradient(176deg,#FBFDFE,#E2EBEF); color:var(--ink-faint);
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.9), 0 3px 0 rgba(14,58,80,.14), 0 6px 12px rgba(14,58,80,.14);
+    text-shadow:none;}
+  .wheel svg{position:absolute; inset:0; width:100%; height:100%;}
+  .pill{
+    position:absolute; top:-16%; left:50%; transform:translateX(-50%);
+    background:var(--sun); color:#4A2200; font-family:var(--display); font-weight:800; font-size:clamp(11px,1.5vw,15px);
+    padding:6px 14px; border-radius:999px; box-shadow:0 3px 0 var(--sun-deep); white-space:nowrap;
+  }
+
+  /* ── stat rail ────────────────────────────── */
+  .rail{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:clamp(10px,1.5vw,16px);
+    background:var(--white); border-block:1px solid var(--line); padding:clamp(16px,2.4vw,26px) var(--gutter);}
+  .stat{
+    padding:18px 14px; text-align:center; border-radius:16px; background:var(--page);
+    box-shadow:inset 0 0 0 1px rgba(14,58,80,.06), 0 2px 0 rgba(255,255,255,.9);
+  }
+  .stat b{display:block; font-family:var(--display); font-weight:800; font-size:clamp(20px,2.9vw,31px); color:var(--sea); letter-spacing:-.035em; font-variant-numeric:tabular-nums; line-height:1;}
+  .stat span{display:block; margin-top:6px; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); font-weight:700;}
+
+  /* ── showcase ─────────────────────────────── */
+  .showcase{display:grid; grid-template-columns:minmax(0,.78fr) minmax(0,1fr); gap:clamp(20px,4vw,54px); align-items:center; padding:clamp(32px,5vw,72px) var(--gutter); background:var(--page);}
+  @media(max-width:780px){ .showcase{grid-template-columns:1fr;} }
+  .phone{position:relative; justify-self:center; width:min(252px,68vw); aspect-ratio:9/19.5; background:#fff; border-radius:36px; padding:8px; box-shadow:0 0 0 2px rgba(14,58,80,.12), 0 26px 50px -18px rgba(14,58,80,.38);}
+  .phone img{width:100%; height:100%; object-fit:cover; border-radius:29px; display:block;}
+  .showcase h2{font-family:var(--display); font-weight:800; font-size:clamp(26px,4.2vw,48px); line-height:.98; letter-spacing:-.035em; margin:0 0 14px; color:var(--ink); text-wrap:balance;}
+  .showcase h2 em{font-style:normal; color:#C06A12;}
+  .showcase > div > p{margin:0 0 18px; color:var(--ink-soft); font-size:clamp(14px,1.7vw,18px); max-width:44ch;}
+  .ticks{display:grid; gap:10px; margin:0; padding:0; list-style:none;}
+  .ticks li{display:flex; gap:12px; align-items:flex-start; font-size:15px; color:var(--ink); font-weight:500;}
+  .ticks svg{width:15px; height:15px; flex:0 0 15px;}
+  .ticks i{flex:0 0 26px; width:26px; height:26px; border-radius:50%; display:grid; place-items:center; margin-top:1px;
+    background:linear-gradient(176deg,#7FE3F2,var(--tq));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.55), 0 3px 0 var(--tq-deep), 0 6px 10px rgba(14,58,80,.16);}
+
+  /* ── band ─────────────────────────────────── */
+  .bandcopy{padding:clamp(24px,4vw,56px); display:grid; align-content:center; gap:14px;}
+  .bandcopy h2{font-family:var(--display); font-weight:800; font-size:clamp(24px,3.5vw,42px); letter-spacing:-.033em; margin:0; color:var(--ink); line-height:1;}
+  .bandcopy p{margin:0; color:var(--ink-soft); max-width:44ch;}
+  .worldchips{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;}
+  .chip{display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; letter-spacing:.02em;
+    padding:8px 14px 8px 10px; border-radius:999px; background:var(--white); color:var(--ink);
+    box-shadow:inset 0 0 0 1px rgba(14,58,80,.10), 0 2px 5px rgba(14,58,80,.07);}
+  .chip s{display:block; width:9px; height:9px; border-radius:50%; text-decoration:none; box-shadow:inset 0 -1px 0 rgba(0,0,0,.18);}
+
+  /* ── closer ───────────────────────────────── */
+  .closer{padding:clamp(34px,5vw,76px) var(--gutter); text-align:center; display:grid; gap:15px; justify-items:center;
+    background:linear-gradient(180deg,var(--sky-soft),var(--page));}
+  .closer h2{font-family:var(--display); font-weight:800; font-size:clamp(26px,4.4vw,52px); letter-spacing:-.037em; margin:0; color:var(--ink); max-width:16ch; line-height:.98;}
+  .closer p{margin:0; color:var(--ink-soft); max-width:46ch;}
+  .foot{padding:24px 20px; text-align:center; font-size:13px; color:var(--ink-faint); background:var(--page); border-top:1px solid var(--line-soft);}
+  .foot a{color:var(--ink-soft); text-decoration:none; margin:0 9px; font-weight:500;}
+
+  /* ── notes ────────────────────────────────── */
+  .sc b{font-family:var(--display); font-weight:800; font-size:12px;}
+
+  /* ── section furniture ─────────────────────── */
+  .sec{padding:clamp(34px,5vw,78px) var(--gutter);}
+  .sec.alt{background:var(--white); border-block:1px solid var(--line);}
+  .sechead{max-width:640px; margin:0 0 clamp(20px,3vw,34px);}
+  .eyebrow{display:inline-flex; align-items:center; gap:8px; font:700 11px/1 var(--body); letter-spacing:.2em; text-transform:uppercase; color:var(--tq-deep); margin:0 0 12px;}
+  .eyebrow s{display:block; width:20px; height:3px; border-radius:2px; background:var(--sun); text-decoration:none;}
+  .sec h2{font-family:var(--display); font-weight:800; font-size:clamp(26px,4vw,46px); letter-spacing:-.035em; margin:0; color:var(--ink); line-height:1; text-wrap:balance;}
+  .sec h2 em{font-style:normal; color:var(--sea);}
+  .sec .lede{margin:12px 0 0; color:var(--ink-soft); font-size:clamp(15px,1.7vw,18px);}
+
+  /* ── how it works ──────────────────────────── */
+  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:clamp(14px,2.2vw,24px);}
+  .step{background:var(--page); border-radius:20px; padding:24px; display:grid; gap:12px; align-content:start;
+    box-shadow:inset 0 0 0 1px rgba(14,58,80,.07);}
+  .sec.alt .step{background:var(--page);}
+  .stepnum{width:34px; height:34px; border-radius:11px; display:grid; place-items:center;
+    font-family:var(--display); font-weight:800; font-size:17px; color:#4A2200;
+    background:linear-gradient(176deg,#FFC066,#EE9932 62%,#DE8117);
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.5), 0 4px 0 var(--sun-deep);}
+  .step h3{font-family:var(--display); font-weight:800; font-size:19px; letter-spacing:-.02em; margin:0; color:var(--ink);}
+  .step p{margin:0; color:var(--ink-soft); font-size:15px;}
+  .minirow{display:flex; gap:6px; margin-top:2px;}
+  .mt{width:30px; height:30px; border-radius:9px; display:grid; place-items:center;
+    font-family:var(--display); font-weight:800; font-size:15px; color:#4A2200; line-height:1;
+    background:linear-gradient(176deg,#FFC066,#EE9932 62%,#DE8117);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5), 0 3px 0 var(--sun-deep);}
+  .mt.e{background:linear-gradient(176deg,#FFFEF8,#EFEADB); box-shadow:inset 0 2px 4px rgba(14,58,80,.18), inset 0 0 0 1px rgba(14,58,80,.1);}
+
+  /* ── worlds grid ───────────────────────────── */
+  .wgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(232px,1fr)); gap:clamp(12px,2vw,18px);}
+  .wcard{position:relative; border-radius:20px; overflow:hidden; aspect-ratio:16/11; isolation:isolate;
+    box-shadow:0 10px 24px rgba(14,58,80,.16);}
+  .wcard img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2;}
+  .wcard::after{content:""; position:absolute; inset:0; z-index:-1;
+    background:linear-gradient(0deg, rgba(4,32,46,.86) 4%, rgba(4,32,46,.12) 58%);}
+  .wcard div{position:absolute; left:16px; right:16px; bottom:13px;}
+  .wcard b{display:block; font-family:var(--display); font-weight:800; font-size:19px; letter-spacing:-.02em; color:#fff;}
+  .wcard span{font-size:11.5px; letter-spacing:.11em; text-transform:uppercase; color:rgba(255,255,255,.8); font-weight:600;}
+  .wcard.more{display:grid; place-items:center; text-align:center; background:var(--mist); box-shadow:inset 0 0 0 1px rgba(14,58,80,.09);}
+  .wcard.more::after{display:none;}
+  .wcard.more p{margin:0; font-family:var(--display); font-weight:800; font-size:clamp(24px,3vw,32px); color:var(--sea); letter-spacing:-.03em;}
+  .wcard.more small{display:block; margin-top:4px; font-size:11.5px; letter-spacing:.11em; text-transform:uppercase; color:#3E6270; font-weight:700;}
+
+  /* ── tool cards ────────────────────────────── */
+  .tools{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:clamp(14px,2.2vw,22px);}
+  .tool{background:var(--white); border-radius:20px; padding:26px 24px; display:grid; gap:11px; align-content:start;
+    box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 6px 16px rgba(14,58,80,.07);}
+  .sec.alt .tool{background:var(--page);}
+  .toolicon{width:44px; height:44px; border-radius:14px; display:grid; place-items:center;
+    background:linear-gradient(176deg,#7FE3F2,var(--tq));
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.5), 0 4px 0 var(--tq-deep), 0 8px 14px rgba(14,58,80,.16);}
+  .toolicon svg{width:22px; height:22px;}
+  .tool h3{font-family:var(--display); font-weight:800; font-size:19px; letter-spacing:-.02em; margin:0; color:var(--ink);}
+  .tool p{margin:0; color:var(--ink-soft); font-size:15px;}
+  .tool a{margin-top:4px; font-family:var(--display); font-weight:800; font-size:14px; color:#0C6E92; text-decoration:none;}
+  .soon{margin-top:4px; justify-self:start; font:700 11px/1 var(--body); letter-spacing:.12em; text-transform:uppercase; color:#3E6270; background:var(--mist); padding:7px 11px; border-radius:999px;}
+
+  /* ── answers panel ─────────────────────────── */
+  .answers{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.82fr); gap:clamp(20px,4vw,48px); align-items:center;}
+  @media(max-width:780px){ .answers{grid-template-columns:1fr;} }
+  .ansgrid{display:grid; grid-template-columns:repeat(5,1fr); gap:7px; width:min(320px,82%); justify-self:center;}
+  .ac{aspect-ratio:1; border-radius:11px;}
+  .ac.f{display:grid; place-items:center; font-family:var(--display); font-weight:800; font-size:clamp(15px,2.3vw,24px); color:#06323A; line-height:1;
+    background:linear-gradient(176deg,#7FE3F2,var(--tq) 62%,#1FAFC6);
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.5), 0 5px 0 var(--tq-deep); text-shadow:0 1px 0 rgba(255,255,255,.35);}
+  .ac.e{background:linear-gradient(176deg,#FFFEF8,#EFEADB); box-shadow:inset 0 3px 5px rgba(14,58,80,.18), inset 0 0 0 1px rgba(14,58,80,.1);}
+  .ac.blank{background:transparent;}
+
+  /* ── daily band ────────────────────────────── */
+  .daily{display:flex; align-items:center; gap:clamp(14px,3vw,30px); flex-wrap:wrap; justify-content:space-between;
+    background:linear-gradient(120deg,var(--sky-soft),var(--mist)); border-radius:24px; padding:clamp(22px,3.4vw,38px);
+    box-shadow:inset 0 0 0 1px rgba(14,58,80,.08);}
+  .daily h3{font-family:var(--display); font-weight:800; font-size:clamp(21px,3vw,32px); letter-spacing:-.03em; margin:0 0 6px; color:var(--ink);}
+  .daily p{margin:0; color:var(--ink-soft); max-width:46ch;}
+  .daily .go{text-decoration:none; display:inline-block;font-family:var(--display); font-weight:800; font-size:15px; color:#fff; background:linear-gradient(180deg,#D64A28,#BE3F22);
+    border:0; border-radius:999px; padding:14px 26px; cursor:pointer; box-shadow:0 4px 0 var(--coral-deep), 0 8px 16px rgba(201,69,38,.26);}
+
+  /* ── footer ────────────────────────────────── */
+  .sitefoot{background:var(--white); border-top:1px solid var(--line); padding:clamp(30px,4vw,54px) var(--gutter) 0;}
+  .footcols{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:clamp(18px,3vw,34px); padding-bottom:30px;}
+  .footcols .fh{font:700 11px/1 var(--body); letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 13px;}
+  .footcols ul{list-style:none; margin:0; padding:0; display:grid; gap:9px;}
+  .footcols a{color:var(--ink-soft); text-decoration:none; font-size:14.5px; font-weight:500;}
+  .footbrand{display:grid; gap:10px;}
+  .footbrand .fb{text-decoration:none; display:flex; align-items:center; gap:9px;}
+  .footbrand img{width:34px; height:34px; border-radius:10px;}
+  .footbrand strong{font-family:var(--display); font-weight:800; font-size:18px; letter-spacing:-.03em; color:var(--ink);}
+  .footbrand p{margin:0; color:var(--ink-faint); font-size:14px; max-width:30ch;}
+  .footbase{border-top:1px solid var(--line-soft); padding:18px 0 26px; display:flex; gap:12px; flex-wrap:wrap; justify-content:space-between; color:var(--ink-faint); font-size:13px;}
+
+  /* ── phones ─────────────────────────────────── */
+  @media (max-width:600px){
+    body{overflow-x:clip;}
+    .navbar{gap:8px; padding:7px 7px 7px 11px;}
+    .navbar ul{display:none;}
+    .navbar .top{padding:10px 17px; font-size:13px;}
+    .brand span{font-size:16px;}
+    .hero{min-height:0;}
+    .hero img.art{object-position:62% 64%;}
+    .nav{padding-block:12px;}
+    .stage{grid-template-columns:1fr; gap:10px; padding-bottom:22px; padding-top:4px;}
+    .copy::before{inset:-18px -20px; border-radius:20px;}
+    h1{font-size:clamp(33px,9.4vw,46px);}
+    .copy > p{font-size:15px; max-width:34ch;}
+    .cta{gap:8px; margin-top:18px;}
+    .btn{padding:8px 15px 8px 12px; min-height:52px; gap:8px; border-radius:10px;}
+    .btn svg{width:22px; height:22px; flex:0 0 22px;}
+    .btn b{font-size:17px;}
+    .btn small{font-size:9.5px;}
+
+    .board{width:min(288px,86%); gap:6px; margin:6px auto 68px;}
+    .cell{border-radius:10px;}
+    .cell.f{font-size:27px;}
+    .wheel{right:2%; left:auto; bottom:-64px; transform:none; width:126px;}
+    .wl{font-size:19px;}
+    .pill{top:-13%; font-size:12px;}
+
+    .rail{grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; padding-block:16px;}
+    .stat{padding:15px 10px; border-radius:14px;}
+    .stat b{font-size:24px;}
+    .stat span{font-size:10px; letter-spacing:.12em;}
+
+    .sec{padding-block:38px;}
+    .sec h2{font-size:clamp(25px,7.4vw,33px);}
+    .steps,.tools,.wgrid{grid-template-columns:minmax(0,1fr);}
+    .wcard{aspect-ratio:16/9;}
+    .showcase{grid-template-columns:1fr; padding-block:38px; gap:26px;}
+    .phone{width:min(228px,64vw);}
+    .showcase h2{font-size:clamp(25px,7.4vw,34px);}
+    .answers{grid-template-columns:1fr; gap:26px;}
+    .ansgrid{width:min(268px,80%); gap:6px;}
+    .ac{border-radius:9px;}
+    .ac.f{font-size:19px;}
+    .daily{flex-direction:column; align-items:flex-start; gap:16px; border-radius:20px;}
+    .daily .go{width:100%; text-align:center;}
+    .closer h2{font-size:clamp(26px,8vw,36px);}
+    .closer .cta{justify-content:center;}
+    .footcols{grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px;}
+    .footbrand{grid-column:1 / -1;}
+    .footbase{flex-direction:column; gap:6px; align-items:flex-start;}
+  }
+  @media (max-width:360px){
+    .cta{flex-direction:column; align-items:stretch;}
+    .btn{justify-content:center;}
+    .rail{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+<style>
+  .navstatic{position:static;}
+  .navstatic .navbar{background:var(--white); border-color:rgba(14,58,80,.08);}
+  .postwrap{max-width:1080px; margin:0 auto; padding:clamp(24px,4vw,52px) var(--gutter) 56px;}
+  .crumbs{font-size:13px; color:var(--ink-faint); margin:0 0 14px; font-weight:500;}
+  .crumbs a{color:var(--ink-soft); text-decoration:underline; text-decoration-color:rgba(14,58,80,.35); text-underline-offset:3px;}
+  .postwrap h1{font-family:var(--display); font-weight:800; font-size:clamp(30px,5.4vw,50px); letter-spacing:-.038em;
+    line-height:1.04; margin:0; color:var(--ink); text-wrap:balance; max-width:20ch;}
+  .postwrap .sub{margin:14px 0 0; color:var(--ink-soft); font-size:clamp(16px,2vw,19px); max-width:58ch;}
+  .meta{margin:18px 0 0; font-size:13.5px; color:var(--ink-faint); font-weight:600;}
+  .meta time{font-variant-numeric:tabular-nums;}
+  .article{margin-top:clamp(28px,4vw,44px); max-width:68ch;}
+  .article h2{font-family:var(--display); font-weight:800; font-size:clamp(21px,3vw,28px); letter-spacing:-.028em;
+    margin:38px 0 12px; color:var(--ink); text-wrap:balance;}
+  .article p{margin:0 0 16px; color:var(--ink-soft); font-size:17px; line-height:1.65;}
+  .article strong{color:var(--ink); font-weight:700;}
+  .article a{color:#0C6E92; font-weight:600; text-decoration:underline; text-underline-offset:3px;}
+  .article ul{margin:0 0 16px; padding:0 0 0 2px; list-style:none; display:grid; gap:10px;}
+  .article ul li{position:relative; padding-left:22px; color:var(--ink-soft); font-size:17px; line-height:1.6;}
+  .article ul li::before{content:""; position:absolute; left:2px; top:11px; width:7px; height:7px; border-radius:50%;
+    background:var(--tq);}
+  .article code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:14.5px; background:var(--mist);
+    color:var(--ink); padding:2px 6px; border-radius:6px; word-break:break-word;}
+  .pull{margin:26px 0; padding:20px 24px; background:var(--white); border-radius:18px;
+    box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 6px 18px rgba(14,58,80,.06);}
+  .pull p{margin:0; font-family:var(--display); font-weight:700; font-size:clamp(17px,2.2vw,20px); line-height:1.45;
+    color:var(--ink); letter-spacing:-.015em;}
+  .tryit{margin:30px 0; display:flex; flex-wrap:wrap; gap:12px; align-items:center; padding:18px 22px;
+    background:linear-gradient(120deg,#FFF3DC,#FFFBF2); border-radius:18px; box-shadow:inset 0 0 0 1px rgba(192,106,18,.22);}
+  .tryit p{margin:0; flex:1 1 240px; font-size:15.5px; color:#5A3300; font-weight:600;}
+  .tryit a{flex:0 0 auto; font-family:var(--display); font-weight:800; font-size:15px; color:#fff; text-decoration:none;
+    background:linear-gradient(180deg,#D64A28,#BE3F22); border-radius:999px; padding:13px 24px; box-shadow:0 4px 0 #9E3319;}
+  .fig{margin:26px 0; padding:18px 20px 14px; background:var(--white); border-radius:18px;
+    box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 6px 18px rgba(14,58,80,.06);}
+  .fig svg{display:block; width:100%; height:auto;}
+  .figcap{margin:10px 0 0; font-size:14px; color:var(--ink-faint); line-height:1.5;}
+  .endnote{margin-top:40px; padding-top:22px; border-top:1px solid var(--line-soft); font-size:15px; color:var(--ink-faint);}
+  .endnote a{color:#0C6E92; font-weight:600; text-decoration:underline; text-underline-offset:3px;}
+  .postlist{margin-top:34px; display:grid; gap:16px;}
+  .postcard{display:block; text-decoration:none; color:inherit; background:var(--white); border-radius:20px;
+    padding:clamp(20px,3vw,28px); box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 6px 18px rgba(14,58,80,.06);}
+  a.postcard:hover{box-shadow:inset 0 0 0 2px var(--tq), 0 10px 24px rgba(14,58,80,.12);}
+  .postcard h2{font-family:var(--display); font-weight:800; font-size:clamp(19px,2.6vw,24px); letter-spacing:-.025em;
+    margin:0; color:var(--ink); text-wrap:balance;}
+  .postcard p{margin:9px 0 0; color:var(--ink-soft); font-size:15.5px;}
+  .postcard .when{display:block; margin-top:12px; font-size:13px; color:var(--ink-faint); font-weight:600;}
+  .upnext{margin-top:44px; max-width:68ch;}
+  .upnext h2{font-family:var(--display); font-weight:800; font-size:clamp(19px,2.6vw,23px); letter-spacing:-.02em;
+    margin:0 0 12px; color:var(--ink);}
+  .upnext p{margin:0 0 14px; color:var(--ink-soft); font-size:16px;}
+  @media (max-width:600px){
+    .postwrap h1{font-size:clamp(27px,8vw,36px);}
+    .article p,.article ul li{font-size:16.5px;}
+    .tryit a{width:100%; text-align:center;}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="nav navstatic"><div class="navbar">
+    <a class="brand" href="/"><img src="/img/icon-96.png" alt="" width="30" height="30"><span>Wordmere</span></a>
+    <ul><li><a href="/#worlds">Worlds</a></li><li><a href="/tools/">Word tools</a></li><li><a href="/blog/">Notes</a></li><li><a href="/#answers">Answers</a></li></ul>
+    <a class="top" href="https://apps.apple.com/app/id6782536688">Play free</a>
+  </div></nav>
+
+  <main class="postwrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <a href="/blog/">Notes</a> › <span aria-current="page">One animation loop costs the same as ten</span></nav>
+    <article class="post">
+      <h1>One animation loop costs the same as ten</h1>
+      <p class="sub">Left on a desk, our game kept redrawing sixty times a second. We switched off one of the eight animations running on that screen and measured again. Nothing moved.</p>
+      <p class="meta"><time datetime="2026-11-06">6 November 2026</time> · The Wordmere team</p>
+      <div class="article">
+      <p>Leave Wordmere open on a table and walk away. Nothing moves that you would really notice. A letter chip swells slightly and settles. A disc breathes. A flame flickers on the streak counter. The screen looks still.</p>
+
+      <p>It was drawing sixty frames a second, indefinitely, and spending about a third of a CPU core to do it.</p>
+
+      <p>That is the sort of thing that surfaces as a one-star review about battery on a four-year-old Android phone and surfaces nowhere else. So in October we sat down to measure it properly, expecting to come away with a ranked list of expensive animations to go and fix. We got something more useful and a lot less convenient.</p>
+
+      <h2>Eight loops, and switching one off changed nothing</h2>
+
+      <p>First we counted the infinite loops on the two screens people actually sit on. A level has the letter-chip breath, the disc breathe, an idle nudge that starts after six seconds and then runs forever, and a rescue cell that spins and pops once you have stalled. Three more appear only in certain states: a halo on the plane, the ads-free slot, the piggy pill. The home screen has two, the streak flame and the daily tile's flip and glow.</p>
+
+      <p>Then we switched them off one at a time and measured every configuration.</p>
+
+      <p>Switching off a single loop while any other was still running saved approximately nothing. Not a small amount — an amount we could not separate from the noise in the measurement. Switch all of them off and the screen dropped to zero frames per second and two to five per cent of a core. Switch any one of them back on, it genuinely did not matter which, and we were back to drawing on every vsync at twenty-five to thirty-five per cent.</p>
+
+      <p>I had assumed the cost would be roughly proportional to the number of animations running. It is not proportional at all. It is a step, and the step is at one.</p>
+
+      <h2>Why the saving is not additive</h2>
+
+      <p>This is obvious once you have seen it, which is the most irritating kind of obvious.</p>
+
+      <p>A frame is a whole-screen unit of work. Once anything has invalidated the view for this vsync, the pipeline does its pass — layout, draw, upload, composite — more or less regardless of how much of the screen actually changed. The second animation is joining a frame that was going to be drawn anyway, so it is close to free. The first one is not, because the first one is what turns the frame on.</p>
+
+      <p>So "how expensive is this animation" is the wrong question to profile. The expensive thing is not any particular animation. It is the existence of any animation at all, and one loop makes that decision on behalf of the entire screen.</p>
+
+      <p>Which is why per-component optimisation cannot help you here. You can make every animation on the screen twice as efficient and save nothing worth measuring, because you have not changed the number of frames.</p>
+
+      <div class="pull"><p>The cost is not in the animation. It is in the decision to draw a frame at all — and a single loop makes that decision for everything else on the screen.</p></div>
+
+      <h2>The measurement I had to throw away</h2>
+
+      <p>A study we had run a few weeks earlier, looking at a video backdrop, reported the home screen holding 72 to 76 frames a second. Two things are wrong with that sentence and I wrote it.</p>
+
+      <p>The capture windows labelled "Home" were not the home screen. They were level 2. Wrong screen, confidently labelled.</p>
+
+      <p>The other problem is worse, because it was visible on the page. A 60 Hz display cannot show you 76 frames a second. That number should have stopped me cold, and instead it sat in a table for a month looking like data. It was an artefact of how we were counting frames; the real figure was about sixty.</p>
+
+      <p>What caught it in the end was the new study producing clean zeros. Zero is a hard number to arrive at by accident, and once we had one we could see that the earlier table had never been measuring what it claimed.</p>
+
+      <h2>Kill switches beat rebuilds</h2>
+
+      <p>None of this would have been practical with a normal build loop. Eight loops is a lot of combinations, and if each one costs you a twenty-minute native build you will measure three of them and reason your way to the rest. Reasoning your way to the rest is exactly how we got the 76 fps table.</p>
+
+      <p>So we built two bits of throwaway tooling first. A deep link that toggles individual loops at runtime, roughly <code>wordmere://qa-idle?off=wheel,flame</code>, and a script that injects a fresh JavaScript bundle into an already-built APK. Together those turned a configuration change from a rebuild into about thirty seconds.</p>
+
+      <p>While we were in there we found four animated components still sitting in the tree that nothing imports any more. They cost exactly nothing, because they never render. We had been carrying them for months and would have happily profiled them.</p>
+
+      <h2>Settling, not deleting</h2>
+
+      <p>The blunt fix is to delete animations. That is a product decision wearing a performance costume, and the breathing chips are part of how the game feels to play. We did not want to pay for battery with character.</p>
+
+      <p>What shipped instead is a screen-wide idle rule. Every loop rests fifteen seconds after the last touch. The hint nudge pulses three times rather than forever. The flame burns for four seconds. The daily tile flips once instead of on a cycle. Touch anything and the whole screen wakes up.</p>
+
+      <p>On the emulator a level now sits around fifty frames a second while you are playing, falls to zero fifteen seconds after you stop, and returns to sixty-two the instant you tap. The home screen reaches zero about four seconds in, once the flame has finished. Both platforms behave the same way.</p>
+
+      <p>One detail worth knowing if you use Reanimated: <code>withRepeat</code> already respects the system Reduce Motion setting by default. Every player who had that switch turned on had been getting the idle behaviour free the entire time. We had shipped a battery feature by accident and filed it under accessibility.</p>
+
+      <h2>What this does not fix</h2>
+
+      <p>The figures above are emulator figures, on API 35. The shape of the result holds — all-or-nothing is a property of how frames work, not of that machine — but do not expect the percentages to match a real handset.</p>
+
+      <p>It does nothing at all for anyone actively playing, and that is on purpose. During play the screen should animate. We only fixed the case where the game is open and nobody is touching it, which happens more than you would think: a level left on screen while someone answers the door, the home screen while they decide whether to keep going.</p>
+
+      <p>It also leaves two things alone. The video backdrop is a separate problem that we measured separately. And the music costs three to five per cent of a core on its own, which no amount of frame work touches.</p>
+
+      <p>Finally, an honest deduction from our own result: animations built as a burst followed by a hold were already cheap, because a hold draws no frames. Some of what we "fixed" was not costing much to begin with. The win came from the loops that never stopped, not from the ones that paused.</p>
+
+      <h2>Measure the screen, not the component</h2>
+
+      <p>If you are profiling a UI with several animations running, measure configurations rather than components. The question "which of these is the expensive one" may simply have no answer, and you can lose a week looking for it.</p>
+
+      <p>The question that does have an answer is how many frames the screen draws when nobody is touching it, and what the smallest change is that takes that number to zero.</p>
+
+      <p>Zero, not fewer. Fewer frames is a different and much worse outcome, because it costs you the same wake-ups and gives you a visibly choppier animation. Either the screen is alive or it is asleep.</p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="sitefoot">
+    <div class="footcols">
+      <div class="footbrand">
+        <a class="fb" href="/"><img src="/img/icon-96.png" alt="" width="34" height="34"><strong>Wordmere</strong></a>
+        <p>A cosy word puzzle where every word you spell builds a little world.</p>
+      </div>
+      <div>
+        <p class="fh">Play</p>
+        <ul><li><a href="https://apps.apple.com/app/id6782536688">Download for iPhone</a></li><li><a href="https://play.google.com/store/apps/details?id=com.wordmere.game">Download for Android</a></li><li><a href="/#worlds">The sixteen worlds</a></li><li><a href="/#how">How to play</a></li></ul>
+      </div>
+      <div>
+        <p class="fh">Word tools</p>
+        <ul><li><a href="/tools/">All word tools</a></li><li><a href="/tools/word-unscrambler/">Word unscrambler</a></li><li><a href="/tools/anagram-solver/">Anagram solver</a></li><li><a href="/tools/multi-word-anagram-solver/">Multi-word anagrams</a></li><li><a href="/tools/word-finder/">Word finder</a></li><li><a href="/tools/five-letter-word-solver/">Five-letter solver</a></li><li><a href="/tools/scrabble-word-finder/">Scrabble word finder</a></li><li><a href="/tools/words-with-letters/">Words with letters</a></li><li><a href="/tools/random-word-generator/">Random word generator</a></li><li><a href="/tools/word-ladder-solver/">Word ladder solver</a></li><li><a href="/tools/word-scrambler/">Word scramble maker</a></li><li><a href="/tools/word-search-maker/">Word search maker</a></li><li><a href="/tools/crossword-maker/">Crossword maker</a></li><li><a href="/tools/cryptogram-maker/">Cryptogram maker</a></li></ul>
+      </div>
+      <div>
+        <p class="fh">Help</p>
+        <ul><li><a href="/blog/">Notes</a></li><li><a href="/#answers">Level answers</a></li><li><a href="/support/">Support</a></li><li><a href="/support/">Contact us</a></li></ul>
+      </div>
+      <div>
+        <p class="fh">Legal</p>
+        <ul><li><a href="/privacy/">Privacy policy</a></li><li><a href="/terms/">Terms of service</a></li><li><a href="/data-deletion/">Delete your data</a></li></ul>
+      </div>
+    </div>
+    <div class="footbase">
+      <span>© 2026 Wordmere</span>
+      <span>Definitions from Princeton WordNet · Word list from dwyl/english-words (public domain)</span>
+    </div>
+  </footer>
+</div>
+</body>
+</html>
