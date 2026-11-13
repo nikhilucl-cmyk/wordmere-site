@@ -32,6 +32,8 @@
     --coral:#D64A28; --coral-deep:#9E3319; --pink:#F8A0C0;
     --tileface:#FDFBF3;
     --line:rgba(14,58,80,.13); --line-soft:rgba(14,58,80,.07);
+    /* reading surfaces: ~68 rendered characters, and a darker ink for long-form body copy */
+    --measure:52ch; --ink-read:#2F5A6E;
     --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
     --body:"Outfit","Avenir Next",system-ui,-apple-system,sans-serif;
   }
@@ -269,8 +271,8 @@
   .sitefoot{background:var(--white); border-top:1px solid var(--line); padding:clamp(30px,4vw,54px) var(--gutter) 0;}
   .footcols{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:clamp(18px,3vw,34px); padding-bottom:30px;}
   .footcols .fh{font:700 11px/1 var(--body); letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 13px;}
-  .footcols ul{list-style:none; margin:0; padding:0; display:grid; gap:9px;}
-  .footcols a{color:var(--ink-soft); text-decoration:none; font-size:14.5px; font-weight:500;}
+  .footcols ul{list-style:none; margin:0; padding:0; display:grid; gap:1px;}
+  .footcols a{color:var(--ink-soft); text-decoration:none; font-size:14.5px; font-weight:500; display:inline-block; padding:7px 0;}
   .footbrand{display:grid; gap:10px;}
   .footbrand .fb{text-decoration:none; display:flex; align-items:center; gap:9px;}
   .footbrand img{width:34px; height:34px; border-radius:10px;}
@@ -341,20 +343,20 @@
   .navstatic .navbar{background:var(--white); border-color:rgba(14,58,80,.08);}
   .postwrap{max-width:1080px; margin:0 auto; padding:clamp(24px,4vw,52px) var(--gutter) 56px;}
   .crumbs{font-size:13px; color:var(--ink-faint); margin:0 0 14px; font-weight:500;}
-  .crumbs a{color:var(--ink-soft); text-decoration:underline; text-decoration-color:rgba(14,58,80,.35); text-underline-offset:3px;}
+  .crumbs a{color:var(--ink-soft); text-decoration:underline; text-decoration-color:rgba(14,58,80,.35); text-underline-offset:3px; display:inline-block; padding:4px 0;}
   .postwrap h1{font-family:var(--display); font-weight:800; font-size:clamp(30px,5.4vw,50px); letter-spacing:-.038em;
     line-height:1.04; margin:0; color:var(--ink); text-wrap:balance; max-width:20ch;}
-  .postwrap .sub{margin:14px 0 0; color:var(--ink-soft); font-size:clamp(16px,2vw,19px); max-width:58ch;}
+  .postwrap .sub{margin:14px 0 0; color:var(--ink-soft); font-size:clamp(16px,2vw,19px); max-width:50ch;}
   .meta{margin:18px 0 0; font-size:13.5px; color:var(--ink-faint); font-weight:600;}
   .meta time{font-variant-numeric:tabular-nums;}
-  .article{margin-top:clamp(28px,4vw,44px); max-width:68ch;}
+  .article{margin-top:clamp(28px,4vw,44px); max-width:var(--measure);}
   .article h2{font-family:var(--display); font-weight:800; font-size:clamp(21px,3vw,28px); letter-spacing:-.028em;
     margin:38px 0 12px; color:var(--ink); text-wrap:balance;}
-  .article p{margin:0 0 16px; color:var(--ink-soft); font-size:17px; line-height:1.65;}
+  .article p{margin:0 0 16px; color:var(--ink-read); font-size:17px; line-height:1.7;}
   .article strong{color:var(--ink); font-weight:700;}
   .article a{color:#0C6E92; font-weight:600; text-decoration:underline; text-underline-offset:3px;}
   .article ul{margin:0 0 16px; padding:0 0 0 2px; list-style:none; display:grid; gap:10px;}
-  .article ul li{position:relative; padding-left:22px; color:var(--ink-soft); font-size:17px; line-height:1.6;}
+  .article ul li{position:relative; padding-left:22px; color:var(--ink-read); font-size:17px; line-height:1.65;}
   .article ul li::before{content:""; position:absolute; left:2px; top:11px; width:7px; height:7px; border-radius:50%;
     background:var(--tq);}
   .article code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:14.5px; background:var(--mist);
@@ -382,7 +384,7 @@
     margin:0; color:var(--ink); text-wrap:balance;}
   .postcard p{margin:9px 0 0; color:var(--ink-soft); font-size:15.5px;}
   .postcard .when{display:block; margin-top:12px; font-size:13px; color:var(--ink-faint); font-weight:600;}
-  .upnext{margin-top:44px; max-width:68ch;}
+  .upnext{margin-top:44px; max-width:var(--measure);}
   .upnext h2{font-family:var(--display); font-weight:800; font-size:clamp(19px,2.6vw,23px); letter-spacing:-.02em;
     margin:0 0 12px; color:var(--ink);}
   .upnext p{margin:0 0 14px; color:var(--ink-soft); font-size:16px;}
@@ -411,57 +413,57 @@
       <a class="postcard" href="/blog/android-dev-launcher-leak/">
         <h2>We shipped a barcode scanner in a word game</h2>
         <p>For fifteen builds our Android app carried a barcode reader, two unused font families and a GraphQL client. We had written the line that was meant to keep them out.</p>
-        <span class="when"><time datetime="2026-11-10">10 November 2026</time></span>
+        <span class="when"><time datetime="2026-11-10">10 November 2026</time> · 5 min read</span>
       </a>
       <a class="postcard" href="/blog/daily-puzzle-omissions/">
         <h2>Our daily puzzle left out words for 347 days</h2>
         <p>A player swipes a word that is plainly there on the wheel, the game says no, and something breaks between you. We had been doing that on almost every day of the year.</p>
-        <span class="when"><time datetime="2026-11-10">10 November 2026</time></span>
+        <span class="when"><time datetime="2026-11-10">10 November 2026</time> · 5 min read</span>
       </a>
       <a class="postcard" href="/blog/ios-app-switcher-no-event/">
         <h2>There is no event for swiping an app away</h2>
         <p>We had a metric meaning "the app vanished during a video". It took three analyses to work out that it meant at least three different things.</p>
-        <span class="when"><time datetime="2026-11-10">10 November 2026</time></span>
+        <span class="when"><time datetime="2026-11-10">10 November 2026</time> · 5 min read</span>
       </a>
       <a class="postcard" href="/blog/xcode-27-ios-27-launch/">
         <h2>A new Xcode shipped an app that could not launch</h2>
         <p>The first build we made with the new Xcode died at launch on every device running the new iOS. Nothing of ours ran, so nothing of ours reported it, and it read as churn.</p>
-        <span class="when"><time datetime="2026-11-10">10 November 2026</time></span>
+        <span class="when"><time datetime="2026-11-10">10 November 2026</time> · 5 min read</span>
       </a>
       <a class="postcard" href="/blog/notification-ask-timing/">
         <h2>We asked for notifications earlier and got fewer</h2>
         <p>Our permission ask sat behind a level about half of new players never reach. Moving it earlier is the obvious fix. We shipped it, and it halved the number who said yes.</p>
-        <span class="when"><time datetime="2026-11-10">10 November 2026</time></span>
+        <span class="when"><time datetime="2026-11-10">10 November 2026</time> · 6 min read</span>
       </a>
       <a class="postcard" href="/blog/idle-animation-loops/">
         <h2>One animation loop costs the same as ten</h2>
         <p>Left on a desk, our game kept redrawing sixty times a second. We switched off one of the eight animations running on that screen and measured again. Nothing moved.</p>
-        <span class="when"><time datetime="2026-11-06">6 November 2026</time></span>
+        <span class="when"><time datetime="2026-11-06">6 November 2026</time> · 7 min read</span>
       </a>
       <a class="postcard" href="/blog/crash-free-rate-denominator/">
         <h2>Your crash-free rate is lying to you</h2>
         <p>One Monday our Android crash-free rate fell 8.8 points. The crash was real and the stack trace was real, but almost none of it was happening to anyone with a phone.</p>
-        <span class="when"><time datetime="2026-11-04">4 November 2026</time></span>
+        <span class="when"><time datetime="2026-11-04">4 November 2026</time> · 6 min read</span>
       </a>
       <a class="postcard" href="/blog/retention-magic-number/">
         <h2>Our retention magic number was a mirage</h2>
         <p>Players who cleared six levels in their first session came back at roughly double the rate. So we made more players clear six levels. Retention didn't move at all.</p>
-        <span class="when"><time datetime="2026-10-28">28 October 2026</time></span>
+        <span class="when"><time datetime="2026-10-28">28 October 2026</time> · 7 min read</span>
       </a>
       <a class="postcard" href="/blog/word-search-answer-keys/">
         <h2>Word search generators print wrong answer keys</h2>
         <p>We switched off one check in our puzzle maker and ran it twenty thousand times. Thirty-seven per cent of the grids hid a word somewhere the answer key never mentioned.</p>
-        <span class="when"><time datetime="2026-10-28">28 October 2026</time></span>
+        <span class="when"><time datetime="2026-10-28">28 October 2026</time> · 6 min read</span>
       </a>
       <a class="postcard" href="/blog/crossword-adjacency-rules/">
         <h2>The two rules that make a crossword a crossword</h2>
         <p>Take either rule out of our generator and the grids still look fine. They are not fine: 78% and 98% of them hide a run of letters that nobody wrote a clue for.</p>
-        <span class="when"><time datetime="2026-10-28">28 October 2026</time></span>
+        <span class="when"><time datetime="2026-10-28">28 October 2026</time> · 6 min read</span>
       </a>
       <a class="postcard" href="/blog/word-list-problem/">
         <h2>Why your word game’s dictionary is lying to you</h2>
         <p>Our Scrabble helper once told a player that REQUIZ was their best move. Here is why every open word list will do that to you, and the cheap fix.</p>
-        <span class="when"><time datetime="2026-10-10">10 October 2026</time></span>
+        <span class="when"><time datetime="2026-10-10">10 October 2026</time> · 4 min read</span>
       </a>
     </div>
 

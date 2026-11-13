@@ -54,6 +54,8 @@
     --coral:#D64A28; --coral-deep:#9E3319; --pink:#F8A0C0;
     --tileface:#FDFBF3;
     --line:rgba(14,58,80,.13); --line-soft:rgba(14,58,80,.07);
+    /* reading surfaces: ~68 rendered characters, and a darker ink for long-form body copy */
+    --measure:52ch; --ink-read:#2F5A6E;
     --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
     --body:"Outfit","Avenir Next",system-ui,-apple-system,sans-serif;
   }
@@ -291,8 +293,8 @@
   .sitefoot{background:var(--white); border-top:1px solid var(--line); padding:clamp(30px,4vw,54px) var(--gutter) 0;}
   .footcols{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:clamp(18px,3vw,34px); padding-bottom:30px;}
   .footcols .fh{font:700 11px/1 var(--body); letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 13px;}
-  .footcols ul{list-style:none; margin:0; padding:0; display:grid; gap:9px;}
-  .footcols a{color:var(--ink-soft); text-decoration:none; font-size:14.5px; font-weight:500;}
+  .footcols ul{list-style:none; margin:0; padding:0; display:grid; gap:1px;}
+  .footcols a{color:var(--ink-soft); text-decoration:none; font-size:14.5px; font-weight:500; display:inline-block; padding:7px 0;}
   .footbrand{display:grid; gap:10px;}
   .footbrand .fb{text-decoration:none; display:flex; align-items:center; gap:9px;}
   .footbrand img{width:34px; height:34px; border-radius:10px;}
@@ -469,7 +471,7 @@
     <div class="sechead">
       <p class="eyebrow"><s></s>Free word tools</p>
       <h2>Stuck on a word? <em>Use ours.</em></h2>
-      <p class="lede">Ten tools that run right here in the browser — unscramblers and word finders for when you're stuck, and puzzle makers that print a word search or a crossword from your own list. No sign-up, no app needed, and they work for any word game, not just this one. <a href="/tools/" style="color:#0C6E92;font-weight:700">See all word tools →</a></p>
+      <p class="lede">Thirteen tools that run right here in the browser — unscramblers and word finders for when you're stuck, and puzzle makers that print a word search or a crossword from your own list. No sign-up, no app needed, and they work for any word game, not just this one. <a href="/tools/" style="color:#0C6E92;font-weight:700">See all word tools →</a></p>
     </div>
     <div class="tools">
       <div class="tool">

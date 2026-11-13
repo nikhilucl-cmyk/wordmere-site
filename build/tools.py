@@ -34,9 +34,9 @@ TOOL_CSS = """<style>
   .navstatic .navbar{background:var(--white); border-color:rgba(14,58,80,.08);}
   .toolwrap{max-width:1080px; margin:0 auto; padding:clamp(24px,4vw,52px) var(--gutter) 56px;}
   .crumbs{font-size:13px; color:var(--ink-faint); margin:0 0 14px; font-weight:500;}
-  .crumbs a{color:var(--ink-soft); text-decoration:underline; text-decoration-color:rgba(14,58,80,.35); text-underline-offset:3px;}
+  .crumbs a{color:var(--ink-soft); text-decoration:underline; text-decoration-color:rgba(14,58,80,.35); text-underline-offset:3px; display:inline-block; padding:4px 0;}
   .toolwrap h1{font-family:var(--display); font-weight:800; font-size:clamp(30px,5.4vw,50px); letter-spacing:-.038em; line-height:1; margin:0; color:var(--ink); text-wrap:balance;}
-  .toolwrap .sub{margin:12px 0 0; color:var(--ink-soft); font-size:clamp(15px,1.8vw,18px); max-width:60ch;}
+  .toolwrap .sub{margin:12px 0 0; color:var(--ink-soft); font-size:clamp(15px,1.8vw,18px); max-width:52ch;}
   .panel{margin-top:26px; background:var(--white); border-radius:22px; padding:clamp(18px,3vw,28px); box-shadow:inset 0 0 0 1px rgba(14,58,80,.08), 0 8px 22px rgba(14,58,80,.08);}
   .field{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;}
   .field label{display:block; font:700 11px/1 var(--body); letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:8px;}
@@ -77,9 +77,9 @@ TOOL_CSS = """<style>
   .words li.rare{color:#3E6270; background:var(--page); box-shadow:inset 0 0 0 1px rgba(14,58,80,.07); font-weight:700;}
   .words li.top.rare{background:linear-gradient(176deg,#FFE3B8,#FAD29A); color:#5A3300; box-shadow:inset 0 0 0 1px rgba(192,106,18,.25);}
   .more{margin:10px 0 0; color:var(--ink-faint); font-size:13.5px;}
-  .prose{margin-top:46px; max-width:66ch;}
+  .prose{margin-top:46px; max-width:var(--measure);}
   .prose h2{font-family:var(--display); font-weight:800; font-size:clamp(21px,3vw,28px); letter-spacing:-.028em; margin:30px 0 10px; color:var(--ink);}
-  .prose p{margin:0 0 14px; color:var(--ink-soft); font-size:16px;}
+  .prose p{margin:0 0 14px; color:var(--ink-read); font-size:16px; line-height:1.68;}
   .prose a{color:#0C6E92; font-weight:600; text-decoration:underline; text-underline-offset:3px;}
   .prose code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:14px; background:var(--mist); color:var(--ink); padding:2px 6px; border-radius:6px;}
   .tm{margin-top:18px; font-size:13px; color:var(--ink-faint);}

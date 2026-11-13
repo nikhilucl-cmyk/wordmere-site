@@ -26,20 +26,20 @@ BLOG_CSS = """<style>
   .navstatic .navbar{background:var(--white); border-color:rgba(14,58,80,.08);}
   .postwrap{max-width:1080px; margin:0 auto; padding:clamp(24px,4vw,52px) var(--gutter) 56px;}
   .crumbs{font-size:13px; color:var(--ink-faint); margin:0 0 14px; font-weight:500;}
-  .crumbs a{color:var(--ink-soft); text-decoration:underline; text-decoration-color:rgba(14,58,80,.35); text-underline-offset:3px;}
+  .crumbs a{color:var(--ink-soft); text-decoration:underline; text-decoration-color:rgba(14,58,80,.35); text-underline-offset:3px; display:inline-block; padding:4px 0;}
   .postwrap h1{font-family:var(--display); font-weight:800; font-size:clamp(30px,5.4vw,50px); letter-spacing:-.038em;
     line-height:1.04; margin:0; color:var(--ink); text-wrap:balance; max-width:20ch;}
-  .postwrap .sub{margin:14px 0 0; color:var(--ink-soft); font-size:clamp(16px,2vw,19px); max-width:58ch;}
+  .postwrap .sub{margin:14px 0 0; color:var(--ink-soft); font-size:clamp(16px,2vw,19px); max-width:50ch;}
   .meta{margin:18px 0 0; font-size:13.5px; color:var(--ink-faint); font-weight:600;}
   .meta time{font-variant-numeric:tabular-nums;}
-  .article{margin-top:clamp(28px,4vw,44px); max-width:68ch;}
+  .article{margin-top:clamp(28px,4vw,44px); max-width:var(--measure);}
   .article h2{font-family:var(--display); font-weight:800; font-size:clamp(21px,3vw,28px); letter-spacing:-.028em;
     margin:38px 0 12px; color:var(--ink); text-wrap:balance;}
-  .article p{margin:0 0 16px; color:var(--ink-soft); font-size:17px; line-height:1.65;}
+  .article p{margin:0 0 16px; color:var(--ink-read); font-size:17px; line-height:1.7;}
   .article strong{color:var(--ink); font-weight:700;}
   .article a{color:#0C6E92; font-weight:600; text-decoration:underline; text-underline-offset:3px;}
   .article ul{margin:0 0 16px; padding:0 0 0 2px; list-style:none; display:grid; gap:10px;}
-  .article ul li{position:relative; padding-left:22px; color:var(--ink-soft); font-size:17px; line-height:1.6;}
+  .article ul li{position:relative; padding-left:22px; color:var(--ink-read); font-size:17px; line-height:1.65;}
   .article ul li::before{content:""; position:absolute; left:2px; top:11px; width:7px; height:7px; border-radius:50%;
     background:var(--tq);}
   .article code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:14.5px; background:var(--mist);
@@ -67,7 +67,7 @@ BLOG_CSS = """<style>
     margin:0; color:var(--ink); text-wrap:balance;}
   .postcard p{margin:9px 0 0; color:var(--ink-soft); font-size:15.5px;}
   .postcard .when{display:block; margin-top:12px; font-size:13px; color:var(--ink-faint); font-weight:600;}
-  .upnext{margin-top:44px; max-width:68ch;}
+  .upnext{margin-top:44px; max-width:var(--measure);}
   .upnext h2{font-family:var(--display); font-weight:800; font-size:clamp(19px,2.6vw,23px); letter-spacing:-.02em;
     margin:0 0 12px; color:var(--ink);}
   .upnext p{margin:0 0 14px; color:var(--ink-soft); font-size:16px;}
@@ -983,6 +983,12 @@ dict(
 
 MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
 
+def read_minutes(body):
+    """Whole minutes at 220 wpm, the usual rate for technical prose.
+    Rounded up, floored at 1 — a '0 min read' helps nobody."""
+    words = len(re.sub(r'<[^>]+>', ' ', body).split())
+    return max(1, round(words / 220 + 0.4))
+
 def pretty(d):
     y, m, dd = d.split('-')
     return f'{int(dd)} {MONTHS[int(m) - 1]} {y}'
@@ -1018,7 +1024,7 @@ def build_post(p):
     body = (f'    <article class="post">\n'
             f'      <h1>{p["h1"]}</h1>\n'
             f'      <p class="sub">{p["sub"]}</p>\n'
-            f'      <p class="meta"><time datetime="{p["date"]}">{pretty(p["date"])}</time> · {AUTHOR}</p>\n'
+            f'      <p class="meta"><time datetime="{p["date"]}">{pretty(p["date"])}</time> · {AUTHOR} · {read_minutes(p["body"])} min read</p>\n'
             f'      <div class="article">{p["body"]}\n      </div>\n'
             f'    </article>')
     return shell(path, p['title'] + ' — Wordmere', p['desc'], schema, crumbs, body)
@@ -1038,7 +1044,7 @@ def build_index():
       f'      <a class="postcard" href="/blog/{p["slug"]}/">\n'
       f'        <h2>{p["title"]}</h2>\n'
       f'        <p>{p["sub"]}</p>\n'
-      f'        <span class="when"><time datetime="{p["date"]}">{pretty(p["date"])}</time></span>\n'
+      f'        <span class="when"><time datetime="{p["date"]}">{pretty(p["date"])}</time> · {read_minutes(p["body"])} min read</span>\n'
       f'      </a>' for p in POSTS)
     body = f"""    <h1>Notes</h1>
     <p class="sub">What we learned building a word game, written down properly. Word lists, puzzle
