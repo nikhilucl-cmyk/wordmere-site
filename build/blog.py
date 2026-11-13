@@ -83,6 +83,150 @@ BLOG_CSS = """<style>
 
 POSTS = [
 dict(
+ slug='word-puzzle-difficulty',
+ date='2026-11-13',
+ updated='2026-11-13',
+ title='What makes a word puzzle hard, measured',
+ h1='What makes a word puzzle hard, measured',
+ sub='Five of our levels were losing players at two to four times the rate of their neighbours. Fixing them meant finding out which ingredient of a board actually costs time.',
+ desc='We fitted solve time against board shape across a hundred levels. One more answer costs about 17% more time; a three-letter answer gives about 5% back.',
+ body="""
+      <p>A word puzzle is hard for reasons you can count, and for a long time we were guessing at which ones mattered.</p>
+
+      <p>The occasion was five levels in our middle hundred that were losing players at two to four times the rate of the levels either side of them. Not a smooth ramp with a few bumps — five distinct walls. Something about those boards was different, and "they feel harder" is not a thing you can act on.</p>
+
+      <h2>Three ingredients, one equation</h2>
+
+      <p>So we fitted median solve time against the shape of the board across about a hundred levels. Three things carried almost all of it.</p>
+
+      <p><strong>Each extra answer on the board costs roughly 17% more time.</strong> Not 17% more per word in a linear sense — the median time for the whole level goes up by about that much for each additional word you have to find. Ten answers is a meaningfully different puzzle from eight.</p>
+
+      <p><strong>Each three-letter answer gives about 5% back.</strong> Short words are nearly free. People find them almost immediately, and they also unlock crossings that make the longer words easier.</p>
+
+      <p><strong>Each answer below a commonness threshold costs about 5%.</strong> We use Zipf frequency, where roughly 4.0 is the line between a word everyone produces on demand and a word people recognise but have to dig for. Below that line, every answer is a small tax.</p>
+
+      <p>Those three together explained the five walls without anything else being wrong. No bad clue, no layout bug, no broken wheel. The boards were simply carrying more words, longer words, and rarer words than their neighbours, and the effects stacked.</p>
+
+      <div class="pull"><p>Difficulty was not a mood. It was word count, word length and word rarity, and two of the three had been set by whoever picked the wheel.</p></div>
+
+      <h2>The obvious fix is the one you must not take</h2>
+
+      <p>Look at that equation and the cheapest lever jumps out. If each answer costs 17%, take answers off the board. A ten-word level becomes an eight-word level and you have bought back a third of the solve time without touching anything else.</p>
+
+      <p>In our game, and in most of this genre, there are two tiers of word. Required answers fill the grid and you must find them all to finish. Bonus words are real words the letters can spell that are not on the board; find one and the game acknowledges it, but it is not part of the puzzle.</p>
+
+      <p>So "take a word off the board" really means "move it from required to bonus". The word still works. Nothing breaks. The level gets shorter.</p>
+
+      <p>We are not allowed to do it, and the rule is absolute: <strong>you may never move a common word to bonus.</strong></p>
+
+      <h2>Why that rule exists</h2>
+
+      <p>Picture the player. The wheel spells <code>BAT</code>. They can see that it spells <code>BAT</code>. There is a three-letter row on the grid and they swipe <code>BAT</code> into it.</p>
+
+      <p>If <code>BAT</code> has been demoted to bonus, the grid does not take it. The row stays empty. From where they are sitting the game has just refused an obvious English word, and the fact that a scoring system somewhere acknowledged it does not help, because they were not trying to score — they were trying to fill that row.</p>
+
+      <p>You have not made the level easier. You have made it feel broken, and you have done it precisely at the moment the player was right.</p>
+
+      <p>This is the same failure we wrote about in <a href="/blog/daily-puzzle-omissions/">our daily puzzle leaving out words</a>, arriving by a different road. There it was a generator trimming a list. Here it would be us doing it deliberately, to hit a difficulty target. The player cannot tell the difference and should not have to.</p>
+
+      <h2>So you change the wheel, not the word list</h2>
+
+      <p>If a wheel spells more common words than the board should hold, the wheel is wrong for that slot. Pick a different one.</p>
+
+      <p>That sounds like a small distinction and it is actually the whole discipline. The word list is downstream of the wheel: once you have chosen the letters, the set of obvious words is fixed and you do not get a vote on it. All the design freedom lives one step earlier, in which letters you offer.</p>
+
+      <p>What you <em>may</em> do on a wheel you are keeping is move the genuinely rare answers down. A word below the commonness line is one nobody will swipe by reflex, so demoting it costs the player nothing and buys back about 5%. That is the legitimate version of the same lever, and it is much weaker, which is appropriate.</p>
+
+      <h2>What the five fixes looked like</h2>
+
+      <p>Four of the five walls were fixed by changing the wheel outright, to one whose obvious set was smaller. The fifth kept its wheel and lost two rare answers to bonus plus gained a three-letter one, which is the full toolkit applied to a single board.</p>
+
+      <p>One of them went from a nine-letter theme word to a six-letter one with seven answers. Another dropped from ten answers to eight. The equation says those should be substantially faster levels, and that is the prediction we shipped.</p>
+
+      <p>I want to be careful here, because this is where write-ups usually overclaim. We have not re-measured yet. The change is on a branch, it rides the next release, and the honest status is that we have a fitted model and a hypothesis, not a result. The model explained five walls we did not design; whether moving the inputs moves the outcome is a different question and a weaker one.</p>
+
+      <h2>What the equation does not know</h2>
+
+      <p>It was fitted on one stretch of one game's levels, so the coefficients are ours, not yours. The shape is probably transferable; the numbers are not.</p>
+
+      <p>It also has nothing to say about several things that obviously matter. Theme helps — a board where every answer belongs to one idea is easier than a random set, and we do not model that at all. Letter overlap matters: two answers sharing a rare letter are easier together than apart. And a word's grid position changes everything, because an answer with three crossings is nearly free by the time you reach it while an isolated one is not.</p>
+
+      <p>Most of all it cannot see the player. Someone on their fortieth level has a different sense of what is obvious from someone on their fourth, and a single median hides that completely.</p>
+
+      <h2>If you are tuning your own</h2>
+
+      <p>The useful part is not our coefficients. It is that difficulty in this genre decomposes into countable things, so you can fit it in an afternoon with data you already have, and then you can stop arguing about whether a level feels hard.</p>
+
+      <p>And when the fit hands you a lever, check what pulling it looks like from inside the puzzle. Ours said to take words off the board. From a spreadsheet that is a 17% saving. From the player's chair it is the game refusing a word they can see.</p>"""),
+dict(
+ slug='fair-puzzle-content-supply',
+ date='2026-11-13',
+ updated='2026-11-13',
+ title='The fairness rule that starved our content',
+ h1='The fairness rule that starved our content',
+ sub='We made one promise about our puzzles: if the letters spell an obvious word, it is on the board. Then we counted how many sets of letters can actually keep that promise.',
+ desc='Promising that every obvious word appears on the board left us 21 usable seven-letter racks and four eight-letter ones. The rule is right; the supply is brutal.',
+ body="""
+      <p>The rule is one sentence. If the letters we hand you spell an obvious word, that word is on the board.</p>
+
+      <p>It is the right rule. It is the difference between a puzzle and a puzzle that keeps saying no to words you can see. We have <a href="/blog/daily-puzzle-omissions/">written about what happens without it</a>, which is that you leave words out on three hundred and forty-seven days of a year and never notice.</p>
+
+      <p>Then we tried to build a thousand levels under it, and found out what it costs.</p>
+
+      <h2>How many racks pass</h2>
+
+      <p>Our levels are built from a rack of letters — six, seven or eight of them — and the board is made of the words that rack spells. Under the rule, you do not choose which words go on the board. The rack chooses, and you either accept all of its obvious words or you reject the rack.</p>
+
+      <p>So a rack is usable only if the set it produces is one you can actually lay out: not too many words, not too few, enough long ones to be interesting, with a sensible spread of lengths.</p>
+
+      <p>We ran every candidate rack through those bars.</p>
+
+      <p><strong>Twenty-one seven-letter racks passed. Four eight-letter ones.</strong></p>
+
+      <p>Out of the whole English language. I had expected the number to be smallish and I had not expected it to be countable on your fingers.</p>
+
+      <h2>Why it collapses so fast</h2>
+
+      <p>The arithmetic is unkind in a specific way. Adding a letter to the rack multiplies the words it can spell, and the rule says every obvious one of them has to go on the board. So the better your rack — the more pronounceable, the more common its letters — the more words it demands, and the faster it blows past any sane board size.</p>
+
+      <p>Racks with common letters spell too much. Racks with awkward letters spell too little, or spell things nobody would call obvious. The window where a rack spells nine to twelve good words and nothing else is narrow, and it gets narrower with every letter you add, which is exactly backwards from what you want, because longer racks make the better puzzles.</p>
+
+      <div class="pull"><p>Every property that makes a rack feel good to play also makes it spell more words than a board can hold.</p></div>
+
+      <p>There is a second squeeze. Variety. Even if a rack passes, you cannot use it at level 12 and again at level 60, because people notice. So the usable set has to be spread thin across the whole run, and the ones that pass most comfortably are exactly the ones that feel most natural, so they are also the ones a player is most likely to remember seeing.</p>
+
+      <h2>What we actually did about it</h2>
+
+      <p>Twenty-five racks is not a thousand levels, so something had to give. The interesting part is what we were willing to give up, because we decided quite early that it would not be the rule.</p>
+
+      <p>We relaxed the bars instead, in a specific order, cheapest first.</p>
+
+      <p>Plurals of words already on the board came off. If <code>CAT</code> is on the board, <code>CATS</code> being accepted as a bonus word rather than occupying a row of its own is not something anybody experiences as unfair — it is the same word and the player has already had the insight.</p>
+
+      <p>Proper nouns went the same way. Names are a grey area in every word game and nobody expects a crossword row for a surname.</p>
+
+      <p>Then words below our commonness floor. A word in the dictionary that most people would not produce on demand is not an obvious word, which means the rule never covered it in the first place. That one is less a relaxation than a clarification of what "obvious" meant.</p>
+
+      <p>And we widened what counts as an acceptable board shape, allowing a slightly wider range of word counts and lengths than the first pass permitted.</p>
+
+      <p>That got us from eighty-five levels to a thousand. Every step is a small retreat from a strict reading, and every one of them was checked against the same question: would a player swipe this word, see it rejected, and feel cheated? If yes, it stays on the board, whatever it costs us.</p>
+
+      <h2>The ordering is the whole design</h2>
+
+      <p>What I would carry to any puzzle game is that a rule like ours is not a constraint on the generator, it is a constraint on the content budget, and the two feel completely different in a planning meeting.</p>
+
+      <p>"Every obvious word is on the board" sounds like a quality bar. It is actually a statement about how many levels you can ship, and nobody realises that until somebody counts. Had we found this at level nine hundred instead of in a feasibility script, the pressure to quietly start trimming words would have been enormous and the reasons would have sounded excellent.</p>
+
+      <p>So count early. Take your fairness rule, apply it with no exceptions, and ask how many levels survive. If the answer is twenty-five, you have not discovered that the rule is wrong — you have discovered the real shape of the work, which is that your content pipeline is a search problem over racks, not a writing problem over words.</p>
+
+      <h2>Where this leaves us</h2>
+
+      <p>Honestly: with a supply that still runs out. The relaxations bought a thousand levels, and good long racks thin out well before the end of what we would like to ship. Past a certain depth the choice is between repeating racks further apart than anyone will notice, accepting shorter boards, or finding a different puzzle shape for the later game.</p>
+
+      <p>We have not solved that. We have made it visible and bounded, which is a smaller claim than I would like to be making but is the true one.</p>
+
+      <p>If you want to see what a rack produces before you commit to it, our <a href="/tools/word-unscrambler/">word unscrambler</a> does the same job the first stage of our generator does — give it a set of letters and it returns every word they spell, grouped by length. That list is the board you would owe the player.</p>"""),
+dict(
  slug='android-dev-launcher-leak',
  date='2026-11-10',
  updated='2026-11-10',

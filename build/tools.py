@@ -340,22 +340,64 @@ SPEC['random-word-generator'] = dict(
       <h2>Press again for a fresh set</h2>
       <p>Every press gives a new selection, and no word repeats within one set. If you want words that fit a shape rather than random ones, the <a href="/tools/word-finder/">word finder</a> searches by pattern, and the <a href="/tools/word-unscrambler/">unscrambler</a> works from letters you already hold.</p>""")
 
+SCRAMBLE_CSS = """<style>
+  /* The scramble maker produces two things: a worksheet with blanks to write
+     on, and the answer key. They must print on separate sheets. */
+  #out{min-height:0;}
+  .pzbar{display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:22px;}
+  .ghost{font-family:var(--display); font-weight:800; font-size:15px; color:#0A4A63; background:var(--page);
+    border:0; border-radius:12px; padding:13px 20px; cursor:pointer; box-shadow:inset 0 0 0 2px rgba(14,58,80,.18);}
+  .ghost:hover{box-shadow:inset 0 0 0 2px var(--tq);}
+  .pznote{font-size:13.5px; color:var(--ink-faint); font-weight:600;}
+  .pzsec{margin-top:24px;}
+  .pzhead{font-family:var(--display); font-weight:800; font-size:clamp(19px,3vw,25px); letter-spacing:-.02em;
+    margin:0 0 14px; color:var(--ink); text-wrap:balance;}
+  .plain input[type=text]{font-family:var(--body); font-weight:600; font-size:16px; letter-spacing:.01em; text-transform:none;}
+  .plain input[type=text]::placeholder{font-weight:500;}
+  .field .wide{flex:1 1 100%; min-width:0;}
+  .scrw{list-style:none; margin:0; padding:0; display:grid; gap:11px;}
+  .scrw li{display:flex; align-items:baseline; gap:14px; background:var(--white); border-radius:12px;
+    padding:12px 15px; box-shadow:inset 0 0 0 1px rgba(14,58,80,.10);}
+  .scrw b{font-family:var(--display); font-weight:800; font-size:17px; letter-spacing:.14em; color:var(--ink); flex:0 0 auto;}
+  .scrw i{flex:1 1 auto; border-bottom:1.5px dotted rgba(14,58,80,.38); min-height:1.1em;}
+  .scrw em{font-style:normal; margin-left:auto; font-size:13px; color:var(--ink-faint); font-weight:600;}
+  @media print{
+    @page{margin:16mm;}
+    body{background:#fff; color:#000;}
+    .nav,.sitefoot,.crumbs,.prose,form,.pzbar,.toolwrap h1,.toolwrap .sub{display:none !important;}
+    .toolwrap{max-width:none; padding:0;}
+    .panel{background:#fff; box-shadow:none; border-radius:0; padding:0;}
+    .pzhead{color:#000;}
+    .scrw li{background:none; box-shadow:none; padding:6px 0; border-bottom:1px solid #ddd; border-radius:0;}
+    .scrw b,.scrw em{color:#000;}
+    .scrw i{border-bottom-color:#999;}
+    .pzsec{break-inside:avoid;}
+    .keysec{break-before:page;}
+  }
+</style>"""
+
 SPEC['word-scrambler'] = dict(
  cta='Scramble',
  needs_dict=False,
+ extra_css=SCRAMBLE_CSS,
  title='Word Scramble Maker — Free Jumbled Word Generator',
- desc='Free word scramble maker. Paste a list of words and the generator jumbles each one for a worksheet, a quiz or a party game, with an answer key.',
- sub='Paste your words, one per line or separated by commas. You get each one jumbled, with the answer beside it — ready to paste into a worksheet or a quiz.',
- form=ta('words','Your words','ORANGE\nMEADOW\nLIGHTHOUSE\nPUZZLE','One word per line, or separated by commas'),
- hint='Letters only. Anything longer than two letters gets scrambled; the answer key is shown next to each one.',
+ desc='Free word scramble maker. Paste any word list and get a printable worksheet of jumbled words with lines to write on, and the answer key on its own sheet.',
+ sub='Paste your words, one per line or separated by commas. You get a printable worksheet of jumbles with a line to write on, and the answer key on a separate sheet.',
+ form=wide(ta('words','Your words','ORANGE\nMEADOW\nLIGHTHOUSE\nPUZZLE','One word per line, or separated by commas'))
+      + tinp('title','Worksheet title (optional)','','e.g. Friday spellings', 48, 'mid'),
+ hint='Letters only. Anything under three letters is left alone — there is nothing to scramble.',
  js=r"""
   var raw=(val('words')||'').toUpperCase().split(/[^A-Z]+/).filter(function(w){ return w.length>0; });
   if(!raw.length) return fail('Paste at least one word.');
   if(raw.length>200) return fail('That is more than 200 words — trim the list a little.');
+  var title=(val('title')||'').trim();
   var short=raw.filter(function(w){ return w.length<3; });
+
+  /* A jumble that comes back as the original word is not a puzzle, and for a
+     two-letter word there is only one other arrangement, so those are left. */
   function scramble(w){
-    var a=w.split(''), best=w, tries=0;
-    while(tries++<30){
+    var a=w.split(''), tries=0, best=w;
+    while(tries++<40){
       for(var i=a.length-1;i>0;i--){ var j=(Math.random()*(i+1))|0, t=a[i]; a[i]=a[j]; a[j]=t; }
       best=a.join('');
       if(best!==w) return best;
@@ -365,17 +407,37 @@ SPEC['word-scrambler'] = dict(
   var rows=raw.map(function(w){
     return w.length<3 ? {w:w, s:w, skip:true} : {w:w, s:scramble(w)};
   });
-  var html='<div class="group"><h2>Scrambled <span>'+rows.length+'</span></h2><ul class="pairs">'
-    + rows.map(function(r){ return '<li class="pair"><b>'+r.s+'</b><span>'+(r.skip?'too short':r.w)+'</span></li>'; }).join('')
-    + '</ul></div>';
-  out(html, rows.length+' word'+(rows.length===1?'':'s')+' scrambled'+(short.length?' — '+short.length+' left alone (under three letters)':''));""",
+
+  function esc(x){ return String(x).replace(/[&<>"]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  var sheet='<ol class="scrw">'+rows.map(function(r){
+      return '<li><b>'+r.s+'</b><i></i>'+(r.skip?'<em>too short to scramble</em>':'')+'</li>'; }).join('')+'</ol>';
+  var key='<ol class="scrw">'+rows.map(function(r){
+      return '<li><b>'+r.s+'</b><em>'+r.w+'</em></li>'; }).join('')+'</ol>';
+
+  var html='<div class="pzbar"><button type="button" class="ghost" data-print>Print or save as PDF</button>'
+      +'<span class="pznote">'+rows.length+' word'+(rows.length===1?'':'s')
+      +(short.length?' · '+short.length+' left alone':'')+'</span></div>'
+    +'<section class="pzsec">'+(title?'<h2 class="pzhead">'+esc(title)+'</h2>':'<h2 class="pzhead">Unscramble the words</h2>')
+      +sheet+'</section>'
+    +'<section class="pzsec keysec"><h2 class="pzhead">Answer key'+(title?' — '+esc(title):'')+'</h2>'
+      +key+'</section>';
+
+  out(html, 'Press Scramble again for a different set of jumbles.');""",
  prose="""
       <h2>Making a worksheet</h2>
-      <p>Paste a spelling list, a set of topic words or the names of everyone at a party. Each word comes back jumbled with the answer next to it, so you can copy the scrambled column into a handout and keep the answers for yourself. Words of one or two letters are left alone — there's nothing to scramble.</p>
+      <p>Paste a spelling list, a set of topic words or the names of everyone coming to a party. You get two sheets: the worksheet, which shows each word jumbled with a line to write the answer on, and the answer key, which pairs each jumble with the word it came from. Press <em>Print or save as PDF</em> and the key starts on a fresh page, so you can hand out the first sheet without the answers showing through.</p>
+      <h2>What makes a scramble hard</h2>
+      <p>Almost entirely length. Three and four-letter words are solved at a glance; seven letters and up are a real puzzle, because the number of arrangements grows faster than anyone's ability to check them. Repeated letters make a word easier, not harder — <code>LETTER</code> has far fewer distinct jumbles than a word with six different letters, so the eye lands on it sooner. If a list feels too easy, add length before you add words.</p>
       <h2>Every jumble is different</h2>
-      <p>The letters are shuffled fresh each time, and the tool won't hand back a "scramble" that is identical to the original word. Press Search again if a particular jumble looks too easy — short words with repeated letters sometimes land close to the real thing.</p>
+      <p>The letters are shuffled fresh each time and the tool will not hand back a "scramble" that is identical to the original. Press the button again if a particular jumble looks too generous — short words with repeated letters sometimes land close to the real thing. Words under three letters are left alone and marked, because there is nothing useful to do with them.</p>
+      <h2>Jumble, letter scramble, word mix-up</h2>
+      <p>The same worksheet goes by a few names. Teachers tend to say word scramble or spelling scramble; puzzle books call it a jumble, after the newspaper feature; children's activity sheets often say letter scramble or mixed-up words. They are all this: a word with its letters shuffled and a blank to write the real one in.</p>
+      <h2>In a classroom</h2>
+      <p>The useful property is that it takes a list you already have and makes a task out of it, in about ten seconds. This week's spelling words, the vocabulary from a topic, the irregular verbs — paste the list, print two sheets, done. Because difficulty tracks length, one list can be split into an easier and a harder sheet without writing anything new: short words on one, long words on the other.</p>
       <h2>The other direction</h2>
-      <p>This tool makes puzzles. To solve one, the <a href="/tools/word-unscrambler/">word unscrambler</a> finds every word your letters can make, and the <a href="/tools/anagram-solver/">anagram solver</a> finds the ones that use every letter exactly once.</p>""")
+      <p>This tool makes puzzles. To solve one, the <a href="/tools/word-unscrambler/">word unscrambler</a> finds every word a set of letters can make, and the <a href="/tools/anagram-solver/">anagram solver</a> finds the ones that use every letter exactly once. If you want a grid rather than a list, the <a href="/tools/word-search-maker/">word search maker</a> hides the same words in a letter square.</p>""")
 
 MAKER_CSS = """<style>
   /* The two puzzle makers: a square letter grid that has to survive a
@@ -451,7 +513,7 @@ SPEC['word-search-maker'] = dict(
  needs_dict=False,
  extra_css=MAKER_CSS,
  title='Word Search Maker — Create a Printable Word Search',
- desc='Free word search maker. Paste your own words, pick the size and difficulty, then print the puzzle with its answer key. No sign-up, no watermark.',
+ desc='Free word search maker. Create your own printable word search from any list, pick the size and difficulty, print it or save as PDF. No sign-up, no watermark.',
  sub='Paste a spelling list, a set of topic words, or the names of everyone coming to the party. You get a grid, a word list and a matching answer key, ready to print.',
  form=(wide(ta('words', 'Your words — one per line', WS_DEFAULT, 'OTTER\nWILLOW\nHERON', 6))
        + tinp('title', 'Puzzle title (optional)', 'Riverbank words', 'Week 3 spellings')
@@ -503,6 +565,8 @@ SPEC['word-search-maker'] = dict(
       <h2>Find-a-word, word sleuth, letter soup</h2>
       <p>The same puzzle goes by different names depending on where you went to school. It's a find-a-word in Australia and New Zealand, a word sleuth in South Africa, and a <em>sopa de letras</em> — letter soup — across the Spanish-speaking world. Some people call it a word hunt. They are all this: a grid of letters with words hidden in it, and this maker builds any of them.</p>
 
+      <h2>How many words to use</h2>
+      <p>Ten to fifteen words is the sweet spot for a single sheet. Fewer than about eight and the grid is mostly filler, which makes the puzzle feel thin and oddly harder — there is less structure for the eye to catch on. More than about twenty and either the grid grows past a comfortable page, or the words cross so often that the square turns into a thicket. Word length matters as much as count: ten long words need a far bigger grid than ten short ones, because each one has to fit end to end in a straight line.</p>
       <h2>Printing it</h2>
       <p>Press <em>Print or save as PDF</em> and the page strips itself back to the puzzle — no navigation, no form, no colour to drain your cartridge. The answer key prints on its own sheet, so you can hand out the first page and keep the second. In the print dialog, choose <em>Save as PDF</em> as the destination if you want a file to email instead.</p>
       <h2>Getting a tighter grid</h2>
