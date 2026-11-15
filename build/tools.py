@@ -147,6 +147,8 @@ SPEC['word-unscrambler'] = dict(
       <p>Type up to twelve letters and the tool checks them against 104,562 English words between three and eight letters long. A word only appears if your letters can actually spell it — each letter is used no more times than you have it. Results are grouped by length, because in most word games the long ones are worth the most.</p>
       <h2>Using it on a letter-wheel puzzle</h2>
       <p>Enter every letter on the wheel, repeats included. Set the length to the number of blanks in the row you're stuck on and the answer usually jumps out. If you're playing <a href="/">Wordmere</a>, a hint reveals a letter for free.</p>
+      <h2>Racks we have already written out</h2>
+      <p>If your letters are a common rack, the answer may already be on the site: <a href="/unscramble/">unscramble letters</a> keeps a page per rack with every word it spells, which is quicker than typing. Anything else, type it above.</p>
       <h2>Unscrambler or anagram solver?</h2>
       <p>The unscrambler finds words that use <em>some</em> of your letters. If you need a word that uses <em>every</em> letter exactly once, the <a href="/tools/anagram-solver/">anagram solver</a> is the one you want.</p>""")
 
