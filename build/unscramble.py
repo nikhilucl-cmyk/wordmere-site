@@ -9,9 +9,14 @@ searches directly instead of handing the visitor an empty text box.
 
 The universe is deliberately NOT every possible letter combination. In this
 genre a rack is always a real word, so the candidate set is the distinct
-sorted-letter keys of common six- and seven-letter words (15,172 of them), and
-we ship the richest PAGE_LIMIT of those. Scaling up is one constant -- but do
-it on evidence, after checking what share of the first tranche gets indexed.
+sorted-letter keys of common six- and seven-letter words (15,172 of them).
+
+Two limits, and they do different jobs. MIN_WORDS is a QUALITY floor: the tail
+of that list is genuinely thin -- the last key, VOODOO, spells three words --
+and shipping those is how a site gets classified as thin content. Only 3,360
+keys clear 120 words, so the full universe must never be built. PAGE_LIMIT is
+a RISK limit on top of that, raised only when the previous tranche is seen to
+index.
 
     python3 build/unscramble.py        # run from the repo root
 
@@ -23,8 +28,15 @@ from collections import defaultdict
 from itertools import combinations
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PAGE_LIMIT = 300          # phase 1. Raise only on indexation evidence.
+PAGE_LIMIT = 2000         # phase 2 (18 Nov): 300 indexed within 3 days, so the
+                          # constraint was never discovery. Raise on evidence only.
+MIN_WORDS  = 120          # a page below this is thin, and thin is how a site gets
+                          # hurt. The tail of the candidate list is genuinely bad --
+                          # the 15,172nd key (VOODOO) spells three words. NEVER
+                          # build the whole universe; 3,360 keys clear this bar.
 RELATED    = 6
+PER_PAGE   = 250          # hub pagination: 2,000 links on one page is 162 KB and
+                          # no use to a reader or a crawler
 
 SCORE = {'A':1,'B':3,'C':3,'D':2,'E':1,'F':4,'G':2,'H':4,'I':1,'J':8,'K':5,'L':1,'M':3,
          'N':1,'O':1,'P':3,'Q':10,'R':1,'S':1,'T':1,'U':1,'V':4,'W':4,'X':8,'Y':4,'Z':10}
@@ -167,7 +179,9 @@ def pick(common, amap):
         hits = subwords(k, amap)
         rows.append((k, sorted(bases), hits, sum(1 for w in hits if w in common)))
     rows.sort(key=lambda r: (-r[3], -len(r[2]), r[0]))
-    return rows
+    rich = [r for r in rows if len(r[2]) >= MIN_WORDS]
+    print(f'  {len(rows):,} candidate keys, {len(rich):,} clear the {MIN_WORDS}-word floor')
+    return rich
 
 
 def esc(s):
@@ -254,7 +268,8 @@ def main():
     amap = build_index(words)
     rows = pick(common, amap)
     chosen = rows[:PAGE_LIMIT]
-    print(f'  {len(rows):,} candidate keys; building the richest {len(chosen)}')
+    print(f'  building the richest {len(chosen):,} '
+          f'({len(chosen[-1][2])} words on the thinnest)')
 
     os.makedirs(os.path.join(ROOT, 'unscramble'), exist_ok=True)
     open(os.path.join(ROOT, 'unscramble/style.css'), 'w', encoding='utf-8').write(SITE_CSS + PAGE_CSS)
@@ -269,41 +284,69 @@ def main():
         open(os.path.join(d, 'index.html'), 'w', encoding='utf-8').write(html)
         total += len(html)
 
-    # hub, so nothing is an orphan
-    cards = ''.join(
-        f'<li><a href="/unscramble/{k.lower()}/"><b>{b[0]}</b><span>{len(h)} words</span></a></li>'
-        for k, b, h, _ in chosen)
-    hub_schema = json.dumps({"@context": "https://schema.org", "@type": "BreadcrumbList",
-        "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"},
-            {"@type": "ListItem", "position": 2, "name": "Word tools", "item": "https://wordmere.com/tools/"},
-            {"@type": "ListItem", "position": 3, "name": "Unscramble", "item": "https://wordmere.com/unscramble/"}]},
-        ensure_ascii=False)
-    hub = (HEAD.format(
-        title='Unscramble Letters — Every Word, Rack by Rack',
-        desc=f'Ready-made word lists for {len(chosen)} common letter racks. Pick a rack and see every word it spells, grouped by length, with the everyday words marked.',
-        url='https://wordmere.com/unscramble/', schema=hub_schema, nav=NAV)
-        + f'''    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <a href="/tools/">Word tools</a> › <span aria-current="page">Unscramble</span></nav>
-    <h1>Unscramble letters</h1>
-    <p class="sub">Ready-made lists for {len(chosen)} of the letter racks word games use most. Each page shows every word that rack spells, longest first.</p>
-    <div class="panel"><div class="grp"><h2>Racks <span>{len(chosen)}</span></h2>
+    # hub, paginated. Nothing is an orphan: every page is also reachable from
+    # the six-neighbour ring, and every one is in the sitemap.
+    pages = [chosen[i:i + PER_PAGE] for i in range(0, len(chosen), PER_PAGE)]
+    for pno, group in enumerate(pages, start=1):
+        path = 'unscramble' if pno == 1 else f'unscramble/page/{pno}'
+        url = ('https://wordmere.com/unscramble/' if pno == 1
+               else f'https://wordmere.com/unscramble/page/{pno}/')
+        cards = ''.join(
+            f'<li><a href="/unscramble/{k.lower()}/"><b>{b[0]}</b><span>{len(h)} words</span></a></li>'
+            for k, b, h, _ in group)
+        crumb_tail = 'Unscramble' if pno == 1 else f'Unscramble, page {pno}'
+        hub_schema = json.dumps({"@context": "https://schema.org", "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Wordmere", "item": "https://wordmere.com/"},
+                {"@type": "ListItem", "position": 2, "name": "Word tools", "item": "https://wordmere.com/tools/"},
+                {"@type": "ListItem", "position": 3, "name": crumb_tail, "item": url}]}, ensure_ascii=False)
+        pager = '<ul class="near">'
+        if pno > 1:
+            prev = '/unscramble/' if pno == 2 else f'/unscramble/page/{pno-1}/'
+            pager += f'<li><a href="{prev}">← Previous</a></li>'
+        for n in range(1, len(pages) + 1):
+            href = '/unscramble/' if n == 1 else f'/unscramble/page/{n}/'
+            pager += (f'<li><a href="{href}"><b>{n}</b></a></li>' if n != pno
+                      else f'<li><a href="{href}" aria-current="page"><b>{n}</b></a></li>')
+        if pno < len(pages):
+            pager += f'<li><a href="/unscramble/page/{pno+1}/">Next →</a></li>'
+        pager += '</ul>'
+        heading = ('Unscramble letters' if pno == 1
+                   else f'Unscramble letters — page {pno}')
+        title = ('Unscramble Letters — Every Word, Rack by Rack' if pno == 1
+                 else f'Unscramble Letters — Racks, Page {pno} of {len(pages)}')
+        desc = (f'Ready-made word lists for {len(chosen):,} common letter racks. Pick a rack '
+                f'and see every word it spells, grouped by length.' if pno == 1 else
+                f'Page {pno} of {len(pages)}: more ready-made racks, each with every word '
+                f'those letters spell, grouped longest first.')
+        hub = (HEAD.format(title=esc(title), desc=esc(desc), url=url, schema=hub_schema, nav=NAV)
+            + f'''    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <a href="/tools/">Word tools</a> › <span aria-current="page">{crumb_tail}</span></nav>
+    <h1>{heading}</h1>
+    <p class="sub">Ready-made lists for {len(chosen):,} of the letter racks word games use most. Each page shows every word that rack spells, longest first.</p>
+    <div class="panel"><div class="grp"><h2>Racks <span>{len(group)} of {len(chosen):,}</span></h2>
     <ul class="hubletters">{cards}</ul></div></div>
     <div class="unprose">
+      {pager}
       <h2>Why these are already written out</h2>
       <p>Most people reaching for an unscrambler are holding one specific set of letters and want the answer, not a text box. These pages are the answer for the racks that come up most often. For anything else, the <a href="/tools/word-unscrambler/">word unscrambler</a> takes whatever you type.</p>
       <p><a class="backtool" href="/tools/word-unscrambler/">Unscramble your own letters</a></p>
     </div>'''
-        + '\n' + TAIL.format(foot=FOOT))
-    open(os.path.join(ROOT, 'unscramble/index.html'), 'w', encoding='utf-8').write(hub)
+            + '\n' + TAIL.format(foot=FOOT))
+        os.makedirs(os.path.join(ROOT, path), exist_ok=True)
+        open(os.path.join(ROOT, path, 'index.html'), 'w', encoding='utf-8').write(hub)
+    print(f'  hub paginated into {len(pages)} pages of up to {PER_PAGE}')
 
     # its own sitemap, so indexation of this tranche can be measured on its own
     urls = ''.join(
-        f'  <url><loc>https://wordmere.com/unscramble/{k.lower()}/</loc><lastmod>2026-11-15</lastmod>'
+        f'  <url><loc>https://wordmere.com/unscramble/{k.lower()}/</loc><lastmod>2026-11-18</lastmod>'
         f'<changefreq>monthly</changefreq><priority>0.5</priority></url>\n' for k, _, _, _ in chosen)
+    hubs = ''.join(
+        f'  <url><loc>https://wordmere.com/unscramble/{"" if p == 1 else f"page/{p}/"}</loc>'
+        f'<lastmod>2026-11-18</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>\n'
+        for p in range(1, len(pages) + 1))
     open(os.path.join(ROOT, 'sitemap-unscramble.xml'), 'w', encoding='utf-8').write(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        '  <url><loc>https://wordmere.com/unscramble/</loc><lastmod>2026-11-15</lastmod>'
-        '<changefreq>weekly</changefreq><priority>0.6</priority></url>\n' + urls + '</urlset>\n')
+        + hubs + urls + '</urlset>\n')
 
     css = os.path.getsize(os.path.join(ROOT, 'unscramble/style.css'))
     print(f'  {len(chosen)} pages + hub, {total/1024/1024:.1f} MB of HTML')
