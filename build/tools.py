@@ -307,7 +307,9 @@ SPEC['five-letter-word-solver'] = dict(
       <h2>A worked example</h2>
       <p>Say you opened with <code>CRANE</code> and got the C and E in place, the R somewhere else, and A and N ruled out. Enter <code>C???E</code> in placed letters, <code>R</code> in the second box and <code>AN</code> in the third. What's left is a short list you can read at a glance.</p>
       <h2>If nothing comes back</h2>
-      <p>Check you haven't put the same letter in two boxes — the tool will tell you if you have. A letter can be placed, misplaced or ruled out, never two at once. Note also that a letter appearing twice in the puzzle behaves differently in different games, so treat the ruled-out box with care when you have a repeat. For other lengths, use the <a href="/tools/word-finder/">word finder</a>.</p>""")
+      <p>Check you haven't put the same letter in two boxes — the tool will tell you if you have. A letter can be placed, misplaced or ruled out, never two at once. Note also that a letter appearing twice in the puzzle behaves differently in different games, so treat the ruled-out box with care when you have a repeat. For other lengths, use the <a href="/tools/word-finder/">word finder</a>.</p>
+      <h2>Lists already written out</h2>
+      <p>If all you know is one letter and where it sits, the list is often worth reading whole rather than filtering. <a href="/words/">Word lists</a> has a page for each of those patterns — every five-letter word starting with a given pair, ending in one, or carrying a particular letter in a particular slot — with the everyday words marked apart from the obscure ones.</p>""")
 
 SPEC['random-word-generator'] = dict(
  cta='Generate',

@@ -3,3 +3,4 @@ Allow: /
 
 Sitemap: https://wordmere.com/sitemap.xml
 Sitemap: https://wordmere.com/sitemap-unscramble.xml
+Sitemap: https://wordmere.com/sitemap-words.xml
