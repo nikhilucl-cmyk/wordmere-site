@@ -30,7 +30,8 @@ from collections import defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-LENGTHS     = (5,)    # phase 1: the Wordle length only. Widen on evidence.
+LENGTHS     = (4, 5, 6, 7)   # 5 shipped first (the Wordle length); 4/6/7 added
+                      # 23 Nov on Nikhil's instruction, ahead of indexation evidence.
 MIN_WORDS   = 8       # below this the page is a stub. Unlike /unscramble/,
                       # a short list here is still the COMPLETE answer to the
                       # query -- but Google cannot tell, so hold a floor.
@@ -39,7 +40,16 @@ RARE_CAP    = 400     # is 3,096 words; a page must not become a scroll trap.
 RELATED     = 8
 PER_PAGE    = 220
 
-ORD = {1:'1st', 2:'2nd', 3:'3rd', 4:'4th', 5:'5th'}
+ORD = {1:'1st', 2:'2nd', 3:'3rd', 4:'4th', 5:'5th', 6:'6th', 7:'7th'}
+
+# Which solver a page should send people to. The five-letter solver takes the
+# green/yellow/grey boxes a daily puzzle gives you and only ever works on five
+# letters; for every other length the word finder is the tool that matches a
+# wildcard pattern. Pointing a 7-letter page at the five-letter solver would be
+# a dead end for the reader and a bad internal link.
+def solver(n):
+    return (('/tools/five-letter-word-solver/', 'five-letter word solver')
+            if n == 5 else ('/tools/word-finder/', 'word finder'))
 
 home = open(os.path.join(ROOT, 'index.html'), encoding='utf-8').read()
 SITE_CSS = re.search(r'<style>(.*?)</style>', home, re.S).group(1)
@@ -231,14 +241,15 @@ def render(s, common, neighbours):
 
     body.append('    </div>')
 
+    shref, sname = solver(n)
     if kind == 'pos':
         p, c = key
-        narrow = (f'<a href="/tools/five-letter-word-solver/">five-letter word solver</a> takes a '
-                  f'pattern like <strong>{"?"*(p-1)}{c}{"?"*(n-p)}</strong> and narrows it further '
+        narrow = (f'<a href="{shref}">{sname}</a> takes a pattern like '
+                  f'<strong>{"?"*(p-1)}{c}{"?"*(n-p)}</strong> and narrows it further '
                   f'once you know a letter that is <em>not</em> in the answer')
     else:
-        narrow = ('<a href="/tools/five-letter-word-solver/">five-letter word solver</a> combines this '
-                  'with the letters you have already ruled in or out')
+        narrow = (f'<a href="{shref}">{sname}</a> combines this with the other letters you '
+                  f'have already ruled in or out')
 
     body.append(f'''    <div class="unprose">
       <h2>What is on this page</h2>
@@ -248,7 +259,7 @@ def render(s, common, neighbours):
       <h2>Related lists</h2>
       <ul class="near">''' + ''.join(
         f'<li><a href="/words/{ns}/">{esc(nh)}</a></li>' for ns, nh in neighbours) + f'''</ul>
-      <p><a class="backtool" href="/tools/five-letter-word-solver/">Solve a {n}-letter word</a></p>
+      <p><a class="backtool" href="{shref}">Solve a {n}-letter word</a></p>
     </div>''')
 
     return (HEAD.format(title=esc(title), desc=esc(desc), url=url, schema=schema, nav=NAV)
@@ -258,7 +269,8 @@ def render(s, common, neighbours):
 def main():
     words, common = load()
     sets = make_sets(words)
-    sets.sort(key=lambda s: (-len([w for w in s[6] if w in common]), s[0]))
+    kindord = {'start': 0, 'end': 1, 'pos': 2}
+    sets.sort(key=lambda s: (s[5], kindord[s[3]], s[0]))
     print(f'  {len(sets):,} pages clear the {MIN_WORDS}-word floor')
 
     os.makedirs(os.path.join(ROOT, 'words'), exist_ok=True)
@@ -275,6 +287,18 @@ def main():
         total += len(html)
 
     pages = [sets[i:i + PER_PAGE] for i in range(0, len(sets), PER_PAGE)]
+    # first hub page each length appears on, so every page can offer a jump nav
+    first = {}
+    for pno, group in enumerate(pages, start=1):
+        for t in group:
+            first.setdefault(t[5], pno)
+    def lennav(cur):
+        out = '<ul class="near">'
+        for n in sorted(first):
+            href = '/words/' if first[n] == 1 else f'/words/page/{first[n]}/'
+            mark = ' aria-current="page"' if first[n] == cur else ''
+            out += f'<li><a href="{href}"{mark}>{n}-letter words</a></li>'
+        return out + '</ul>'
     for pno, group in enumerate(pages, start=1):
         path = 'words' if pno == 1 else f'words/page/{pno}'
         url = ('https://wordmere.com/words/' if pno == 1
@@ -298,24 +322,30 @@ def main():
         if pno < len(pages):
             pager += f'<li><a href="/words/page/{pno+1}/">Next →</a></li>'
         pager += '</ul>'
-        heading = 'Word lists' if pno == 1 else f'Word lists — page {pno}'
-        title = ('Word Lists — Five Letter Words by Pattern' if pno == 1
-                 else f'Word Lists — Five Letter Words, Page {pno} of {len(pages)}')
-        desc = (f'{len(sets):,} ready-made five-letter word lists by starting letters, ending '
-                f'letters and letter position, with everyday words marked.' if pno == 1 else
-                f'Page {pno} of {len(pages)}: more five-letter word lists by pattern, '
-                f'with the everyday words marked apart from the obscure ones.')
+        lens = sorted({t[5] for t in group})
+        span = (f'{lens[0]}-letter' if len(lens) == 1
+                else f'{lens[0]}- to {lens[-1]}-letter')
+        heading = 'Word lists' if pno == 1 else f'Word lists — {span}, page {pno}'
+        title = ('Word Lists — Words by Letter Pattern' if pno == 1
+                 else f'Word Lists — {span[0].upper() + span[1:]} Words, Page {pno}')
+        desc = (f'{len(sets):,} ready-made word lists for four to seven letters, by starting '
+                f'letters, ending letters and letter position, with everyday words marked.'
+                if pno == 1 else
+                f'Page {pno} of {len(pages)}: {span} word lists by pattern, with the '
+                f'everyday words marked apart from the obscure ones.')
+        lenjump = lennav(pno)
         hub = (HEAD.format(title=esc(title), desc=esc(desc), url=url, schema=hub_schema, nav=NAV)
             + f'''    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Wordmere</a> › <span aria-current="page">{crumb_tail}</span></nav>
     <h1>{heading}</h1>
-    <p class="sub">{len(sets):,} ready-made five-letter lists — by first letters, last letters, and which letter sits in which position. Everyday words are marked apart from the obscure ones.</p>
-    <div class="panel"><div class="grp"><h2>Lists <span>{len(group)} of {len(sets):,}</span></h2>
+    <p class="sub">{len(sets):,} ready-made lists for words of four to seven letters — by first letters, last letters, and which letter sits in which position. Everyday words are marked apart from the obscure ones.</p>
+    <div class="panel"><div class="grp"><h2>Jump to a length</h2>{lenjump}</div>
+    <div class="grp"><h2>{span} lists <span>{len(group)} of {len(sets):,}</span></h2>
     <ul class="hubletters">{cards}</ul></div></div>
     <div class="unprose">
       {pager}
       <h2>Why these are written out</h2>
-      <p>Someone stuck on a five-letter puzzle usually knows one or two letters and where they sit. These lists are that answer, already written down. For anything more specific, the <a href="/tools/five-letter-word-solver/">five-letter word solver</a> takes a pattern and the letters you have ruled out.</p>
-      <p><a class="backtool" href="/tools/five-letter-word-solver/">Solve a five-letter word</a></p>
+      <p>Someone stuck on a puzzle usually knows one or two letters and where they sit. These lists are that answer, already written down. For anything more specific, the <a href="/tools/word-finder/">word finder</a> matches a wildcard pattern at any length, and the <a href="/tools/five-letter-word-solver/">five-letter word solver</a> also takes the letters a daily puzzle has ruled out.</p>
+      <p><a class="backtool" href="/tools/word-finder/">Find a word by pattern</a></p>
     </div>'''
             + '\n' + TAIL.format(foot=FOOT))
         os.makedirs(os.path.join(ROOT, path), exist_ok=True)

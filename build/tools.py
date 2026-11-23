@@ -211,7 +211,9 @@ SPEC['word-finder'] = dict(
       <h2>Starts with, ends with, contains</h2>
       <p>Use these on their own or together. <code>ST</code> in "Starts with" and <code>ING</code> in "Ends with" gives you every word shaped like STING or STRING. "Contains" respects repeats — <code>EE</code> only matches words with at least two E's.</p>
       <h2>Lists like "5-letter words starting with S"</h2>
-      <p>Set the length to 5 and put S in "Starts with". It works the same way for any length from three to eight letters and any starting or ending letters. For words built only from letters you're holding, use the <a href="/tools/word-unscrambler/">word unscrambler</a>.</p>""")
+      <p>Set the length to 5 and put S in "Starts with". It works the same way for any length from three to eight letters and any starting or ending letters. For words built only from letters you're holding, use the <a href="/tools/word-unscrambler/">word unscrambler</a>.</p>
+      <h2>The common ones already written out</h2>
+      <p>For four- to seven-letter words we have written these lists out in advance: <a href="/words/">word lists</a> has a page for each pattern — a given pair of starting letters, a given ending, or a particular letter in a particular slot — and marks the everyday words apart from the ones that are merely valid, which a raw pattern search cannot do.</p>""")
 
 SPEC['scrabble-word-finder'] = dict(
  cta='Find plays',
@@ -309,7 +311,7 @@ SPEC['five-letter-word-solver'] = dict(
       <h2>If nothing comes back</h2>
       <p>Check you haven't put the same letter in two boxes — the tool will tell you if you have. A letter can be placed, misplaced or ruled out, never two at once. Note also that a letter appearing twice in the puzzle behaves differently in different games, so treat the ruled-out box with care when you have a repeat. For other lengths, use the <a href="/tools/word-finder/">word finder</a>.</p>
       <h2>Lists already written out</h2>
-      <p>If all you know is one letter and where it sits, the list is often worth reading whole rather than filtering. <a href="/words/">Word lists</a> has a page for each of those patterns — every five-letter word starting with a given pair, ending in one, or carrying a particular letter in a particular slot — with the everyday words marked apart from the obscure ones.</p>""")
+      <p>If all you know is one letter and where it sits, the list is often worth reading whole rather than filtering. <a href="/words/">Word lists</a> has a page for each of those patterns — every word starting with a given pair, ending in one, or carrying a particular letter in a particular slot, for four letters up to seven — with the everyday words marked apart from the obscure ones.</p>""")
 
 SPEC['random-word-generator'] = dict(
  cta='Generate',
