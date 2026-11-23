@@ -40,6 +40,18 @@ RARE_CAP    = 400     # is 3,096 words; a page must not become a scroll trap.
 RELATED     = 8
 PER_PAGE    = 220
 
+# Three-letter endings are gated, and the gate is the point. 1,108 trigrams
+# clear the word floor at some length, but most are not endings anyone thinks
+# of as an ending -- in CANE, LANE, PANE the "ANE" is simply the rest of the
+# word, and nobody searches for it. Requiring the ending to appear on at least
+# this many words across all four lengths is a measured test of whether it is a
+# productive ending rather than a coincidence of spelling. It keeps every real
+# suffix (-ing -ers -est -ion -ous -ily -ate -ies -ier -ish -ful -ive -ent -age
+# -ary) and the phonetic endings people do search (-ine -ite -ock -ble -tic),
+# and it cuts the build from 2,607 pages to 330. One- and two-letter endings
+# need no gate: there are few enough that all of them are searched.
+SUFFIX_MIN_TOTAL = 150
+
 ORD = {1:'1st', 2:'2nd', 3:'3rd', 4:'4th', 5:'5th', 6:'6th', 7:'7th'}
 
 # Which solver a page should send people to. The five-letter solver takes the
@@ -159,12 +171,27 @@ def esc(s):
     return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
 
+def productive_endings(words):
+    """Three-letter endings common enough across LENGTHS to be worth a page."""
+    tally = defaultdict(int)
+    for w in words:
+        if len(w) in LENGTHS:
+            tally[w[-3:]] += 1
+    keep = {k for k, c in tally.items() if c >= SUFFIX_MIN_TOTAL}
+    print(f'  {len(keep)} three-letter endings clear {SUFFIX_MIN_TOTAL} words '
+          f'(of {len(tally)} that occur at all)')
+    return keep
+
+
 def make_sets(words):
     """Every (slug, heading, query-phrase, word-list) this template covers."""
     out = []
+    suffixes = productive_endings(words)
     for n in LENGTHS:
         pool = [w for w in words if len(w) == n]
 
+        # prefixes: one and two letters only. A three-letter prefix of a
+        # four-letter word is almost the whole word, and nobody searches it.
         for size in (1, 2):
             g = defaultdict(list)
             for w in pool:
@@ -174,10 +201,15 @@ def make_sets(words):
                             f'{n} letter words starting with {k}',
                             f'start with {k}', 'start', k, n, sorted(lst)))
 
+        # suffixes: one and two letters, plus the three-letter endings that
+        # pass the productivity gate above
+        for size in (1, 2, 3):
             g = defaultdict(list)
             for w in pool:
                 g[w[-size:]].append(w)
             for k, lst in g.items():
+                if size == 3 and k not in suffixes:
+                    continue
                 out.append((f'{n}-letter-words-ending-in-{k.lower()}',
                             f'{n} letter words ending in {k}',
                             f'end in {k}', 'end', k, n, sorted(lst)))
