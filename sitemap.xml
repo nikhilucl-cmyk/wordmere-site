@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://wordmere.com/</loc><lastmod>2026-10-10</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://wordmere.com/tools/</loc><lastmod>2026-11-06</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://wordmere.com/tools/word-unscrambler/</loc><lastmod>2026-09-21</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://wordmere.com/tools/</loc><lastmod>2026-11-23</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://wordmere.com/tools/word-unscrambler/</loc><lastmod>2026-11-23</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://wordmere.com/tools/anagram-solver/</loc><lastmod>2026-09-21</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://wordmere.com/tools/word-finder/</loc><lastmod>2026-09-21</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://wordmere.com/tools/scrabble-word-finder/</loc><lastmod>2026-09-21</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
@@ -15,6 +15,8 @@
   <url><loc>https://wordmere.com/tools/multi-word-anagram-solver/</loc><lastmod>2026-11-06</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://wordmere.com/tools/word-ladder-solver/</loc><lastmod>2026-11-06</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://wordmere.com/tools/cryptogram-maker/</loc><lastmod>2026-11-06</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://wordmere.com/tools/spelling-bee-solver/</loc><lastmod>2026-11-23</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://wordmere.com/tools/hangman-solver/</loc><lastmod>2026-11-23</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://wordmere.com/blog/</loc><lastmod>2026-11-13</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://wordmere.com/blog/crash-free-rate-denominator/</loc><lastmod>2026-11-04</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
   <url><loc>https://wordmere.com/blog/idle-animation-loops/</loc><lastmod>2026-11-06</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>

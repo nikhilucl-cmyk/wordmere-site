@@ -27,6 +27,8 @@ TOOLS = [
   ('multi-word-anagram-solver','Multi-word anagram solver','Anagrams that take two or three words'),
   ('word-ladder-solver',    'Word ladder solver',   'The shortest chain from one word to another'),
   ('cryptogram-maker',      'Cryptogram maker',     'Turn a quote into a printable letter-swap puzzle'),
+  ('spelling-bee-solver',   'Spelling bee solver',  'Every word from seven letters, pangrams first'),
+  ('hangman-solver',        'Hangman solver',       'What still fits, and the safest letter to guess next'),
 ]
 
 TOOL_CSS = """<style>
@@ -1051,6 +1053,151 @@ SPEC['word-ladder-solver'] = dict(
       <p>Pick two words that are related but opposite — <code>HEAD</code> and <code>TAIL</code>, <code>BLACK</code> and <code>WHITE</code>, <code>WHEAT</code> and <code>BREAD</code> — and check the ladder here first so you know it exists and how long it runs. Give your solvers the two ends and the number of rungs. Four- and five-letter words make the best puzzles: three-letter ladders are over too quickly, and anything above six tends to need words nobody uses.</p>
       <h2>Related tools</h2>
       <p>The <a href="/tools/word-finder/">word finder</a> matches a pattern like <code>C?LD</code>, which is the manual version of what each rung of this search does. For rearranging letters rather than replacing them, try the <a href="/tools/anagram-solver/">anagram solver</a> or the <a href="/tools/multi-word-anagram-solver/">multi-word anagram solver</a>.</p>""")
+
+SPEC['spelling-bee-solver'] = dict(
+ cta='Find words',
+ title='Spelling Bee Solver — Every Word From 7 Letters',
+ desc='Free spelling bee solver. Enter the seven letters and the middle one, and get every word that uses it, with the pangrams picked out first. No sign-up.',
+ sub='Enter the seven letters and say which one is in the middle. You get every word that uses the middle letter, with the pangrams — the ones using all seven — picked out first.',
+ form=inp('letters','The seven letters','AEGLNRT','e.g. AEGLNRT', 9)
+      + mid('centre','Middle letter','A','e.g. A', 1)
+      + sel('pool','Dictionary', [('common','Everyday words',True),('all','Every word (obscure too)',False)]),
+ hint='Letters may be reused as often as you like — that is the rule in this puzzle. Words must be four letters or more and must contain the middle letter.',
+ js=r"""
+  var raw=WK.clean(val('letters'));
+  if(!raw) return fail('Enter the seven letters first.');
+  var uniq='', seenL={};
+  for(var i=0;i<raw.length;i++){ var c=raw.charAt(i); if(!seenL[c]){ seenL[c]=1; uniq+=c; } }
+  if(uniq.length<4) return fail('Enter at least four different letters.');
+  if(uniq.length>9) return fail('Nine different letters is the limit.');
+  setv('letters',uniq);
+  var centre=WK.clean(val('centre')).charAt(0);
+  if(!centre) return fail('Which letter is in the middle?');
+  setv('centre',centre);
+  if(uniq.indexOf(centre)<0) return fail(centre+' is not one of your letters.');
+  var co = val('pool') !== 'all';
+
+  var allowed={}, d=WK.dict, hits=[], pangrams=[];
+  for(i=0;i<uniq.length;i++) allowed[uniq.charAt(i)]=1;
+  for(i=0;i<d.length;i++){
+    var w=d[i];
+    if(w.length<4) continue;
+    if(w.indexOf(centre)<0) continue;
+    if(co && !WK.isCommon(w)) continue;
+    var ok=true, distinct={}, n=0;
+    for(var j=0;j<w.length;j++){
+      var ch=w.charAt(j);
+      if(!allowed[ch]){ ok=false; break; }
+      if(!distinct[ch]){ distinct[ch]=1; n++; }
+    }
+    if(!ok) continue;
+    if(n===uniq.length) pangrams.push(w); else hits.push(w);
+  }
+
+  var html='';
+  if(pangrams.length)
+    html += '<div class="group"><h2>Pangrams <span>'+pangrams.length+'</span></h2><ul class="words">'
+          + pangrams.sort().map(function(w){ return '<li class="top'+(WK.isCommon(w)?'':' rare')+'">'+w+'</li>'; }).join('')
+          + '</ul></div>';
+  if(hits.length) html += WK.group(hits);
+  if(!html) return out('<p class="status">No words from those letters use '+centre+'. Check the middle letter.</p>','');
+  var total=hits.length+pangrams.length;
+  out(html, total+' word'+(total===1?'':'s')+' using '+centre
+      + (pangrams.length ? ', including '+pangrams.length+' pangram'+(pangrams.length===1?'':'s') : ', no pangram'));""",
+ prose="""
+      <h2>The rules this solves for</h2>
+      <p>Seven letters, arranged with one in the middle. Every answer has to use the middle letter, has to be four letters or longer, and may reuse any letter as many times as you like — that last rule is what makes this different from an <a href="/tools/word-unscrambler/">unscrambler</a>, where each letter is spent once. A word using all seven letters is a pangram, and those are shown first.</p>
+      <h2>Why the everyday setting matters here</h2>
+      <p>Letter reuse makes this puzzle generous: a good set of seven letters spells hundreds of dictionary entries, most of which no one would call words. Leave the dictionary on everyday words and the list stays close to what a puzzle would actually accept. Switch to every word only when you are stuck and willing to read through the obscure ones.</p>
+      <h2>What this will not match</h2>
+      <p>Two honest limitations. Our dictionary runs from three to eight letters, so any answer nine letters or longer is simply missing — and these puzzles often have one. And no two word lists agree: a published puzzle uses its own curated list, so it will accept words we do not have and refuse some we show. Treat this as a strong hint rather than a key.</p>
+      <h2>Related tools</h2>
+      <p>If each letter may be used only once, the <a href="/tools/word-unscrambler/">word unscrambler</a> is the right tool. For words that use every letter exactly once, try the <a href="/tools/anagram-solver/">anagram solver</a>, and for answers that take more than one word, the <a href="/tools/multi-word-anagram-solver/">multi-word anagram solver</a>.</p>""")
+
+SPEC['hangman-solver'] = dict(
+ cta='Narrow it down',
+ title='Hangman Solver — Words From Letters You Know',
+ desc='Free hangman solver. Enter the letters you have and the ones you have ruled out, and get every word that still fits, plus the best letter to guess next.',
+ sub='Type the word with a question mark for each blank, add the letters you have already guessed wrong, and see what is still possible — and which letter to try next.',
+ form=inp('pattern','The word so far','PU??LE','use ? for a blank', 8)
+      + mid('out','Guessed wrong','','e.g. RSTN', 20)
+      + sel('pool','Dictionary', [('common','Everyday words',True),('all','Every word (obscure too)',False)]),
+ hint='One question mark per unknown letter, so a five-letter word is five characters. Three to eight letters.',
+ js=r"""
+  var pat=WK.clean(val('pattern'), 1);
+  if(!pat) return fail('Enter the word so far, with ? for each blank.');
+  if(pat.length<3) return fail('Three letters or more.');
+  if(pat.length>8) return fail('Eight letters is the limit of our dictionary.');
+  setv('pattern',pat);
+  var ex=WK.clean(val('out'));
+  setv('out',ex);
+  var exSet={};
+  for(var i=0;i<ex.length;i++) exSet[ex.charAt(i)]=1;
+  for(i=0;i<pat.length;i++){
+    var c=pat.charAt(i);
+    if(c!=='?' && exSet[c]) return fail(c+' is both in the word and ruled out. Remove it from one of them.');
+  }
+  if(pat.indexOf('?')<0) return fail('There are no blanks to fill — put a ? where a letter is missing.');
+  var co = val('pool') !== 'all';
+
+  var list=WK.byLen[pat.length]||[], hits=[];
+  for(i=0;i<list.length;i++){
+    var w=list[i];
+    if(co && !WK.isCommon(w)) continue;
+    var ok=true;
+    for(var j=0;j<pat.length;j++){
+      var p=pat.charAt(j), c2=w.charAt(j);
+      if(p==='?'){ if(exSet[c2]){ ok=false; break; } }
+      else if(c2!==p){ ok=false; break; }
+    }
+    if(ok) hits.push(w);
+  }
+  if(!hits.length)
+    return out('<p class="status">No '+pat.length+'-letter word fits that.'
+      + (co ? ' Try the full dictionary — the answer may be an uncommon word.' : ' Check the pattern and the ruled-out letters.') + '</p>','');
+
+  /* The useful part of a hangman solver is not the list, it is what to guess
+     next: the letter in the most remaining candidates is the one least likely
+     to cost you a life. */
+  var known={};
+  for(i=0;i<pat.length;i++) if(pat.charAt(i)!=='?') known[pat.charAt(i)]=1;
+  var tally={};
+  for(i=0;i<hits.length;i++){
+    var seenW={};
+    for(j=0;j<hits[i].length;j++){
+      var ch=hits[i].charAt(j);
+      if(known[ch] || exSet[ch] || seenW[ch]) continue;
+      seenW[ch]=1; tally[ch]=(tally[ch]||0)+1;
+    }
+  }
+  var best=null, bestN=0;
+  for(var k in tally) if(tally[k]>bestN){ best=k; bestN=tally[k]; }
+
+  /* A pattern with few known letters matches thousands of words, and a wall of
+     41,872 chips helps nobody. The next-guess line is the useful output at that
+     point, so cap the list and say so. */
+  var CAP=300, shown=hits.slice(0,CAP);
+
+  var html='';
+  if(best)
+    html += '<div class="group"><h2>Guess this next</h2><p class="best"><b>'+best+'</b> appears in '
+          + bestN.toLocaleString() + ' of the ' + hits.length.toLocaleString() + ' words that still fit'
+          + (bestN===hits.length ? ' — every one of them.' : '.') + '</p></div>';
+  if(hits.length>CAP)
+    html += '<div class="group"><p class="best">Too many to list usefully. The first '+CAP
+          + ' are below — fill in another letter or two and this gets short fast.</p></div>';
+  html += WK.group(shown);
+  out(html, hits.length.toLocaleString()+' word'+(hits.length===1?'':'s')+' still fit '+pat
+      + (hits.length>CAP ? ', showing '+CAP : ''));""",
+ prose="""
+      <h2>How to enter the word</h2>
+      <p>Use one question mark for each letter you have not got yet, so a five-letter word is five characters long: <code>?A?E?</code>. Put the letters you have guessed and missed into the second box. Those letters are then excluded from every blank, which is what narrows the list so sharply — a handful of wrong guesses usually cuts the candidates by more than the right ones do.</p>
+      <h2>Which letter to guess next</h2>
+      <p>The tool names the letter that appears in the most remaining candidates. In hangman that is the right target, because the cost of a wrong guess is a life and the cost of a right one is nothing. It is not the same as the letter that would tell you the most — a letter appearing in about half the candidates splits the field more efficiently — but when you are two mistakes from losing, the safest guess beats the most informative one.</p>
+      <h2>Starting from nothing</h2>
+      <p>With no letters at all, enter only question marks for the length. You will get every word of that length, which is not much use by itself, but the next-guess line is: it tells you the commonest letter at that length, which is a better opening than guessing E out of habit.</p>
+      <h2>Related tools</h2>
+      <p>For a known pattern without the guessed-wrong list, the <a href="/tools/word-finder/">word finder</a> matches wildcards directly. For the daily five-letter puzzles, the <a href="/tools/five-letter-word-solver/">five-letter word solver</a> also handles letters that are in the word but in the wrong place, which hangman does not have.</p>""")
 
 PRELOAD = '<link rel="preload" as="fetch" href="/tools/words.txt?v=2" crossorigin>\n'
 ENGINE_DICT = '<script src="/tools/wordkit.js?v=2"></script>'
